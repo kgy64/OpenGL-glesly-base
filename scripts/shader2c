@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+
+function error()
+{
+	echo "${1}" >&2
+	exit 1
+}
+
+linefeed="\\n"
+
+while test $# -gt 0
+do
+    case "$1" in
+        -c)
+            shift
+            cppfile="$1"
+        ;;
+        -n)
+            linefeed=" "
+        ;;
+        -f)
+            shift
+            shader_file="$1"
+        ;;
+        -i)
+            shift
+            include="$1"
+        ;;
+        *)
+            error "Unknown option: $cmd"
+            failed=1
+        ;;
+    esac
+    shift
+done
+
+test "$failed" && error "Exiting now."
+test "$shader_file" || error "No input file name given"
+test "$cppfile" || error "No output file name given"
+
+headerfile="${cppfile/\.cpp/.h}"
+variable_name="`basename "$shader_file" | sed "s/\.shader//" | tr "+-." "___"`"
+
+function print_warning()
+{
+    echo "//"
+    echo "// Warning: This is a generated file, do not edit!"
+    echo "// Note:    Generated from file \"$shader_file\""
+    echo
+}
+
+function namespace_begin()
+{
+    echo "namespace Glesly {"
+    echo "  namespace Shaders {"
+}
+
+function namespace_end()
+{
+    echo "  } // namespace Shaders"
+    echo "} // namespace Glesly"
+}
+
+function create_cpp()
+{
+    print_warning
+
+    test "$include" && echo "#include $include"
+
+    namespace_begin
+
+    echo        "    Glesly::ShaderSource $variable_name = {"
+    echo        "      \"$shader_file\","
+
+    while read line
+    do
+        test ${#line} = 0 && continue
+        echo    "      \"$line$linefeed\""
+    done <$shader_file
+
+    echo        "    };"
+
+    namespace_end
+}
+
+function create_header()
+{
+    print_warning
+    namespace_begin
+    echo "    extern Glesly::ShaderSource $variable_name;"
+    namespace_end
+}
+
+create_cpp >$cppfile
+create_header >$headerfile
+
