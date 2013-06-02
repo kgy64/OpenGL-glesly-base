@@ -8,7 +8,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <glesly/read-tga.h>
+#include <glesly/target2d.h>
 
 #include "texture.h"
 
@@ -22,40 +22,40 @@ using namespace Glesly;
 
 Texture2DRaw::Texture2DRaw(void * pixels, int width, int height, GLenum format):
     myWidth(width),
-    myHeight(height)
+    myHeight(height),
+    myFormat(format),
+    myPixels(pixels)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Initialize();
 
- SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB," << myWidth << "," << myHeight << ", 0, " << format << ", GL_UNSIGNED_BYTE, " << pixels << ");");
+ SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB," << myWidth << "," << myHeight << ", 0, " << format << ", GL_UNSIGNED_BYTE, " << myPixels << ");");
 
  glTexImage2D(
     GL_TEXTURE_2D, 0,           /* target, level */
-    GL_RGB,                     /* internal format */
+    format,                     /* internal format */
     myWidth, myHeight, 0,       /* width, height, border */
     format, GL_UNSIGNED_BYTE,   /* external format, type */
-    pixels                      /* pixels */
+    myPixels                    /* pixels */
  );
 }
 
-Texture2DRaw::Texture2DRaw(const ReadTGA & tga_file):
-    myWidth(tga_file.GetWidth()),
-    myHeight(tga_file.GetHeight())
+Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_now):
+    myWidth(target.GetWidth()),
+    myHeight(target.GetHeight()),
+    myFormat(format),
+    myPixels(target.GetPixelData())
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Initialize();
 
- SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, " << myWidth << "," << myHeight << ", 0, " << "GL_RGB, GL_UNSIGNED_BYTE, &tga_file);");
+ SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, " << myWidth << "," << myHeight << ", 0, " << "GL_RGB, GL_UNSIGNED_BYTE, &target);");
 
- glTexImage2D(
-    GL_TEXTURE_2D, 0,           /* target, level */
-    GL_RGB,                     /* internal format */
-    myWidth, myHeight, 0,       /* width, height, border */
-    GL_RGB, GL_UNSIGNED_BYTE,   /* external format, type */
-    &tga_file.GetPixelData()    /* pixels */
- );
+ if (update_now) {
+    Update();
+ };
 }
 
 Texture2DRaw::~Texture2DRaw()
@@ -65,6 +65,17 @@ Texture2DRaw::~Texture2DRaw()
  SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
 
  glDeleteTextures(1, &myTexture);
+}
+
+void Texture2DRaw::Update(void)
+{
+ glTexImage2D(
+    GL_TEXTURE_2D, 0,           /* target, level */
+    myFormat,                   /* internal format */
+    myWidth, myHeight, 0,       /* width, height, border */
+    myFormat, GL_UNSIGNED_BYTE, /* external format, type */
+    myPixels                    /* pixels */
+ );
 }
 
 void Texture2DRaw::Initialize(void)

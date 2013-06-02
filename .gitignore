@@ -6,3 +6,4 @@ src/shaders/*.h
 tags
 cscope.*
 doc
+bin

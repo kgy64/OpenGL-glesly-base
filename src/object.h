@@ -522,9 +522,9 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            UniformTexture(const Object & obj, const char * name, const ReadTGA & tga_file, int index = 0):
+            UniformTexture(const Object & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
-                Texture2DRaw(tga_file),
+                Texture2DRaw(target, format, false),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -728,7 +728,7 @@ namespace Glesly
         class UseBlend
         {
          public:
-            inline UseBlend(GLenum source_factor, GLenum dest_factor)
+            inline UseBlend(GLenum source_factor = GL_SRC_ALPHA, GLenum dest_factor = GL_ONE_MINUS_SRC_ALPHA)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 glEnable(GL_BLEND);

@@ -20,13 +20,13 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
-    class ReadTGA;
+    class Target2D;
 
     class Texture2DRaw
     {
      protected:
         Texture2DRaw(void * pixels, int width, int height, GLenum format = GL_RGB);
-        Texture2DRaw(const ReadTGA & tga_file);
+        Texture2DRaw(const Target2D & target, GLenum format = GL_RGB, bool update_now = true);
         virtual ~Texture2DRaw();
 
         inline GLuint GetBuffer(void)
@@ -47,6 +47,10 @@ namespace Glesly
 
         int myHeight;
 
+        GLenum myFormat;
+
+        const void * myPixels;
+
      public:
         int GetWidth(void) const
         {
@@ -57,6 +61,8 @@ namespace Glesly
         {
             return myHeight;
         }
+
+        void Update(void);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Texture2DRaw");
