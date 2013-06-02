@@ -7,8 +7,6 @@ VERS_MINOR           =  1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-BASE_LIBRARIES       =  glibmm-2.4
-
 export SRCDIR        =  .
 
 .PHONY: all
@@ -22,6 +20,6 @@ export LFLAGS       +=  $(MY_PROJECT_LIBS)
 
 .PHONY: clean
 clean:
-	@echo " - Cleaning basic library..."
+	@echo " - Cleaning $(NAME)..."
 	@rm -f $(BINDIR)/* $(OBJECTS) $(Y_CPPFILES) $(Y_HEADERS) $(DEPENDS)
 
