@@ -15,6 +15,7 @@
 #include <glesly/texture.h>
 #include <glesly/shader-ptr.h>
 #include <glesly/object-ptr.h>
+#include <matrix/matrix.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
 
@@ -553,46 +554,12 @@ namespace Glesly
 
         }; // class UniformTexture
 
-        template <typename T, unsigned R, unsigned S>
-        class UniformMatrixBase: public UniformBase
-        {
-         protected:
-            inline UniformMatrixBase(const Object & obj, const char * name):
-                UniformBase(obj, name)
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-            }
-
-            VIRTUAL_IF_DEBUG inline ~UniformMatrixBase()
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-            }
-
-            T myMatrix[R*S];
-
-         public:
-            inline T * operator[](int index)
-            {
-                return myMatrix + R * index;
-            }
-
-            inline const T * operator=(const void * data)
-            {
-                memcpy(myMatrix, data, sizeof(myMatrix));
-                return myMatrix;
-            }
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Object::UniformMatrixBase<T,R,S>");
-
-        }; // class UniformMatrixBase
-
         template <typename T>
-        class UniformMatrix2: public UniformMatrixBase<T, 2, 2>
+        class UniformMatrix2: public Matrix<T, 2, 2>, public UniformBase
         {
          public:
             inline UniformMatrix2(const Object & obj, const char * name):
-                UniformMatrixBase<T,2,2>(obj, name)
+                UniformBase(obj, name)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -605,13 +572,13 @@ namespace Glesly
             virtual void Activate(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO3, " - glUniformMatrix2fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (UniformMatrixBase<T,2,2>::myMatrix) << ");");
-                glUniformMatrix2fv(UniformBase::myUniform, 1, GL_FALSE, UniformMatrixBase<T,2,2>::myMatrix);
+                SYS_DEBUG(DL_INFO3, " - glUniformMatrix2fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (Matrix<T,2,2>::myMatrix) << ");");
+                glUniformMatrix2fv(UniformBase::myUniform, 1, GL_FALSE, Matrix<T,2,2>::myMatrix);
             }
 
             inline const T * operator=(const T * data)
             {
-                return UniformMatrixBase<T,2,2>::operator=(data);
+                return Matrix<T,2,2>::operator=(data);
             }
 
          private:
@@ -620,11 +587,11 @@ namespace Glesly
         }; // class UniformMatrix<T>
 
         template <typename T>
-        class UniformMatrix3: public UniformMatrixBase<T, 3, 3>
+        class UniformMatrix3: public Matrix<T, 3, 3>, public UniformBase
         {
          public:
             inline UniformMatrix3(const Object & obj, const char * name):
-                UniformMatrixBase<T,3,3>(obj, name)
+                UniformBase(obj, name)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -637,13 +604,13 @@ namespace Glesly
             virtual void Activate(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO3, " - glUniformMatrix3fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (UniformMatrixBase<T,3,3>::myMatrix) << ");");
-                glUniformMatrix3fv(UniformBase::myUniform, 1, GL_FALSE, UniformMatrixBase<T,3,3>::myMatrix);
+                SYS_DEBUG(DL_INFO3, " - glUniformMatrix3fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (Matrix<T,3,3>::myMatrix) << ");");
+                glUniformMatrix3fv(UniformBase::myUniform, 1, GL_FALSE, Matrix<T,3,3>::myMatrix);
             }
 
             inline const T * operator=(const T * data)
             {
-                return UniformMatrixBase<T,3,3>::operator=(data);
+                return Matrix<T,3,3>::operator=(data);
             }
 
          private:
@@ -652,11 +619,11 @@ namespace Glesly
         }; // class UniformMatrix<T>
 
         template <typename T>
-        class UniformMatrix4: public UniformMatrixBase<T, 4, 4>
+        class UniformMatrix4: public Matrix<T, 4, 4>, public UniformBase
         {
          public:
             inline UniformMatrix4(const Object & obj, const char * name):
-                UniformMatrixBase<T,4,4>(obj, name)
+                UniformBase(obj, name)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -669,13 +636,13 @@ namespace Glesly
             virtual void Activate(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO3, " - glUniformMatrix4fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (UniformMatrixBase<T,4,4>::myMatrix) << ");");
-                glUniformMatrix4fv(UniformBase::myUniform, 1, GL_FALSE, UniformMatrixBase<T,4,4>::myMatrix);
+                SYS_DEBUG(DL_INFO3, " - glUniformMatrix4fv(" << UniformBase::myUniform << ",1,GL_FALSE," << (Matrix<T,4,4>::myMatrix) << ");");
+                glUniformMatrix4fv(UniformBase::myUniform, 1, GL_FALSE, Matrix<T,4,4>::myMatrix);
             }
 
             inline const T * operator=(const T * data)
             {
-                return UniformMatrixBase<T,4,4>::operator=(data);
+                return Matrix<T,4,4>::operator=(data);
             }
 
          private:
