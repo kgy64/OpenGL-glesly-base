@@ -55,16 +55,6 @@ namespace Glesly
             return result;
         }
 
-        template <unsigned U, unsigned V>
-        Matrix<T,R,V> operator*(const Matrix<T,U,V> & other)
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            ASSERT_FATAL(U==S, "Matrix multiplication: size problem");
-            Matrix<T,R,V> result;
-            memset(result.myMatrix, 0, sizeof(result.myMatrix));
-            return result;
-        }
-
         inline Matrix<T,R,S> & operator*=(const Matrix<T,R,S> & other)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
