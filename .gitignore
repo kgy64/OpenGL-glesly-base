@@ -1,0 +1,8 @@
+*.o
+*.depend
+src/shaders/*.cpp
+src/shaders/*.h
+.*.sw?
+tags
+cscope.*
+bin
