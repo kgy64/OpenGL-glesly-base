@@ -581,6 +581,11 @@ namespace Glesly
                 return Matrix<T,2,2>::operator=(data);
             }
 
+            inline const Matrix<T,2,2> & operator=(const Matrix<T,2,2> & data)
+            {
+                return Matrix<T,2,2>::operator=(data);
+            }
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Object::UniformMatrix2<T>");
 
@@ -613,6 +618,11 @@ namespace Glesly
                 return Matrix<T,3,3>::operator=(data);
             }
 
+            inline const Matrix<T,3,3> & operator=(const Matrix<T,3,3> & data)
+            {
+                return Matrix<T,3,3>::operator=(data);
+            }
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Object::UniformMatrix3<T>");
 
@@ -641,6 +651,11 @@ namespace Glesly
             }
 
             inline const T * operator=(const T * data)
+            {
+                return Matrix<T,4,4>::operator=(data);
+            }
+
+            inline const Matrix<T,4,4> & operator=(const Matrix<T,4,4> & data)
             {
                 return Matrix<T,4,4>::operator=(data);
             }
