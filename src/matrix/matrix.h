@@ -11,6 +11,8 @@
 #ifndef __GLESLY_SRC_MATRIX_MATRIX_H_INCLUDED__
 #define __GLESLY_SRC_MATRIX_MATRIX_H_INCLUDED__
 
+#include <Exceptions/Exceptions.h>
+
 #include <math.h>
 
 namespace Glesly
@@ -31,11 +33,21 @@ namespace Glesly
 
         T myMatrix[R*S];
 
-        Matrix<T,R,S> & operator*=(const Matrix<T,R,S> & other)
+        template <unsigned U, unsigned V>
+        Matrix<T,R,V> operator*(const Matrix<T,U,V> & other)
         {
-            T original[R*S] = myMatrix; // Copy the original matrix
-            memset(myMatrix, 0, sizeof(myMatrix)); // It will be calculated now
-            //
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            ASSERT_FATAL(U==S, "Matrix multiplication: size problem");
+            Matrix<T,R,V> result;
+            memset(result.myMatrix, 0, sizeof(result.myMatrix));
+            // TODO
+            return result;
+        }
+
+        inline Matrix<T,R,S> & operator*=(const Matrix<T,R,S> & other)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            *this = (*this) * other;
             return *this;
         }
 
@@ -49,6 +61,12 @@ namespace Glesly
         {
             memcpy(myMatrix, data, sizeof(myMatrix));
             return myMatrix;
+        }
+
+        inline Matrix<T,R,S> & operator=(const Matrix<T,R,S> & other)
+        {
+            myMatrix = other.myMatrix;
+            return *this;
         }
 
      private:
