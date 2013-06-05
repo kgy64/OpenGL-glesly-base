@@ -599,6 +599,11 @@ namespace Glesly
                 return myVariable = data;
             }
 
+            Matrix<T, N, N> & get(void)
+            {
+                return myVariable;
+            };
+
          protected:
             Matrix<T, N, N> & myVariable;
 

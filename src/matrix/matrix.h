@@ -36,7 +36,12 @@ namespace Glesly
             memcpy(myMatrix, data, sizeof(myMatrix));
         }
 
-        VIRTUAL_IF_DEBUG inline ~Matrix()
+        inline Matrix(T data)
+        {
+            *this = data;
+        }
+
+        virtual inline ~Matrix()
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
@@ -79,6 +84,16 @@ namespace Glesly
         {
             memcpy(myMatrix, data, sizeof(myMatrix));
             return myMatrix;
+        }
+
+        T operator=(T data)
+        {
+            for (unsigned i = 0; i < R; ++i) {
+                for (unsigned j = 0; j < S; ++j) {
+                    (*this)[i][j] = (i==j) ? data : 0;
+                }
+            }
+            return data;
         }
 
         inline Matrix<T,R,S> & operator=(const Matrix<T,R,S> & other)

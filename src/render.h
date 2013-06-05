@@ -13,7 +13,7 @@
 
 #include <list>
 
-#include <matrix/matrix.h>
+#include <glesly/camera.h>
 #include <glesly/program.h>
 #include <glesly/object-ptr.h>
 #include <glesly/render-ptr.h>
@@ -41,7 +41,12 @@ namespace Glesly
 
         inline Glesly::Matrix<float, 4, 4> & GetProjectionMatrix(void)
         {
-            return myProjectionMatrix;
+            return myCamera;
+        }
+
+        inline Glesly::CameraPosition & GetCameraPosition(void)
+        {
+            return myCamera;
         }
 
         void NextFrame(void);
@@ -55,7 +60,7 @@ namespace Glesly
 
         std::list<ObjectPtr> myObjects;
 
-        Glesly::Matrix<float, 4, 4> myProjectionMatrix;
+        Glesly::CameraMatrix myCamera;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
