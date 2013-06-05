@@ -17,6 +17,8 @@
 #include <iostream>
 #include <math.h>
 
+SYS_DECLARE_MODULE(DM_GLESLY);
+
 namespace Glesly
 {
     template <typename T, unsigned R, unsigned S>
@@ -111,7 +113,7 @@ std::ostream & operator<<(std::ostream & os, const Glesly::Matrix<T,R,S> & m)
         if (++j >= S) {
             break;
         }
-        os << " ";
+        os << "|";
     }
     os << "}";
  }
