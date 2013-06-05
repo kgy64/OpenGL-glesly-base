@@ -49,11 +49,21 @@ namespace Glesly
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config);
         virtual void ProcessPendingEvents(Glesly::Main &);
 
+        virtual int GetWidth(void) const
+        {
+            return myWidth;
+        }
+
+        virtual int GetHeight(void) const
+        {
+            return myHeight;
+        }
+
         void SetupFullscreen(void);
         void SetupScreen(void);
         void CreateWindow(int width, int height, int redirect = 0);
 
-    }; // class Target
+    }; // class TargetX11
 
     inline TargetPtr TargetX11::Create(int width, int height)
     {

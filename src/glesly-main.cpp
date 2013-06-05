@@ -52,7 +52,7 @@ void Main::Run(void)
         if (myFinished) {
             goto finished;
         }
-        (*i)->Frame();
+        (*i)->NextFrame();
     }
     myBackend.SwapBuffers();
     myBackend.ProcessPendingEvents(*this);

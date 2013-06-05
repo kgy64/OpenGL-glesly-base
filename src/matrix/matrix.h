@@ -11,6 +11,7 @@
 #ifndef __GLESLY_SRC_MATRIX_MATRIX_H_INCLUDED__
 #define __GLESLY_SRC_MATRIX_MATRIX_H_INCLUDED__
 
+#include <Debug/Debug.h>
 #include <Exceptions/Exceptions.h>
 
 #include <iostream>
@@ -82,6 +83,11 @@ namespace Glesly
         {
             memcpy(myMatrix, other.myMatrix, sizeof(myMatrix));
             return *this;
+        }
+
+        const float * get(void) const
+        {
+            return myMatrix;
         }
 
      protected:

@@ -141,6 +141,10 @@ void TargetX11::SetupFullscreen(void)
  }
 
  CreateWindow(10, 10, redirect);
+
+ myWidth = DisplayWidth(x11Display, x11Screen);
+ myHeight = DisplayHeight(x11Display, x11Screen);
+
  if (redirect) {
     // Not necessary to send any message:
     return;

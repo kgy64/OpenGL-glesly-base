@@ -24,9 +24,11 @@ Render::~Render()
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
-void Render::Frame(void)
+void Render::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Frame();
 
  for (Objects::iterator i = myObjects.begin(); i != myObjects.end(); ++i) {
     (*i)->UseProgram();

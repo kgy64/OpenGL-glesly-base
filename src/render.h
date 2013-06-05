@@ -13,6 +13,7 @@
 
 #include <list>
 
+#include <matrix/matrix.h>
 #include <glesly/program.h>
 #include <glesly/object-ptr.h>
 #include <glesly/render-ptr.h>
@@ -38,8 +39,14 @@ namespace Glesly
             myObjects.erase(object);
         }
 
-        void Frame(void);
+        inline Glesly::Matrix<float, 4, 4> & GetProjectionMatrix(void)
+        {
+            return myProjectionMatrix;
+        }
 
+        void NextFrame(void);
+
+        virtual void Frame(void) { }
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
 
@@ -47,6 +54,8 @@ namespace Glesly
         Render(void);
 
         std::list<ObjectPtr> myObjects;
+
+        Glesly::Matrix<float, 4, 4> myProjectionMatrix;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");

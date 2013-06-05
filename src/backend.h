@@ -35,8 +35,14 @@ namespace Glesly
             myTarget->ProcessPendingEvents(main);
         }
 
+        Glesly::Target & GetTarget(void)
+        {
+            return *myTarget;
+        }
+
      protected:
         TargetPtr myTarget;
+
         EGLint myEGLMajorVersion;
         EGLint myEGLMinorVersion;
         EGLDisplay myDisplay;
