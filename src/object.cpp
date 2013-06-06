@@ -8,7 +8,8 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <EGL/egl.h>
+#include <GLES/egl.h>
+#include <GLES/gl.h>
 
 #include <glesly/shader.h>
 #include <glesly/error.h>
@@ -64,6 +65,27 @@ void Object::DrawArrays(GLenum mode, GLint first, GLsizei count)
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not glDrawArrays()");
  }
+}
+
+void Object::NextFrame(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ UseProgram();
+
+ glMatrixMode(GL_MODELVIEW);
+ glPushMatrix();
+
+ ActivateVariables();
+ BufferVariables();
+ Frame();
+ UnbufferVariables();
+
+ glMatrixMode(GL_MODELVIEW);
+ glPopMatrix();
+
+ SYS_DEBUG(DL_INFO3, " - glUseProgram(0);");
+ glUseProgram(0);
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

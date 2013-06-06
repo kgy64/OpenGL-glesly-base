@@ -7,8 +7,8 @@ all:
 
 .PHONY: clean
 clean:
-	(cd src && $(MAKE) -s clean)
-	rm -rf doc
+	@(cd src && $(MAKE) -s clean)
+	@rm -rf doc
 
 .PHONY: doc
 doc:

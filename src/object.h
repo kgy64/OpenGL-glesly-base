@@ -679,7 +679,7 @@ namespace Glesly
         void BufferVariables(void);
         void UnbufferVariables(void);
 
-        virtual void Frame(void) { };
+        void NextFrame(void);
 
         inline void UseProgram(void)
         {
@@ -700,6 +700,8 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
         Render::Objects::iterator myIter;
+
+        virtual void Frame(void) { };
 
         inline void Register(UniformList & var) const
         {

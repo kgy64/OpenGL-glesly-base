@@ -8,6 +8,8 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include <GLES/gl.h>
+
 #include <glesly/object.h>
 
 #include "render.h"
@@ -28,17 +30,17 @@ void Render::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ glMatrixMode(GL_MODELVIEW);
+ glPushMatrix();
+
  Frame();
 
  for (Objects::iterator i = myObjects.begin(); i != myObjects.end(); ++i) {
-    (*i)->UseProgram();
-    (*i)->ActivateVariables();
-    (*i)->BufferVariables();
-    (*i)->Frame();
-    (*i)->UnbufferVariables();
-    SYS_DEBUG(DL_INFO3, " - glUseProgram(0);");
-    glUseProgram(0);
+    (*i)->NextFrame();
  }
+
+ glMatrixMode(GL_MODELVIEW);
+ glPopMatrix();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
