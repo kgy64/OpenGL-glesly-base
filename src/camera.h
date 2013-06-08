@@ -19,17 +19,14 @@ namespace Glesly
     class CameraParameters
     {
      public:
+        inline CameraParameters(void)
+        {
+        }
+
         inline void SetSize(float width, float height)
         {
             myWidth = width;
             myHeight = height;
-        }
-
-        inline void SetPosition(float x, float y, float z)
-        {
-            myPosition[0] = x;
-            myPosition[1] = y;
-            myPosition[2] = z;
         }
 
         inline void SetNearPlane(float value)
@@ -50,8 +47,6 @@ namespace Glesly
      protected:
         float myWidth;
         float myHeight;
-
-        Glesly::Vector<float, 3> myPosition;
 
         float near;
         float far;
@@ -74,6 +69,21 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::CameraMatrix");
 
     }; // class CameraMatrix
+
+    class Transformation: public Glesly::Matrix<float, 4, 4>, public CameraParameters
+    {
+     public:
+        Transformation(void):
+            Glesly::Matrix<float, 4, 4>(1.0)
+        {
+        }
+
+        void RotateX(float angle);
+        void RotateY(float angle);
+        void RotateZ(float angle);
+        void Move(float x, float y, float z);
+
+    }; // Transformation
 
 } // namespace Glesly
 

@@ -48,13 +48,18 @@ namespace Glesly
             myRenders.push_back(rp);
         }
 
-     protected:
-        Glesly::Backend myBackend;
+        inline Glesly::Backend & GetBackend(void)
+        {
+            return myBackend;
+        }
 
+     protected:
         Glesly::CameraMatrix myViewMatrix;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
+
+        Glesly::Backend myBackend;
 
         bool myFinished;
 

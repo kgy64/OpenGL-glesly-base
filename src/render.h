@@ -40,6 +40,16 @@ namespace Glesly
             myObjects.erase(object);
         }
 
+        inline Glesly::CameraMatrix & GetCamera(void)
+        {
+            return myCamera;
+        }
+
+        inline Glesly::Transformation & GetTransform(unsigned index)
+        {
+            return myTransform[index];
+        }
+
         void NextFrame(void);
 
         virtual void Frame(void) { }
@@ -51,17 +61,17 @@ namespace Glesly
 
         std::list<ObjectPtr> myObjects;
 
-        inline Glesly::Matrix<float, 4, 4> & GetCamera(void)
-        {
-            return myCamera;
-        }
-
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
 
-        Glesly::Matrix<float, 4, 4> myCamera;
+        Glesly::CameraMatrix myCamera;
+        Glesly::Transformation myTransform[4];
 
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
+        Shaders::UniformMatrix_ref<float, 4> myT1Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT2Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT3Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT4Matrix;
 
     }; // class Render
 

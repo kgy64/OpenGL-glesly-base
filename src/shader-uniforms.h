@@ -23,9 +23,10 @@ namespace Glesly
         class UniformBase: protected UniformList
         {
          protected:
-            inline UniformBase(const UniformManager & obj, const char * name):
+            inline UniformBase(UniformManager & obj, const char * name):
                 UniformList(obj),
-                myUniformID(-1)
+                myUniformID(-1),
+                myName(name)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -38,7 +39,7 @@ namespace Glesly
             GLint GetUniformID(void)
             {
                 if (myUniformID < 0) {
-                    myUniformID = obj.GetUniformLocationSafe(name);
+                    myUniformID = GetParent().GetUniformLocationSafe(myName);
                 }
                 return myUniformID;
             }
@@ -48,12 +49,14 @@ namespace Glesly
 
             GLint myUniformID;
 
+            const char * myName;
+
         }; // class UniformBase
 
         class UniformTexture: public UniformBase, public Texture2DRaw
         {
          public:
-            UniformTexture(const UniformManager & obj, const char * name, void * pixels, int width, int height, int index = 0, GLenum format = GL_RGB):
+            UniformTexture(UniformManager & obj, const char * name, void * pixels, int width, int height, int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
                 Texture2DRaw(pixels, width, height, format),
                 myIndex(index)
@@ -61,7 +64,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            UniformTexture(const UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
+            UniformTexture(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
                 Texture2DRaw(target, format, false),
                 myIndex(index)
@@ -96,7 +99,7 @@ namespace Glesly
         class UniformMatrix_ref: public UniformBase
         {
          public:
-            inline UniformMatrix_ref(const UniformManager & obj, const char * name, Matrix<T, N, N> & variable):
+            inline UniformMatrix_ref(UniformManager & obj, const char * name, Matrix<T, N, N> & variable):
                 UniformBase(obj, name),
                 myVariable(variable)
             {
@@ -154,14 +157,19 @@ namespace Glesly
 
         inline void UniformManager::Register(UniformList & var) const
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             var.next = myVars;
             myVars = &var;
+            for (UniformList * var = myVars; var; var=var->next) {
+                SYS_DEBUG(DL_INFO3, "KGY: **** " << (void*)var << " -> " << (void*)var->next);
+            }
         }
 
         inline void UniformManager::ActivateVariables(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             for (UniformList * var = myVars; var; var=var->next) {
+                SYS_DEBUG(DL_INFO3, "KGY: activating " << (void*)var << " -> " << (void*)var->next);
                 var->Activate();
             }
         }

@@ -21,7 +21,6 @@ namespace Glesly
 {
     namespace Shaders
     {
-        class UniformList;
         class AttribList;
 
         class AttribManager
@@ -49,6 +48,41 @@ namespace Glesly
 
         }; // class AttribManager
 
+        class AttribList
+        {
+            friend class AttribManager;
+
+         protected:
+            inline AttribList(AttribManager & parent):
+                myParent(parent)
+                // Note: 'next' is uninitialized intentionally. It will be
+                //       initialized in UniformManager::Register()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                myParent.Register(*this);
+            }
+
+            AttribManager & GetParent(void)
+            {
+                return myParent;
+            }
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::AttribList");
+
+            virtual void BufferData(void)=0;
+            virtual void UnbufferData(void)=0;
+
+            AttribManager & myParent;
+
+            AttribList * next;
+
+        }; // class AttribList
+
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+        class UniformList;
+
         class UniformManager
         {
          public:
@@ -68,6 +102,12 @@ namespace Glesly
 
             virtual GLint GetUniformLocationSafe(const char * name) const =0;
 
+            inline void x()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                SYS_DEBUG(DL_INFO3, "KGY: myVars=" << (void*)myVars);
+            }
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformManager");
 
@@ -75,25 +115,24 @@ namespace Glesly
 
         }; // class UniformManager
 
-        class VarManager: public AttribManager, public UniformManager
-        {
-         protected:
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::VarManager");
-
-        }; // class VarManager
-
-        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
         class UniformList
         {
             friend class UniformManager;
 
          protected:
-            inline UniformList(const UniformManager & obj)
+            inline UniformList(UniformManager & parent):
+                myParent(parent)
+                // Note: 'next' is uninitialized intentionally. It will be
+                //       initialized in UniformManager::Register()
             {
-                obj.Register(*this);
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                parent.x();
+                myParent.Register(*this);
+            }
+
+            UniformManager & GetParent(void)
+            {
+                return myParent;
             }
 
          private:
@@ -101,31 +140,19 @@ namespace Glesly
 
             virtual void Activate(void)=0;
 
-            //UniformList * next;
+            UniformManager & myParent;
+
+            UniformList * next;
 
         }; // class UniformList
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        class AttribList
+        class VarManager: public AttribManager, public UniformManager
         {
-            friend class AttribManager;
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::VarManager");
 
-         protected:
-            inline AttribList(const AttribManager & obj)
-            {
-                obj.Register(*this);
-            }
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::AttribList");
-
-            virtual void BufferData(void)=0;
-            virtual void UnbufferData(void)=0;
-
-            AttribList * next;
-
-        }; // class AttribList
+        }; // class VarManager
 
     } // namespace Shaders
 

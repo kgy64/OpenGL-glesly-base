@@ -25,7 +25,7 @@ using namespace Shaders;
   \param  usage           Specifies the expected usage pattern of the data store. See 'glBufferData()' function specification.
   \param  target          Specifies the target buffer object. See 'glBufferData()' and 'glBindBuffer()' function specifications.
   */
-VBOAttribBase::VBOAttribBase(const Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage, GLenum target):
+VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage, GLenum target):
     AttribList(parent),
     myName(name),
     myAttrib(target != GL_ELEMENT_ARRAY_BUFFER ? parent.GetAttribLocationSafe(myName) : 0),

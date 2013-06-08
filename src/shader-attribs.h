@@ -20,7 +20,7 @@ namespace Glesly
         class VBOAttribBase: public AttribList
         {
          protected:
-            VBOAttribBase(const Glesly::Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER);
+            VBOAttribBase(Glesly::Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER);
 
             virtual ~VBOAttribBase()
             {
@@ -128,7 +128,7 @@ namespace Glesly
                 \param  usage       Specifies the expected usage pattern of the data store. See 'glBufferData()' function specification.
                 \param  target      Specifies the target buffer object. See 'glBufferData()' function specification.
              */
-            inline VBOAttrib(const Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
+            inline VBOAttrib(Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
                 VBOAttribBase(parent, name, myData, S, sizeof(T_HOST), V, T_GL, usage, target)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -178,7 +178,7 @@ namespace Glesly
         class VBOAttribMatrix: public VBOAttrib<T_HOST, T_GL, R*S, N>
         {
          protected:
-            inline VBOAttribMatrix(const Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
+            inline VBOAttribMatrix(Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
                 VBOAttrib<T_HOST, T_GL, R*S, N>(parent, name, usage, target)
             {
             }
@@ -222,7 +222,7 @@ namespace Glesly
         class VBOAttribVector: public VBOAttrib<T_HOST, T_GL, S, N>
         {
          protected:
-            inline VBOAttribVector(const Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
+            inline VBOAttribVector(Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
                 VBOAttrib<T_HOST, T_GL, S, N>(parent, name, usage, target)
             {
             }
@@ -248,7 +248,7 @@ namespace Glesly
         class VBOAttribVariable: public VBOAttrib<T_HOST, T_GL, 1, N>
         {
          protected:
-            inline VBOAttribVariable(const Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
+            inline VBOAttribVariable(Glesly::Object & parent, const char * name, GLenum usage, GLenum target):
                 VBOAttrib<T_HOST, T_GL, 1, N>(parent, name, usage, target)
             {
             }
@@ -275,7 +275,7 @@ namespace Glesly
         class VBOAttribFloatMatrix: public VBOAttribMatrix<float, GL_FLOAT, R, S, N>
         {
          public:
-            inline VBOAttribFloatMatrix(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribFloatMatrix(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribMatrix<GLfloat, GL_FLOAT, R, S, N>(parent, name, usage, target)
             {
             }
@@ -291,7 +291,7 @@ namespace Glesly
         class VBOAttribFloatVector: public VBOAttribVector<float, GL_FLOAT, S, N>
         {
          public:
-            inline VBOAttribFloatVector(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribFloatVector(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribVector<GLfloat, GL_FLOAT, S, N>(parent, name, usage, target)
             {
             }
@@ -307,7 +307,7 @@ namespace Glesly
         class VBOAttribFloatVariable: public VBOAttribVariable<float, GL_FLOAT, N>
         {
          public:
-            inline VBOAttribFloatVariable(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribFloatVariable(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribVariable<GLfloat, GL_FLOAT, N>(parent, name, usage, target)
             {
             }
@@ -323,7 +323,7 @@ namespace Glesly
         class VBOAttribIntMatrix: public VBOAttribMatrix<int, GL_INT, R, S, N>
         {
          public:
-            inline VBOAttribIntMatrix(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribIntMatrix(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribMatrix<GLint, GL_INT, R, S, N>(parent, name, usage, target)
             {
             }
@@ -339,7 +339,7 @@ namespace Glesly
         class VBOAttribIntVector: public VBOAttribVector<int, GL_INT, S, N>
         {
          public:
-            inline VBOAttribIntVector(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribIntVector(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribVector<GLint, GL_INT, S, N>(parent, name, usage, target)
             {
             }
@@ -355,7 +355,7 @@ namespace Glesly
         class VBOAttribIntVariable: public VBOAttribVariable<int, GL_INT, N>
         {
          public:
-            inline VBOAttribIntVariable(const Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
+            inline VBOAttribIntVariable(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
                 VBOAttribVariable<GLint, GL_INT, N>(parent, name, usage, target)
             {
             }
@@ -371,7 +371,7 @@ namespace Glesly
         class VBOUShortElementBuffer: public VBOAttribBase
         {
          public:
-            inline VBOUShortElementBuffer(const Glesly::Object & parent, const char * name = "<noname>"):
+            inline VBOUShortElementBuffer(Glesly::Object & parent, const char * name = "<noname>"):
                 VBOAttribBase(parent, name, NULL, 1, sizeof(GLushort), N, GL_INT /*not used here*/, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER)
             {
             }

@@ -52,8 +52,7 @@ namespace Glesly
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             ASSERT_FATAL(U==S, "Matrix multiplication: size problem");
-            Matrix<T,R,V> result;
-            memset(result.myMatrix, 0, sizeof(result.myMatrix));
+            Matrix<T,R,V> result(0.0);
             for (unsigned i = 0; i < R; ++i) {
                 for (unsigned j = 0; j < V; ++j) {
                     for (unsigned k = 0; k < S; ++k) {
