@@ -24,7 +24,8 @@ namespace Glesly
         {
          protected:
             inline UniformBase(const UniformManager & obj, const char * name):
-                UniformList(obj)
+                UniformList(obj),
+                myUniformID(-1)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -34,8 +35,18 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
+            GLint GetUniformID(void)
+            {
+                if (myUniformID < 0) {
+                    myUniformID = obj.GetUniformLocationSafe(name);
+                }
+                return myUniformID;
+            }
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformBase");
+
+            GLint myUniformID;
 
         }; // class UniformBase
 
@@ -58,7 +69,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            VIRTUAL_IF_DEBUG inline ~UniformTexture()
+            virtual ~UniformTexture()
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }

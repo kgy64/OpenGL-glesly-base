@@ -101,7 +101,7 @@ namespace Glesly
 
             virtual void Activate(void)=0;
 
-            UniformList * next;
+            //UniformList * next;
 
         }; // class UniformList
 
