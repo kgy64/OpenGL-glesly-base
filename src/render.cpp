@@ -16,7 +16,9 @@
 
 using namespace Glesly;
 
-Render::Render()
+Render::Render():
+    myCamera(1.0),
+    myCameraMatrix(*this, "camera_matrix", myCamera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -30,8 +32,7 @@ void Render::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- glMatrixMode(GL_MODELVIEW);
- glPushMatrix();
+ UseProgram();
 
  Frame();
 
@@ -39,8 +40,7 @@ void Render::NextFrame(void)
     (*i)->NextFrame();
  }
 
- glMatrixMode(GL_MODELVIEW);
- glPopMatrix();
+ UnuseProgram();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

@@ -11,36 +11,25 @@
 #ifndef __GLESLY_SRC_CAMERA_H_INCLUDED__
 #define __GLESLY_SRC_CAMERA_H_INCLUDED__
 
-#include <matrix/matrix.h>
+#include <glesly/math/vector.h>
+#include <glesly/math/matrix.h>
 
 namespace Glesly
 {
-    class CameraPosition
+    class CameraParameters
     {
      public:
-        inline void SetWidth(float value)
+        inline void SetSize(float width, float height)
         {
-            width = value;
+            myWidth = width;
+            myHeight = height;
         }
 
-        inline void SetHeight(float value)
+        inline void SetPosition(float x, float y, float z)
         {
-            height = value;
-        }
-
-        inline void SetX(float value)
-        {
-            x = value;
-        }
-
-        inline void SetY(float value)
-        {
-            y = value;
-        }
-
-        inline void SetZ(float value)
-        {
-            z = value;
+            myPosition[0] = x;
+            myPosition[1] = y;
+            myPosition[2] = z;
         }
 
         inline void SetNearPlane(float value)
@@ -59,27 +48,30 @@ namespace Glesly
         }
 
      protected:
-        float width;
-        float height;
-        float x;
-        float y;
-        float z;
+        float myWidth;
+        float myHeight;
+
+        Glesly::Vector<float, 3> myPosition;
+
         float near;
         float far;
         float fov;
 
      private:
-        SYS_DEFINE_CLASS_NAME("Glesly::CameraPosition");
+        SYS_DEFINE_CLASS_NAME("Glesly::CameraParameters");
 
-    }; // class CameraPosition
+    }; // class CameraParameters
 
-    class CameraMatrix: public Glesly::Matrix<float, 4, 4>, public CameraPosition
+    class CameraMatrix: public Glesly::Matrix<float, 4, 4>, public CameraParameters
     {
      public:
         CameraMatrix(void);
         virtual ~CameraMatrix();
 
         void Update(void);
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::CameraMatrix");
 
     }; // class CameraMatrix
 

@@ -23,9 +23,7 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Object::Object(Render & renderer):
-    myProgram(renderer),
-    myVars(NULL),
-    myAttribs(NULL)
+    myProgram(renderer)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -35,24 +33,6 @@ Object::~Object()
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  GetProgram().Remove(myIter);
-}
-
-void Object::BufferVariables(void)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- for (VBOAttribBase * i = myAttribs; i; i=i->next) {
-    i->BufferData();
- }
-}
-
-void Object::UnbufferVariables(void)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- for (VBOAttribBase * i = myAttribs; i; i=i->next) {
-    i->UnbufferData();
- }
 }
 
 void Object::DrawArrays(GLenum mode, GLint first, GLsizei count)
@@ -71,21 +51,10 @@ void Object::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- UseProgram();
-
- glMatrixMode(GL_MODELVIEW);
- glPushMatrix();
-
  ActivateVariables();
  BufferVariables();
  Frame();
  UnbufferVariables();
-
- glMatrixMode(GL_MODELVIEW);
- glPopMatrix();
-
- SYS_DEBUG(DL_INFO3, " - glUseProgram(0);");
- glUseProgram(0);
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

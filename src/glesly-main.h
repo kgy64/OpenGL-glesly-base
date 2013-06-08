@@ -17,6 +17,7 @@
 
 #include <glesly/backend.h>
 #include <glesly/render.h>
+#include <glesly/camera.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
 
@@ -49,6 +50,8 @@ namespace Glesly
 
      protected:
         Glesly::Backend myBackend;
+
+        Glesly::CameraMatrix myViewMatrix;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");

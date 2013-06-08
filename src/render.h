@@ -17,6 +17,7 @@
 #include <glesly/program.h>
 #include <glesly/object-ptr.h>
 #include <glesly/render-ptr.h>
+#include <glesly/shader-uniforms.h>
 
 namespace Glesly
 {
@@ -39,16 +40,6 @@ namespace Glesly
             myObjects.erase(object);
         }
 
-        inline Glesly::Matrix<float, 4, 4> & GetProjectionMatrix(void)
-        {
-            return myCamera;
-        }
-
-        inline Glesly::CameraPosition & GetCameraPosition(void)
-        {
-            return myCamera;
-        }
-
         void NextFrame(void);
 
         virtual void Frame(void) { }
@@ -60,10 +51,17 @@ namespace Glesly
 
         std::list<ObjectPtr> myObjects;
 
-        Glesly::CameraMatrix myCamera;
+        inline Glesly::Matrix<float, 4, 4> & GetCamera(void)
+        {
+            return myCamera;
+        }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
+
+        Glesly::Matrix<float, 4, 4> myCamera;
+
+        Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
 
     }; // class Render
 

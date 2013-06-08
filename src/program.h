@@ -15,6 +15,8 @@
 
 #include <glesly/program-ptr.h>
 #include <glesly/shader-ptr.h>
+#include <glesly/shader-uniforms.h>
+
 #include <Debug/Debug.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
@@ -22,7 +24,7 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 namespace Glesly
 {
     /// An OpenGL program
-    class Program
+    class Program: public Glesly::Shaders::UniformManager
     {
      public:
         virtual ~Program();
@@ -56,13 +58,28 @@ namespace Glesly
             return result;
         }
 
-        GLuint GetProgramID(void) const
+        inline GLuint GetProgramID(void) const
         {
             return myProgram;
         }
 
-        GLint GetUniformLocationSafe(const char * name) const;
+        inline void UseProgram(void) const
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO3, " - glUseProgram(" << GetProgramID() << ");");
+            glUseProgram(GetProgramID());
+        }
+
+        inline void UnuseProgram(void) const
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO3, " - glUseProgram(0);");
+            glUseProgram(0);
+        }
+
+        virtual GLint GetUniformLocationSafe(const char * name) const;
         GLint GetAttribLocationSafe(const char * name) const;
+
         std::string GetLogInfo(void);
 
      protected:
@@ -76,6 +93,67 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Program");
 
     }; // class Program
+
+    class UseDepth
+    {
+     public:
+        inline UseDepth(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glEnable(GL_DEPTH_TEST);
+        }
+
+        inline ~UseDepth()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glDisable(GL_DEPTH_TEST);
+        }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::Shader::UseDepth");
+
+    }; // class UseDepth
+
+    class UseCullFace
+    {
+     public:
+        inline UseCullFace(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glEnable(GL_CULL_FACE);
+        }
+
+        inline ~UseCullFace()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glDisable(GL_CULL_FACE);
+        }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::Shader::UseCullFace");
+
+    }; // class UseCullFace
+
+    class UseBlend
+    {
+     public:
+        inline UseBlend(GLenum source_factor = GL_SRC_ALPHA, GLenum dest_factor = GL_ONE_MINUS_SRC_ALPHA)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glEnable(GL_BLEND);
+            glBlendFunc(source_factor, dest_factor);
+        }
+
+        inline ~UseBlend()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            glDisable(GL_BLEND);
+        }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::Shader::UseBlend");
+
+    }; // class UseBlend
 
 } // namespace Glesly
 

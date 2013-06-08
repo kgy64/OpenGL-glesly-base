@@ -30,10 +30,11 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        inline Matrix(const void * data)
+        inline Matrix(std::initializer_list<T> data)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            memcpy(myMatrix, data, sizeof(myMatrix));
+            ASSERT_FATAL(data.size() == R*S, "Invalid intializer for matrix");
+            std::copy(data.begin(), data.end(), myMatrix);
         }
 
         inline Matrix(T data)
@@ -80,9 +81,10 @@ namespace Glesly
             return myMatrix + R * index;
         }
 
-        inline const T * operator=(const void * data)
+        inline const T * operator=(std::initializer_list<T> data)
         {
-            memcpy(myMatrix, data, sizeof(myMatrix));
+            ASSERT_FATAL(data.size() == R*S, "Invalid intializer for matrix");
+            std::copy(data.begin(), data.end(), myMatrix);
             return myMatrix;
         }
 
