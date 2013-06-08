@@ -8,7 +8,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <GLES/gl.h>
+#include <GLES2/gl2.h>
 
 #include <glesly/program.h>
 #include <glesly/error.h>
@@ -54,8 +54,6 @@ void Main::Run(void)
         if (myFinished) {
             goto finished;
         }
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
         (*i)->NextFrame();
     }
     myBackend.SwapBuffers();

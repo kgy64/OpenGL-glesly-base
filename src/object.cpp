@@ -9,7 +9,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <GLES/egl.h>
-#include <GLES/gl.h>
+#include <GLES2/gl2.h>
 
 #include <glesly/shader.h>
 #include <glesly/error.h>
