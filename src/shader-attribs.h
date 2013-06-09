@@ -92,7 +92,7 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 if (data) {
-                    SYS_DEBUG(DL_INFO2, "Overridong data pointer: " << data);
+                    SYS_DEBUG(DL_INFO2, "Overriding data pointer: " << data);
                     myData = data;
                 }
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
