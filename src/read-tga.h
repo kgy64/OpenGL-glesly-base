@@ -61,6 +61,10 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
+        boost::scoped_ptr<const pixel_data> myData;
+
+        void Normalize(void);
+
     }; // class ReadTGA
 
 } // namespace Glesly
