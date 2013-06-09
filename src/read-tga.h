@@ -23,7 +23,7 @@ namespace Glesly
     class ReadTGA: public FILES::FileMap, public Target2D
     {
      public:
-        ReadTGA(const char * filename);
+        ReadTGA(const char * filename, bool convert_2_rgb = false);
         virtual ~ReadTGA();
 
         struct pixel_data
@@ -62,6 +62,8 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
         boost::scoped_ptr<const pixel_data> myData;
+
+        const pixel_data * myRawData;
 
         void Normalize(void);
 
