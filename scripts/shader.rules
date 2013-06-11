@@ -6,8 +6,10 @@ SHADER_SOURCES           =  $(SHADER_FILES:.shader=.cpp)
 SHADER_HEADERS           =  $(SHADER_FILES:.shader=.h)
 SHADER_OBJECTS           =  $(SHADER_SOURCES:.cpp=.o)
 
+export CXXFLAGS         +=  -I$(SHADER_PATH)
+
 %.cpp: %.shader
-	$(GLSCRIPTS)/shader2c -f "$<" -i "<glesly/shader-names.h>" -c "$@"
+	$(GLSCRIPTS)/shader2c -f $(PWD)/"$<" -i "<glesly/shader-names.h>" -c "$@"
 
 do_pre_compile: $(SHADER_SOURCES)
 

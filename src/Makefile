@@ -1,20 +1,18 @@
 # Makefile for my GLES-based library: Glesly
 #
 
-NAME                 =  Glesly
+NAME                 =  Glesly_Base
 VERS_MAJOR           =  0
 VERS_MINOR           =  1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export SRCDIR        =  .
-
 .PHONY: all
 all: _everything
 
-include $(SCRIPTDIR)/makelib
+export SRCDIR        =  .
 
-export LFLAGS       +=  $(MY_PROJECT_LIBS)
+include $(SCRIPTDIR)/makelib
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
