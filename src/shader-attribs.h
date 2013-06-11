@@ -174,7 +174,7 @@ namespace Glesly
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        template <typename T_HOST, unsigned T_GL, unsigned R, unsigned S, unsigned N>
+        template <typename T_HOST, unsigned T_GL, unsigned N, unsigned R, unsigned S>
         class VBOAttribMatrix: public VBOAttrib<T_HOST, T_GL, R*S, N>
         {
          protected:
@@ -218,7 +218,7 @@ namespace Glesly
 
         }; // class VBOAttribMatrix
 
-        template <typename T_HOST, int T_GL, unsigned S, unsigned N>
+        template <typename T_HOST, int T_GL, unsigned N, unsigned S>
         class VBOAttribVector: public VBOAttrib<T_HOST, T_GL, S, N>
         {
          protected:
@@ -271,34 +271,34 @@ namespace Glesly
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        template <unsigned R, unsigned S, unsigned N>
-        class VBOAttribFloatMatrix: public VBOAttribMatrix<float, GL_FLOAT, R, S, N>
+        template <unsigned N, unsigned R, unsigned S>
+        class VBOAttribFloatMatrix: public VBOAttribMatrix<float, GL_FLOAT, N, R, S>
         {
          public:
             inline VBOAttribFloatMatrix(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
-                VBOAttribMatrix<GLfloat, GL_FLOAT, R, S, N>(parent, name, usage, target)
+                VBOAttribMatrix<GLfloat, GL_FLOAT, N, R, S>(parent, name, usage, target)
             {
             }
 
             inline float * operator=(const float * src)
             {
-                return VBOAttribMatrix<GLfloat, GL_FLOAT, R, S, N>::operator=(src);
+                return VBOAttribMatrix<GLfloat, GL_FLOAT, N, R, S>::operator=(src);
             }
 
         }; // class VBOAttribFloatMatrix
 
-        template <unsigned S, unsigned N>
-        class VBOAttribFloatVector: public VBOAttribVector<float, GL_FLOAT, S, N>
+        template <unsigned N, unsigned S>
+        class VBOAttribFloatVector: public VBOAttribVector<float, GL_FLOAT, N, S>
         {
          public:
             inline VBOAttribFloatVector(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
-                VBOAttribVector<GLfloat, GL_FLOAT, S, N>(parent, name, usage, target)
+                VBOAttribVector<float, GL_FLOAT, N, S>(parent, name, usage, target)
             {
             }
 
             inline float * operator=(const float * src)
             {
-                return VBOAttribVector<GLfloat, GL_FLOAT, S, N>::operator=(src);
+                return VBOAttribVector<GLfloat, GL_FLOAT, N, S>::operator=(src);
             }
 
         }; // class VBOAttribFloatVector
@@ -319,34 +319,34 @@ namespace Glesly
 
         }; // class VBOAttribFloatVariable
 
-        template <unsigned R, unsigned S, unsigned N>
-        class VBOAttribIntMatrix: public VBOAttribMatrix<int, GL_INT, R, S, N>
+        template <unsigned N, unsigned R, unsigned S>
+        class VBOAttribIntMatrix: public VBOAttribMatrix<int, GL_INT, N, R, S>
         {
          public:
             inline VBOAttribIntMatrix(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
-                VBOAttribMatrix<GLint, GL_INT, R, S, N>(parent, name, usage, target)
+                VBOAttribMatrix<GLint, GL_INT, N, R, S>(parent, name, usage, target)
             {
             }
 
             inline int * operator=(const int * src)
             {
-                return VBOAttribMatrix<GLint, GL_INT, R, S, N>::operator=(src);
+                return VBOAttribMatrix<GLint, GL_INT, N, R, S>::operator=(src);
             }
 
         }; // class VBOAttribIntMatrix
 
-        template <unsigned S, unsigned N>
-        class VBOAttribIntVector: public VBOAttribVector<int, GL_INT, S, N>
+        template <unsigned N, unsigned S>
+        class VBOAttribIntVector: public VBOAttribVector<int, GL_INT, N, S>
         {
          public:
             inline VBOAttribIntVector(Glesly::Object & parent, const char * name, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER):
-                VBOAttribVector<GLint, GL_INT, S, N>(parent, name, usage, target)
+                VBOAttribVector<GLint, GL_INT, N, S>(parent, name, usage, target)
             {
             }
 
             inline int * operator=(const int * src)
             {
-                return VBOAttribVector<GLint, GL_INT, S, N>::operator=(src);
+                return VBOAttribVector<GLint, GL_INT, N, S>::operator=(src);
             }
 
         }; // class VBOAttribIntVector

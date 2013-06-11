@@ -17,11 +17,7 @@
 using namespace Glesly;
 
 Render::Render():
-    myCameraMatrix(*this, "camera_matrix", myCamera),
-    myT1Matrix(*this, "t0_matrix", myTransform[0]),
-    myT2Matrix(*this, "t1_matrix", myTransform[1]),
-    myT3Matrix(*this, "t2_matrix", myTransform[2]),
-    myT4Matrix(*this, "t3_matrix", myTransform[3])
+    myCameraMatrix(*this, "camera_matrix", myCamera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }

@@ -45,11 +45,6 @@ namespace Glesly
             return myCamera;
         }
 
-        inline Glesly::Transformation & GetTransform(unsigned index)
-        {
-            return myTransform[index];
-        }
-
         void NextFrame(void);
 
         virtual void Frame(void) { }
@@ -65,13 +60,8 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
 
         Glesly::CameraMatrix myCamera;
-        Glesly::Transformation myTransform[4];
 
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
-        Shaders::UniformMatrix_ref<float, 4> myT1Matrix;
-        Shaders::UniformMatrix_ref<float, 4> myT2Matrix;
-        Shaders::UniformMatrix_ref<float, 4> myT3Matrix;
-        Shaders::UniformMatrix_ref<float, 4> myT4Matrix;
 
     }; // class Render
 
