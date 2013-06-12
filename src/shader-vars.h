@@ -102,12 +102,6 @@ namespace Glesly
 
             virtual GLint GetUniformLocationSafe(const char * name) const =0;
 
-            inline void x()
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO3, "KGY: myVars=" << (void*)myVars);
-            }
-
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformManager");
 
@@ -126,7 +120,6 @@ namespace Glesly
                 //       initialized in UniformManager::Register()
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                parent.x();
                 myParent.Register(*this);
             }
 

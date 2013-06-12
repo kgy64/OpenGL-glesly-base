@@ -160,16 +160,12 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
             var.next = myVars;
             myVars = &var;
-            for (UniformList * var = myVars; var; var=var->next) {
-                SYS_DEBUG(DL_INFO3, "KGY: **** " << (void*)var << " -> " << (void*)var->next);
-            }
         }
 
         inline void UniformManager::ActivateVariables(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             for (UniformList * var = myVars; var; var=var->next) {
-                SYS_DEBUG(DL_INFO3, "KGY: activating " << (void*)var << " -> " << (void*)var->next);
                 var->Activate();
             }
         }
