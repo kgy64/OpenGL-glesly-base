@@ -48,6 +48,18 @@ void Object::DrawArrays(GLenum mode, GLint first, GLsizei count)
  }
 }
 
+void Object::DrawElements(GLenum mode, GLsizei count)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO3, " - glDrawElements(" << (int)mode << "," << (int)count << ",GL_UNSIGNED_SHORT,0);");
+
+ glDrawElements(mode, count, GL_UNSIGNED_SHORT, (void*)0);
+ if (eglGetError() != EGL_SUCCESS) {
+    throw Error("Could not glDrawElements()");
+ }
+}
+
 void Object::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);

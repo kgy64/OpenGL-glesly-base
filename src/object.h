@@ -64,6 +64,7 @@ namespace Glesly
         }
 
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
+        void DrawElements(GLenum mode, GLsizei count);
 
         inline Render & GetProgram(void)
         {

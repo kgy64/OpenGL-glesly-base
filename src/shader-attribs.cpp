@@ -28,10 +28,11 @@ using namespace Shaders;
 VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage, GLenum target):
     AttribList(parent),
     myName(name),
-    myAttrib(target != GL_ELEMENT_ARRAY_BUFFER ? parent.GetAttribLocationSafe(myName) : 0),
+    myAttrib(target != GL_ELEMENT_ARRAY_BUFFER ? parent.GetAttribLocationSafe(name) : 0),
     myData(data),
     myVectorSize(vector_size),
-    myByteSize(myVectorSize * vertices * element_size),
+    myElementSize(element_size),
+    myByteSize(vector_size * vertices * element_size),
     myGLType(gl_type),
     myTarget(target),
     myUsage(usage),

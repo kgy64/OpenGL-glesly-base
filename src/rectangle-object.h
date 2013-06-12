@@ -1,19 +1,17 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  *
- *  * Project:     
- *  * Purpose:     
- *  * Author:      
- *  * Licence:     GPL (see file 'COPYING' in the project root for more details)
- *  * Comments:    
- *  *
- *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ *
+ * Project:     Glesly: my GLES-based rendering library
+ * Purpose:     Generic rectangle-shaped object
+ * Author:      György Kövesdi (kgy@teledigit.eu)
+ * Licence:     GPL (see file 'COPYING' in the project root for more details)
+ * Comments:    
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #ifndef __GLESLY_SRC_RECTANGLE_OBJECT_H_INCLUDED__
 #define __GLESLY_SRC_RECTANGLE_OBJECT_H_INCLUDED__
 
 #include <glesly/object.h>
-#include <glesly/shader-uniforms.h> // Shader headers are not necessary here, but
-#include <glesly/shader-attribs.h>  // probably will be in the derivatives
 
 namespace Glesly
 {
@@ -44,12 +42,6 @@ namespace Glesly
         virtual ~RectangleObject()
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-        }
-
-        static Glesly::ObjectPtr Create(Glesly::Render & render, int width, int height)
-        {
-            Glesly::ObjectPtr obj(new RectangleObject(render, width, height));
-            return obj;
         }
 
      private:

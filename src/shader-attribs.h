@@ -77,6 +77,8 @@ namespace Glesly
 
             unsigned myVectorSize;
 
+            unsigned myElementSize;
+
             unsigned myByteSize;
 
             int myGLType;
@@ -88,7 +90,7 @@ namespace Glesly
             VBOAttribBase * next;
 
          public:
-            void Bind(const void * data = NULL)
+            void Bind(const void * data = NULL, unsigned elements = 0U)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 if (data) {
@@ -99,7 +101,7 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");
-                glBufferData(myTarget, myByteSize, myData, myUsage);
+                glBufferData(myTarget, elements ? elements * myElementSize : myByteSize, myData, myUsage);
             }
 
          private:
