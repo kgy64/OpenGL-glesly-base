@@ -180,6 +180,15 @@ void TargetX11::ProcessPendingEvents(Glesly::Main & main)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ Window root;
+ Window child;
+ int rx, ry, wx, wy;
+ unsigned int mask;
+
+ if (XQueryPointer(x11Display, x11Window, &root, &child, &rx, &ry, &wx, &wy, &mask)) {
+    SYS_DEBUG(DL_INFO3, "KGY: " << rx << " x " << ry << ", " << wx << " x " << wy << ", mask: " << mask);
+ }
+
  int messages = XPending(x11Display);
  for( int i = 0; i < messages; i++ ) {
     XEvent event;
