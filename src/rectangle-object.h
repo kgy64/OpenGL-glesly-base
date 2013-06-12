@@ -15,7 +15,7 @@
 
 namespace Glesly
 {
-    template <unsigned S>
+    template <unsigned W, unsigned H>
     class RectangleObject: public Glesly::Object
     {
      protected:
@@ -28,15 +28,9 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        Glesly::Shaders::VBOAttribFloatVector<S, 3> position;
-        Glesly::Shaders::VBOAttribFloatVector<S, 2> texcoord;
-        Glesly::Shaders::VBOUShortElementBuffer<6*S> elements;
-
-        virtual void Frame(void)
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            DrawArrays(GL_TRIANGLES, 0, S);
-        }
+        Glesly::Shaders::VBOAttribFloatVector<W*H, 3> position;
+        Glesly::Shaders::VBOAttribFloatVector<W*H, 2> texcoord;
+        Glesly::Shaders::VBOUShortElementBuffer<6*(W-1)*(H-1)> elements;
 
      public:
         virtual ~RectangleObject()

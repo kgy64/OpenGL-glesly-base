@@ -19,26 +19,28 @@ namespace Glesly
     class _RectangleInit
     {
      protected:
-        static void RectangleVerticesInit(Shaders::VBOAttribBase & attrib);
+        static void RectangleVerticesInit(Glesly::Shaders::VBOAttribFloatVector<4, 3> & position, Glesly::Shaders::VBOAttribFloatVector<4, 2> & texcoord, Shaders::VBOAttribBase & elements);
 
     }; // class _RectangleInit
 
-    class PaCaObject: public Glesly::RectangleObject<4>, private _RectangleInit
+    class PaCaObject: public Glesly::RectangleObject<2,2>, private _RectangleInit
     {
      protected:
          inline PaCaObject(Glesly::Render & render, int width, int height):
-            Glesly::RectangleObject<4>(render),
+            Glesly::RectangleObject<2,2>(render),
             myPaca(width, height),
-            texture(*this, "texture", myPaca, GL_RGBA)
+            texture(*this, "texture", myPaca, 0, GL_RGBA)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            RectangleVerticesInit(elements);
+            RectangleVerticesInit(position, texcoord, elements);
         }
 
         inline PaCaLib::PacaTarget & PaCa(void)
         {
             return myPaca;
         };
+
+        virtual void Frame(void);
 
      public:
         virtual ~PaCaObject()
@@ -51,6 +53,7 @@ namespace Glesly
 
         PaCaLib::PacaTarget myPaca;
 
+     protected:
         Glesly::Shaders::UniformTexture texture;
 
     }; // class PaCaObject
