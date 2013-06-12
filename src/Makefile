@@ -12,6 +12,8 @@ all: _everything
 
 export SRCDIR        =  .
 
+BASE_LIBRARIES       =  pangocairo
+
 include $(SCRIPTDIR)/makelib
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

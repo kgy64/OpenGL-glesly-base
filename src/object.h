@@ -78,6 +78,11 @@ namespace Glesly
      public:
         void NextFrame(void);
 
+        Glesly::Transformation & GetProjection(void)
+        {
+            return myProjection;
+        }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
@@ -86,6 +91,11 @@ namespace Glesly
         virtual void Frame(void) { };
 
         Render & myProgram;
+
+        /// The object's Projection Matrix
+        Glesly::Transformation myProjection;
+
+        Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
 
     }; // class Object
 
