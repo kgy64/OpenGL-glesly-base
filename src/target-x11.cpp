@@ -187,8 +187,13 @@ void TargetX11::ProcessPendingEvents(Glesly::Main & main)
     switch(event.type)
     {
         case ButtonPress: // Mouse click
+            SYS_DEBUG(DL_INFO2, "KGY: Button press event...");
+        break;
+        case ButtonRelease: // Mouse click
+            SYS_DEBUG(DL_INFO2, "KGY: Button release event...");
         break;
         default:
+            SYS_DEBUG(DL_INFO3, "X11: Unhandled event: " << (int)event.type << " ...");
         break;
     }
  }
