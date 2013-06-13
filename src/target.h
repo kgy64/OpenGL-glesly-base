@@ -46,9 +46,15 @@ namespace Glesly
             myMouse.Position(x, y);
         }
 
+        inline void MouseButtonState(int index, bool pressed, const SYS::TimeDelay & time)
+        {
+            myMouse.ButtonState(index, pressed, time);
+        }
+
         inline void MouseButtonState(int index, bool pressed)
         {
-            myMouse.ButtonState(index, pressed);
+            SYS::TimeDelay now;
+            myMouse.ButtonState(index, pressed, now);
         }
 
      private:

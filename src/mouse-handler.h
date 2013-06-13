@@ -11,6 +11,7 @@
 #ifndef __GLESLY_SRC_MOUSE_HANDLER_H_INCLUDED__
 #define __GLESLY_SRC_MOUSE_HANDLER_H_INCLUDED__
 
+#include <System/TimeDelay.h>
 #include <Debug/Debug.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
@@ -32,7 +33,7 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        void State(bool pressed);
+        void State(bool pressed, const SYS::TimeDelay & time);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::MouseHandler");
@@ -40,6 +41,12 @@ namespace Glesly
         int myIndex;
 
         bool myPressed;
+
+        SYS::TimeDelay myPreviousTime;
+
+        void Logic(const SYS::TimeDelay & time);
+        void Pressed(void);
+        void Released(const SYS::TimeDelay & time);
 
     }; // class MouseButton
 
@@ -57,10 +64,10 @@ namespace Glesly
 
         void Position(int x, int y);
 
-        inline void ButtonState(int index, bool pressed)
+        inline void ButtonState(int index, bool pressed, const SYS::TimeDelay & time)
         {
             ASSERT_FATAL(index >= 0 && index < 5, "Mouse button index out of range");
-            buttons[index].State(pressed);
+            buttons[index].State(pressed, time);
         }
 
      private:

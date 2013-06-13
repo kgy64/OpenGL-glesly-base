@@ -57,14 +57,47 @@ MouseButton::MouseButton(MouseHandler & parent, int index):
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
-void MouseButton::State(bool pressed)
+void MouseButton::State(bool pressed, const SYS::TimeDelay & time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (myPressed ^ pressed) {
-    myPressed = pressed;
-    SYS_DEBUG(DL_INFO3, "KGY: Mouse button " << myIndex << " is " << (pressed ? "pressed" : "released"));
+ if (!myPressed) {
+    if (pressed) {
+        myPressed = true;
+        myPreviousTime = time;
+        Pressed();
+    } else {
+        Logic(time);
+    }
+ } else {
+    if (!pressed) {
+        myPressed = false;
+        Released(time - myPreviousTime);
+        myPreviousTime = time;
+    } else {
+        Logic(time);
+    }
  }
+}
+
+void MouseButton::Logic(const SYS::TimeDelay & time)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+}
+
+void MouseButton::Pressed(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO3, "KGY: Mouse button " << myIndex << " is pressed");
+}
+
+void MouseButton::Released(const SYS::TimeDelay & time)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO3, "KGY: Mouse button " << myIndex << " is released, time=" << time.ToMillisecond());
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
