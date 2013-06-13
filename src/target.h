@@ -14,6 +14,7 @@
 #include <boost/shared_ptr.hpp>
 #include <EGL/egl.h>
 
+#include <glesly/mouse-handler.h>
 #include <Debug/Debug.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
@@ -36,8 +37,24 @@ namespace Glesly
      protected:
         Target(void);
 
+        void ShiftState(bool pressed);
+        void AltState(bool pressed);
+        void ControlState(bool pressed);
+
+        inline void MousePosition(int x, int y)
+        {
+            myMouse.Position(x, y);
+        }
+
+        inline void MouseButtonState(int index, bool pressed)
+        {
+            myMouse.ButtonState(index, pressed);
+        }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Target");
+
+        Glesly::MouseHandler myMouse;
 
     }; // class Target
 

@@ -8,9 +8,9 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <glesly/error.h>
-
 #include "shader.h"
+
+#include <glesly/error.h>
 
 using namespace Glesly;
 

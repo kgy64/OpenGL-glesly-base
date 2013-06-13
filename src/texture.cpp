@@ -8,9 +8,9 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <glesly/target2d.h>
-
 #include "texture.h"
+
+#include <glesly/target2d.h>
 
 using namespace Glesly;
 

@@ -10,8 +10,6 @@
 
 #include "target.h"
 
-SYS_DEFINE_MODULE(DM_GLESLY);
-
 using namespace Glesly;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -20,7 +18,8 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Target::Target(void)
+Target::Target(void):
+    myMouse(*this)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -28,6 +27,18 @@ Target::Target(void)
 Target::~Target()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+}
+
+void Target::ShiftState(bool pressed)
+{
+}
+
+void Target::AltState(bool pressed)
+{
+}
+
+void Target::ControlState(bool pressed)
+{
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

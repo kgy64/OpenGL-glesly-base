@@ -186,7 +186,15 @@ void TargetX11::ProcessPendingEvents(Glesly::Main & main)
  unsigned int mask;
 
  if (XQueryPointer(x11Display, x11Window, &root, &child, &rx, &ry, &wx, &wy, &mask)) {
-    SYS_DEBUG(DL_INFO3, "KGY: " << rx << " x " << ry << ", " << wx << " x " << wy << ", mask: " << mask);
+    ShiftState(mask & ShiftMask);
+    AltState(mask & LockMask);
+    ControlState(mask & ControlMask);
+    MousePosition(wx, wy);
+    MouseButtonState(0, mask & Button1Mask);
+    MouseButtonState(1, mask & Button2Mask);
+    MouseButtonState(2, mask & Button3Mask);
+    MouseButtonState(3, mask & Button4Mask);
+    MouseButtonState(4, mask & Button5Mask);
  }
 
  int messages = XPending(x11Display);
