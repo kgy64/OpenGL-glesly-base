@@ -10,6 +10,8 @@
 
 #include "mouse-handler.h"
 
+#include <glesly/target.h>
+
 using namespace Glesly;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -44,15 +46,25 @@ void MouseHandler::Position(int x, int y)
  }
 }
 
+void MouseHandler::MouseClick(int index, int count)
+{
+ myParent.MouseClick(myX, myY, index, count);
+}
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  *                                                                                       *
  *     class MouseButton:                                                                *
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+int MouseButton::ClickTime = 300;
+int MouseButton::ReleaseTime = 300;
+
 MouseButton::MouseButton(MouseHandler & parent, int index):
+    myParent(parent),
     myIndex(index),
-    myPressed(false)
+    myPressed(false),
+    myPressCount(0)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -61,22 +73,18 @@ void MouseButton::State(bool pressed, const SYS::TimeDelay & time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!myPressed) {
-    if (pressed) {
-        myPressed = true;
-        myPreviousTime = time;
-        Pressed();
-    } else {
+ if (myPressed == pressed) {
+    if (myPressCount) {
         Logic(time);
     }
  } else {
-    if (!pressed) {
-        myPressed = false;
+     myPressed = pressed;
+     if (pressed) {
+        Pressed();
+     } else {
         Released(time - myPreviousTime);
-        myPreviousTime = time;
-    } else {
-        Logic(time);
-    }
+     }
+     myPreviousTime = time;
  }
 }
 
@@ -84,20 +92,38 @@ void MouseButton::Logic(const SYS::TimeDelay & time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ SYS::TimeDelay elapsed = time - myPreviousTime;
+
+ SYS_DEBUG(DL_INFO3, "elapsed time: " << elapsed.ToMillisecond() << " ms");
+
+ if (myPressed) {
+    if (elapsed.ToMillisecond() < ClickTime) {
+        return;
+    }
+ } else {
+    if (elapsed.ToMillisecond() < ReleaseTime) {
+        return;
+    }
+ }
+
+ myParent.MouseClick(myIndex, myPressCount);
+ myPressCount = 0;
 }
 
 void MouseButton::Pressed(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO3, "KGY: Mouse button " << myIndex << " is pressed");
+ SYS_DEBUG(DL_INFO3, "Mouse button " << myIndex << " is pressed");
+
+ ++myPressCount;
 }
 
 void MouseButton::Released(const SYS::TimeDelay & time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO3, "KGY: Mouse button " << myIndex << " is released, time=" << time.ToMillisecond());
+ SYS_DEBUG(DL_INFO3, "Mouse button " << myIndex << " is released, time: " << time.ToMillisecond() << " ms");
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

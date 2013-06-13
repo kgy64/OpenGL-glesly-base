@@ -38,11 +38,18 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::MouseHandler");
 
+        MouseHandler & myParent;
+
         int myIndex;
 
         bool myPressed;
 
+        int myPressCount;
+
         SYS::TimeDelay myPreviousTime;
+
+        static int ClickTime;
+        static int ReleaseTime;
 
         void Logic(const SYS::TimeDelay & time);
         void Pressed(void);
@@ -53,6 +60,7 @@ namespace Glesly
     class MouseHandler
     {
         friend class Target;
+        friend class MouseButton;
 
      protected:
         MouseHandler(Target & parent);
@@ -69,6 +77,8 @@ namespace Glesly
             ASSERT_FATAL(index >= 0 && index < 5, "Mouse button index out of range");
             buttons[index].State(pressed, time);
         }
+
+        void MouseClick(int index, int count);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::MouseHandler");

@@ -34,6 +34,8 @@ namespace Glesly
         virtual int GetHeight(void) const =0;
         virtual void ProcessPendingEvents(Glesly::Main &) { }
 
+        void MouseClick(int x, int y, int index, int count);
+
      protected:
         Target(void);
 

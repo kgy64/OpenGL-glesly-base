@@ -31,14 +31,24 @@ Target::~Target()
 
 void Target::ShiftState(bool pressed)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
 void Target::AltState(bool pressed)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
 void Target::ControlState(bool pressed)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+}
+
+void Target::MouseClick(int x, int y, int index, int count)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO1, "Mouse Click(" << count << "): " << x << ", " << y << ", button " << index);
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
