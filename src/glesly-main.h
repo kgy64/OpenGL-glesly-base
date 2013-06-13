@@ -23,7 +23,7 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
-    class Main
+    class Main: private TargetHolder
     {
      public:
         Main(TargetPtr & target);
@@ -58,6 +58,9 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
+
+        virtual void CloseRequest(void);
+        virtual void MouseClick(int x, int y, int index, int count);
 
         Glesly::Backend myBackend;
 

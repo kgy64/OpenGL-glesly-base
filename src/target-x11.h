@@ -41,6 +41,7 @@ namespace Glesly
         long x11Screen;
         XVisualInfo x11Visual;
         Colormap x11Colormap;
+        Atom myDeleteMessage;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::TargetX11");

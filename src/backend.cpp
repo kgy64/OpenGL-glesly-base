@@ -22,6 +22,7 @@ using namespace Glesly;
 
 Backend::Backend(TargetPtr & target):
     myTarget(target),
+    myParent(NULL),
     myEGLMajorVersion(0),
     myEGLMinorVersion(0),
     myDisplay(0),
@@ -31,6 +32,8 @@ Backend::Backend(TargetPtr & target):
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ myTarget->RegisterParent(this);
+
  InitDisplay();
  InitSurface();
 }
@@ -38,6 +41,24 @@ Backend::Backend(TargetPtr & target):
 Backend::~Backend()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ myTarget->RegisterParent(NULL); // unregister
+}
+
+void Backend::CloseRequest(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+ if (myParent) {
+    myParent->CloseRequest();
+ }
+}
+
+void Backend::MouseClick(int x, int y, int index, int count)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+ if (myParent) {
+    myParent->MouseClick(x, y, index, count);
+ }
 }
 
 void Backend::InitDisplay(void)

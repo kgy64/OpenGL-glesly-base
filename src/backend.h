@@ -22,7 +22,7 @@ namespace Glesly
 {
     class Main;
 
-    class Backend
+    class Backend: private Glesly::TargetHolder
     {
      public:
         Backend(TargetPtr & target);
@@ -40,8 +40,15 @@ namespace Glesly
             return *myTarget;
         }
 
+        inline void RegisterParent(TargetHolder * parent = NULL)
+        {
+            myParent = parent;
+        }
+
      protected:
         TargetPtr myTarget;
+
+        TargetHolder * myParent;
 
         EGLint myEGLMajorVersion;
         EGLint myEGLMinorVersion;
@@ -52,6 +59,9 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Backend");
+
+        virtual void CloseRequest(void);
+        virtual void MouseClick(int x, int y, int index, int count);
 
         void InitDisplay(void);
         void InitSurface(void);

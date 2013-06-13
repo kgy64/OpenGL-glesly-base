@@ -42,7 +42,7 @@ void MouseHandler::Position(int x, int y)
  if (x != myX || y != myY) {
     myX = x;
     myY = y;
-    SYS_DEBUG(DL_INFO3, "KGY: Mouse position=" << myX << "x" << myY);
+    SYS_DEBUG(DL_INFO3, "Mouse position=" << myX << "x" << myY);
  }
 }
 

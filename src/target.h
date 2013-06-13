@@ -22,6 +22,18 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 namespace Glesly
 {
     class Main;
+    class Target;
+    class Backend;
+
+    class TargetHolder
+    {
+        friend class Target;
+        friend class Backend;
+
+        virtual void CloseRequest(void) =0;
+        virtual void MouseClick(int x, int y, int index, int count) =0;
+
+    }; // class TargetHolder
 
     class Target
     {
@@ -34,11 +46,22 @@ namespace Glesly
         virtual int GetHeight(void) const =0;
         virtual void ProcessPendingEvents(Glesly::Main &) { }
 
-        void MouseClick(int x, int y, int index, int count);
+        inline void RegisterParent(TargetHolder * parent = NULL)
+        {
+            myParent = parent;
+        }
+
+        inline void MouseClick(int x, int y, int index, int count)
+        {
+            if (myParent) {
+                myParent->MouseClick(x, y, index, count);
+            }
+        }
 
      protected:
         Target(void);
 
+        void CloseRequest(void);
         void ShiftState(bool pressed);
         void AltState(bool pressed);
         void ControlState(bool pressed);
@@ -58,6 +81,8 @@ namespace Glesly
             SYS::TimeDelay now;
             myMouse.ButtonState(index, pressed, now);
         }
+
+        TargetHolder * myParent;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Target");

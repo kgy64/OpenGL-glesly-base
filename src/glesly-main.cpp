@@ -28,11 +28,15 @@ Main::Main(TargetPtr & backend):
     myFinished(false)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ myBackend.RegisterParent(this);
 }
 
 Main::~Main()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ myBackend.RegisterParent(NULL); // unregister
 }
 
 void Main::Run(void)
@@ -67,6 +71,21 @@ finished:;
  }
 
  Cleanup();
+}
+
+void Main::CloseRequest(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO1, "KGY: Closing down...");
+
+ myFinished = true;
+}
+
+void Main::MouseClick(int x, int y, int index, int count)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+ SYS_DEBUG(DL_INFO1, "KGY: Mouse click: button=" << index << ", x=" << x << ", y=" << y << ", count=" << count);
 }
 
 void Main::Clear(void)

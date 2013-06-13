@@ -157,6 +157,9 @@ void TargetX11::SetupFullscreen(void)
  if (!XSendEvent(x11Display, RootWindow(x11Display, x11Screen), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev)) {
     throw Error("Could not XSendEvent()");
  }
+
+ myDeleteMessage = XInternAtom(x11Display, "WM_DELETE_WINDOW", False);
+ XSetWMProtocols(x11Display, x11Window, &myDeleteMessage, 1);
 }
 
 EGLDisplay TargetX11::GetEGLDisplay(void)
@@ -205,10 +208,15 @@ void TargetX11::ProcessPendingEvents(Glesly::Main & main)
     switch(event.type)
     {
         case ButtonPress: // Mouse click
-            SYS_DEBUG(DL_INFO2, "KGY: Button press event...");
+            SYS_DEBUG(DL_INFO2, "X11: Button press event...");
         break;
         case ButtonRelease: // Mouse click
-            SYS_DEBUG(DL_INFO2, "KGY: Button release event...");
+            SYS_DEBUG(DL_INFO2, "X11: Button release event...");
+        break;
+        case ClientMessage:
+            if (event.xclient.data.l[0] == (long)myDeleteMessage) {
+                CloseRequest();
+            }
         break;
         default:
             SYS_DEBUG(DL_INFO3, "X11: Unhandled event: " << (int)event.type << " ...");
