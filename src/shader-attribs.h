@@ -30,15 +30,6 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO2, "VBO=" << myVBO << " deleted.");
             }
 
-            ///
-            /*!
-             *  \param  stride      Specifies the byte offset between consecutive generic vertex attributes.
-             *                      If stride is 0, the generic vertex attributes are understood to be tightly
-             *                      packed in the array.
-             *  \param  offset      Specifies a offset of the first component of the first generic vertex
-             *                      attribute in the array in the data store of the buffer currently bound
-             *                      to the GL_ARRAY_BUFFER target.
-             */
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);

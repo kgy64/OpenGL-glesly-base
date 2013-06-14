@@ -23,9 +23,14 @@ namespace Glesly
 {
     class Object: public Glesly::Shaders::VarManager
     {
-     public:
-        virtual ~Object();
+        class UniformList;
+        class VBOAttribBase;
 
+        friend class UniformList;
+        friend class VBOAttribBase;
+        friend ObjectPtr;
+
+     public:
         inline GLint GetUniformLocation(const char * name) const
         {
             return GetProgram().GetUniformLocation(name);
@@ -46,14 +51,17 @@ namespace Glesly
             return GetProgram().GetAttribLocationSafe(name);
         }
 
+        /// Removes this class from the parent
+        /*! 
+         *  \warning Do not call it from destructor, it is not necessary and leads to creash! */
+        inline void Destroy(void)
+        {
+            GetProgram().Remove(myIter);
+        }
+
      protected:
-        class UniformList;
-        class VBOAttribBase;
-
-        friend class UniformList;
-        friend class VBOAttribBase;
-
         Object(Render & renderer);
+        virtual ~Object();
 
         ObjectWeak mySelf;
 

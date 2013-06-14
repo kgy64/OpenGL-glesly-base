@@ -32,8 +32,6 @@ Object::Object(Render & renderer):
 Object::~Object()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- GetProgram().Remove(myIter);
 }
 
 void Object::DrawArrays(GLenum mode, GLint first, GLsizei count)

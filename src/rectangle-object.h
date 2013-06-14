@@ -32,7 +32,6 @@ namespace Glesly
         Glesly::Shaders::VBOAttribFloatVector<W*H, 2> texcoord;
         Glesly::Shaders::VBOUShortElementBuffer<6*(W-1)*(H-1)> elements;
 
-     public:
         virtual ~RectangleObject()
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
