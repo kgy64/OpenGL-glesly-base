@@ -37,8 +37,15 @@ void Render::NextFrame(void)
 
  Frame();
 
- for (Objects::iterator i = myObjects.begin(); i != myObjects.end(); ++i) {
-    (*i)->NextFrame();
+ for (Objects::iterator i = myObjects.begin(); i != myObjects.end(); ) {
+    ObjectPtr current = *i;
+    if (current->ToBeDestroyed()) {
+        i = myObjects.erase(i);
+    } else {
+        current->NextFrame();
+        ++i;
+    }
+    // Note: the corresponding objects will be deleted here
  }
 
  UnuseProgram();

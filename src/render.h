@@ -35,11 +35,6 @@ namespace Glesly
             return myObjects.begin();
         }
 
-        inline void Remove(Objects::iterator & object)
-        {
-            myObjects.erase(object);
-        }
-
         inline Glesly::CameraMatrix & GetCamera(void)
         {
             return myCamera;

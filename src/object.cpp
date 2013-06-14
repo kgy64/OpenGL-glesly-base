@@ -24,7 +24,8 @@ using namespace Glesly;
 
 Object::Object(Render & renderer):
     myProgram(renderer),
-    p_matrix(*this, "p_matrix", myProjection)
+    p_matrix(*this, "p_matrix", myProjection),
+    toBeErased(false)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }

@@ -18,8 +18,22 @@ namespace Glesly
 {
     class Object;
 
-    typedef boost::shared_ptr<Object> ObjectPtr;
     typedef boost::weak_ptr<Object> ObjectWeak;
+
+    class ObjectPtr: public boost::shared_ptr<Object>
+    {
+     public:
+        ObjectPtr(Object * obj);
+        ObjectPtr(boost::shared_ptr<Object> obj);
+        ObjectPtr(boost::shared_ptr<Object> & obj);
+
+        inline ObjectPtr & operator=(boost::shared_ptr<Object> & obj)
+        {
+            static_cast<boost::shared_ptr<Object>&>(*this) = obj;
+            return *this;
+        }
+
+    }; // ObjectPtr
 
 } // namespace Glesly
 

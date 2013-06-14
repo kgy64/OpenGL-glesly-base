@@ -31,6 +31,8 @@ namespace Glesly
         friend ObjectPtr;
 
      public:
+        virtual ~Object();
+
         inline GLint GetUniformLocation(const char * name) const
         {
             return GetProgram().GetUniformLocation(name);
@@ -52,22 +54,25 @@ namespace Glesly
         }
 
         /// Removes this class from the parent
-        /*! 
-         *  \warning Do not call it from destructor, it is not necessary and leads to creash! */
         inline void Destroy(void)
         {
-            GetProgram().Remove(myIter);
+            toBeErased = true;
+        }
+
+        inline bool ToBeDestroyed(void) const
+        {
+            return toBeErased;
         }
 
      protected:
         Object(Render & renderer);
-        virtual ~Object();
 
         ObjectWeak mySelf;
 
         inline void Register(void)
         {
-            ObjectPtr me = mySelf.lock();
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            ObjectPtr me(mySelf.lock());
             myIter = GetProgram().Add(me);
         }
 
@@ -105,6 +110,8 @@ namespace Glesly
         Glesly::Transformation myProjection;
 
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
+
+        bool toBeErased;
 
     }; // class Object
 
