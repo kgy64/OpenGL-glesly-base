@@ -12,6 +12,12 @@
 
 using namespace Glesly;
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     class CameraMatrix:                                                               *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 CameraMatrix::CameraMatrix(void):
     Glesly::Matrix<float,4,4>(1.0f)
 {
@@ -42,53 +48,80 @@ void CameraMatrix::Update(void)
  };
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     class Transformation:                                                             *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Transformation::Transformation(void):
+    Glesly::Matrix<float, 4, 4>(1.0),
+    xAngle(0.0f),
+    yAngle(0.0f),
+    zAngle(0.0f)
+{
+}
+
+
 void Transformation::RotateX(float angle)
 {
+ xAngle = angle;
+
  float s = sinf(angle);
  float c = cosf(angle);
 
- static_cast<Matrix<float,4,4>&>(*this) = {
-    1.0f,   0.0f,   0.0f,   0.0f,
-    0.0f,   c,      s,      0.0f,
-    0.0f,  -s,      c,      0.0f,
-    0.0f,   0.0f,   0.0f,   1.0f
- };
+ (*this)[0][0] = 1.0;
+ (*this)[0][1] = 0.0;
+ (*this)[0][2] = 0.0;
+ (*this)[1][0] = 0.0;
+ (*this)[1][1] = c;
+ (*this)[1][2] = s;
+ (*this)[2][0] = 0.0;
+ (*this)[2][1] = -s;
+ (*this)[2][2] = c;
 }
 
 void Transformation::RotateY(float angle)
 {
+ yAngle = angle;
+
  float s = sinf(angle);
  float c = cosf(angle);
 
- static_cast<Matrix<float,4,4>&>(*this) = {
-    c,      0.0f,    s,      0.0f,
-    0.0f,   1.0f,    0.0f,   0.0f,
-   -s,      0.0f,    c,      0.0f,
-    0.0f,   0.0f,    0.0f,   1.0f
- };
+ (*this)[0][0] = c;
+ (*this)[0][1] = 0.0;
+ (*this)[0][2] = s;
+ (*this)[1][0] = 0.0;
+ (*this)[1][1] = 1.0;
+ (*this)[1][2] = 0.0;
+ (*this)[2][0] = -s;
+ (*this)[2][1] = 0.0;
+ (*this)[2][2] = c;
 }
 
 void Transformation::RotateZ(float angle)
 {
+ zAngle = angle;
+
  float s = sinf(angle);
  float c = cosf(angle);
 
- static_cast<Matrix<float,4,4>&>(*this) = {
-    c,      s,      0.0f,   0.0f,
-   -s,      c,      0.0f,   0.0f,
-    0.0f,   0.0f,   1.0f,   0.0f,
-    0.0f,   0.0f,   0.0f,   1.0f
- };
+ (*this)[0][0] = c;
+ (*this)[0][1] = s;
+ (*this)[0][2] = 0.0;
+ (*this)[1][0] = -s;
+ (*this)[1][1] = c;
+ (*this)[1][2] = 0.0;
+ (*this)[2][0] = 0.0;
+ (*this)[2][1] = 0.0;
+ (*this)[2][2] = 1.0;
 }
 
 void Transformation::Move(float x, float y, float z)
 {
- static_cast<Matrix<float,4,4>&>(*this) = {
-    1.0f,   0.0f,   0.0f,   0.0f,
-    0.0f,   1.0f,   0.0f,   0.0f,
-    0.0f,   0.0f,   1.0f,   0.0f,
-    x,      y,      z,      1.0f
- };
+ (*this)[3][0] = x;
+ (*this)[3][1] = y;
+ (*this)[3][2] = z;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

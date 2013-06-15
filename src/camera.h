@@ -73,15 +73,55 @@ namespace Glesly
     class Transformation: public Glesly::Matrix<float, 4, 4>, public CameraParameters
     {
      public:
-        Transformation(void):
-            Glesly::Matrix<float, 4, 4>(1.0)
+        Transformation(void);
+
+        Transformation & operator=(const Glesly::Matrix<float, 4, 4> & other)
         {
+            Glesly::Matrix<float, 4, 4>::operator=(other);
+            return *this;
         }
 
         void RotateX(float angle);
         void RotateY(float angle);
         void RotateZ(float angle);
         void Move(float x, float y, float z);
+
+        inline float GetAngleX(void) const
+        {
+            return xAngle;
+        }
+
+        inline float GetAngleY(void) const
+        {
+            return yAngle;
+        }
+
+        inline float GetAngleZ(void) const
+        {
+            return zAngle;
+        }
+
+        inline float GetPositionX(void) const
+        {
+            return (*this)[2][0];
+        }
+
+        inline float GetPositionY(void) const
+        {
+            return (*this)[2][1];
+        }
+
+        inline float GetPositionZ(void) const
+        {
+            return (*this)[2][2];
+        }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::Transformation");
+
+        float xAngle;
+        float yAngle;
+        float zAngle;
 
     }; // Transformation
 
