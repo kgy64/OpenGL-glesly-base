@@ -24,6 +24,8 @@ namespace Glesly
         TargetFB(int index);
         virtual ~TargetFB();
 
+        int myFd;
+
         int myIndex;
 
         int myWidth;
@@ -35,6 +37,7 @@ namespace Glesly
         virtual EGLDisplay GetEGLDisplay(void);
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config);
         virtual void ProcessPendingEvents(Glesly::Main &);
+        virtual void Wait4Sync(void);
 
         virtual int GetWidth(void) const
         {

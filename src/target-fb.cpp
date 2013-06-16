@@ -37,19 +37,22 @@ TargetFB::TargetFB(int index):
  char devicename[40];
 
  sprintf(devicename, "/dev/fb%d", myIndex);
- int fd = open(devicename, O_RDWR);
- ASSERT_STD(fd > 2);
+ myFd = open(devicename, O_RDWR);
+ ASSERT_STD(myFd > 2);
  struct fb_var_screeninfo screeninfo_var;
- if (ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo_var) == 0) {
+ if (ioctl(myFd, FBIOGET_VSCREENINFO, &screeninfo_var) == 0) {
     myWidth = screeninfo_var.xres;
     myHeight = screeninfo_var.yres;
  }
- close(fd);
 }
 
 TargetFB::~TargetFB()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myFd > 2) {
+    close(myFd);
+ }
 }
 
 EGLDisplay TargetFB::GetEGLDisplay(void)
@@ -74,6 +77,14 @@ void TargetFB::ProcessPendingEvents(Glesly::Main & main)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+}
+
+void TargetFB::Wait4Sync(void)
+{
+ if (myFd > 2) {
+    int arg = 0;
+    ioctl(myFd, FBIO_WAITFORVSYNC, &arg);
+ }
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

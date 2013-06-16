@@ -116,6 +116,7 @@ void Backend::SwapBuffers(void)
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not eglSwapBuffers()");
  }
+ GetTarget().Wait4Sync();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
