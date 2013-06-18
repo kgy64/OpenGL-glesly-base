@@ -53,28 +53,10 @@ namespace Glesly
             return GetProgram().GetAttribLocationSafe(name);
         }
 
-        /// Removes this class from the parent
-        inline void Destroy(void)
-        {
-            toBeErased = true;
-        }
-
-        inline bool ToBeDestroyed(void) const
-        {
-            return toBeErased;
-        }
-
      protected:
         Object(Render & renderer);
 
         ObjectWeak mySelf;
-
-        inline void Register(void)
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            ObjectPtr me(mySelf.lock());
-            myIter = GetProgram().Add(me);
-        }
 
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
@@ -100,8 +82,6 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
-        Render::Objects::iterator myIter;
-
         virtual void Frame(void) { };
 
         Render & myProgram;
@@ -110,8 +90,6 @@ namespace Glesly
         Glesly::Transformation myProjection;
 
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
-
-        bool toBeErased;
 
     }; // class Object
 

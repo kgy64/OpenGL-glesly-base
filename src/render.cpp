@@ -17,6 +17,7 @@
 using namespace Glesly;
 
 Render::Render():
+    myObjects(new ObjectList),
     myCameraMatrix(*this, "camera_matrix", myCamera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -37,15 +38,10 @@ void Render::NextFrame(void)
 
  Frame();
 
- for (Objects::iterator i = myObjects.begin(); i != myObjects.end(); ) {
-    ObjectPtr current = *i;
-    if (current->ToBeDestroyed()) {
-        i = myObjects.erase(i);
-    } else {
-        current->NextFrame();
-        ++i;
-    }
-    // Note: the corresponding objects will be deleted here
+ ObjectListPtr p = GetObjectList(); // The pointer is copied here to solve thread safety
+
+ for (ObjectList::iterator i = p->begin(); i != p->end(); ++i) {
+    (*i)->NextFrame();
  }
 
  UnuseProgram();

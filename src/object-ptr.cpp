@@ -17,17 +17,6 @@ ObjectPtr::ObjectPtr(Object * obj):
     boost::shared_ptr<Object>(obj)
 {
  obj->mySelf = *this;
- obj->Register();
-};
-
-ObjectPtr::ObjectPtr(boost::shared_ptr<Object> obj):
-    boost::shared_ptr<Object>(obj)
-{
-};
-
-ObjectPtr::ObjectPtr(boost::shared_ptr<Object> & obj):
-    boost::shared_ptr<Object>(obj)
-{
 };
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

@@ -27,12 +27,21 @@ namespace Glesly
      public:
         virtual ~Render();
 
-        typedef std::list<ObjectPtr> Objects;
-
-        inline Objects::iterator Add(ObjectPtr object)
+        inline ObjectListPtr & GetObjectList(void)
         {
-            myObjects.push_front(object);
-            return myObjects.begin();
+            return myObjects;
+        }
+
+        inline ObjectListPtr CopyObjectList(void)
+        {
+            return ObjectListPtr(new ObjectList(*GetObjectList()));
+        }
+
+        inline void Add(ObjectPtr object)
+        {
+            ObjectListPtr p(CopyObjectList());
+            p->push_front(object);
+            myObjects = p; // Updated this way to solve thread safety
         }
 
         inline Glesly::CameraMatrix & GetCamera(void)
@@ -49,7 +58,7 @@ namespace Glesly
      protected:
         Render(void);
 
-        std::list<ObjectPtr> myObjects;
+        ObjectListPtr myObjects;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
