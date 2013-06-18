@@ -17,7 +17,6 @@
 using namespace Glesly;
 
 Render::Render():
-    myObjects(new ObjectList),
     myCameraMatrix(*this, "camera_matrix", myCamera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -38,9 +37,9 @@ void Render::NextFrame(void)
 
  Frame();
 
- ObjectListPtr p = GetObjectList(); // The pointer is copied here to solve thread safety
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- for (ObjectList::iterator i = p->begin(); i != p->end(); ++i) {
+ for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
     (*i)->NextFrame();
  }
 

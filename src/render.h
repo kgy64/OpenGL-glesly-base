@@ -15,34 +15,17 @@
 
 #include <glesly/camera.h>
 #include <glesly/program.h>
-#include <glesly/object-ptr.h>
+#include <glesly/object-list.h>
 #include <glesly/render-ptr.h>
 #include <glesly/shader-uniforms.h>
 
 namespace Glesly
 {
     /// An OpenGL program with Objects
-    class Render: public Glesly::Program
+    class Render: public Glesly::Program, public Glesly::ObjectListBase
     {
      public:
         virtual ~Render();
-
-        inline ObjectListPtr & GetObjectList(void)
-        {
-            return myObjects;
-        }
-
-        inline ObjectListPtr CopyObjectList(void)
-        {
-            return ObjectListPtr(new ObjectList(*GetObjectList()));
-        }
-
-        inline void Add(ObjectPtr object)
-        {
-            ObjectListPtr p(CopyObjectList());
-            p->push_front(object);
-            myObjects = p; // Updated this way to solve thread safety
-        }
 
         inline Glesly::CameraMatrix & GetCamera(void)
         {
@@ -57,8 +40,6 @@ namespace Glesly
 
      protected:
         Render(void);
-
-        ObjectListPtr myObjects;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
