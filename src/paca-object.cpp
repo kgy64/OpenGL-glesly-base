@@ -16,20 +16,28 @@ void _RectangleInit::RectangleVerticesInit(Glesly::Shaders::VBOAttribFloatVector
 {
  SYS_DEBUG_STATIC(DM_GLESLY);
 
- for (unsigned y = 0, i = 0; y < 2; ++y) {
-    for (unsigned x = 0; x < 2; ++x, ++i) {
-        position[i][0] = x - 0.5;
-        position[i][1] = y - 0.5;
-        position[i][2] = 0.0;
-        texcoord[i][0] = x;
-        texcoord[i][1] = y;
-    }
- }
+ static const float vertex_init[] = {
+    -1.0,   -1.0,   0.0,
+     1.0,   -1.0,   0.0,
+     1.0,    1.0,   0.0,
+    -1.0,    1.0,   0.0
+ };
+
+ position = vertex_init;
+
+ static const float texture_pos[] = {
+    0.0,    0.0,
+    1.0,    0.0,
+    1.0,    1.0,
+    0.0,    1.0
+ };
+
+ texcoord = texture_pos;
 
  // We always draw two triangles:
  GLushort elem_init[] = {
     0, 1, 2,
-    1, 3, 2
+    0, 2, 3
  };
 
  elements.Bind(elem_init, 6);

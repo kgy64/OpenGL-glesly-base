@@ -47,22 +47,26 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        inline Matrix<T,R,S> operator!() const
+        inline Matrix<T,R,S> operator~() const
         {
             ASSERT_FATAL(R==S, "Cannot invert non-square matrix");
             return invert();
         }
 
+        /// Matrix multiplication
+        /*! 
+            \note   It is allowed to give smaller input matrix (U<S): in this case the
+                    remaining part is assumed to be zero. */
         template <unsigned U, unsigned V>
         Matrix<T,R,V> operator*(const Matrix<T,U,V> & other)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            ASSERT_FATAL(U==S, "Matrix multiplication: size problem");
+            ASSERT_FATAL(U<=S, "Matrix multiplication: size problem");
             Matrix<T,R,V> result(0.0);
-            for (unsigned i = 0; i < R; ++i) {
-                for (unsigned j = 0; j < V; ++j) {
-                    for (unsigned k = 0; k < S; ++k) {
-                        result[i][j] += (*this)[k][j] * other[i][k];
+            for (unsigned r = 0; r < R; ++r) {
+                for (unsigned u = 0; u < U; ++u) {
+                    for (unsigned v = 0; v < V; ++v) {
+                        result[r][v] += (*this)[r][u] * other[u][v];
                     }
                 }
             }
@@ -78,12 +82,12 @@ namespace Glesly
 
         inline T * operator[](int index)
         {
-            return myMatrix + R * index;
+            return myMatrix + S * index;
         }
 
         inline const T * operator[](int index) const
         {
-            return myMatrix + R * index;
+            return myMatrix + S * index;
         }
 
         inline const T * operator=(std::initializer_list<T> data)
@@ -123,6 +127,7 @@ namespace Glesly
         inline Matrix<T,R,S> invert(void) const
         {
             Matrix<T,R,S> result(1.0f);
+            // TODO!
             return result;
         }
 

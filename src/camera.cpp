@@ -63,14 +63,14 @@ Transformation::Transformation(void):
 }
 
 
-void Transformation::RotateX(float angle)
+void Transformation::RotateX(float angle, float scale)
 {
  xAngle = angle;
 
- float s = sinf(angle);
- float c = cosf(angle);
+ float s = sinf(angle) * scale;
+ float c = cosf(angle) * scale;
 
- (*this)[0][0] = 1.0;
+ (*this)[0][0] = scale;
  (*this)[0][1] = 0.0;
  (*this)[0][2] = 0.0;
  (*this)[1][0] = 0.0;
@@ -81,30 +81,30 @@ void Transformation::RotateX(float angle)
  (*this)[2][2] = c;
 }
 
-void Transformation::RotateY(float angle)
+void Transformation::RotateY(float angle, float scale)
 {
  yAngle = angle;
 
- float s = sinf(angle);
- float c = cosf(angle);
+ float s = sinf(angle) * scale;
+ float c = cosf(angle) * scale;
 
  (*this)[0][0] = c;
  (*this)[0][1] = 0.0;
  (*this)[0][2] = s;
  (*this)[1][0] = 0.0;
- (*this)[1][1] = 1.0;
+ (*this)[1][1] = scale;
  (*this)[1][2] = 0.0;
  (*this)[2][0] = -s;
  (*this)[2][1] = 0.0;
  (*this)[2][2] = c;
 }
 
-void Transformation::RotateZ(float angle)
+void Transformation::RotateZ(float angle, float scale)
 {
  zAngle = angle;
 
- float s = sinf(angle);
- float c = cosf(angle);
+ float s = sinf(angle) * scale;
+ float c = cosf(angle) * scale;
 
  (*this)[0][0] = c;
  (*this)[0][1] = s;
@@ -114,7 +114,7 @@ void Transformation::RotateZ(float angle)
  (*this)[1][2] = 0.0;
  (*this)[2][0] = 0.0;
  (*this)[2][1] = 0.0;
- (*this)[2][2] = 1.0;
+ (*this)[2][2] = scale;
 }
 
 void Transformation::Move(float x, float y, float z)
@@ -126,6 +126,16 @@ void Transformation::Move(float x, float y, float z)
 
 void Transformation::ConvertMouseCoordinates(float & x, float & y) const
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Matrix<float, 2, 1> mouse_pos({x, y});
+
+ Matrix<float, 4, 1> result = ~*this * mouse_pos;
+
+ SYS_DEBUG(DL_INFO1, "KGY: result=" << result);
+
+ x = result[0][0];
+ y = result[1][0];
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

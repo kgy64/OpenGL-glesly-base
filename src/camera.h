@@ -70,7 +70,7 @@ namespace Glesly
 
     }; // class CameraMatrix
 
-    class Transformation: public Glesly::Matrix<float, 4, 4>, public CameraParameters
+    class Transformation: public Glesly::Matrix<float, 4, 4>
     {
      public:
         Transformation(void);
@@ -83,9 +83,9 @@ namespace Glesly
 
         void ConvertMouseCoordinates(float & x, float & y) const;
 
-        void RotateX(float angle);
-        void RotateY(float angle);
-        void RotateZ(float angle);
+        void RotateX(float angle, float scale = 1.0);
+        void RotateY(float angle, float scale = 1.0);
+        void RotateZ(float angle, float scale = 1.0);
         void Move(float x, float y, float z);
 
         inline float GetAngleX(void) const
