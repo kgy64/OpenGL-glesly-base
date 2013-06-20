@@ -53,6 +53,8 @@ namespace Glesly
             return GetProgram().GetAttribLocationSafe(name);
         }
 
+        virtual bool MouseClick(float x, float y, int index, int count);
+
      protected:
         Object(Render & renderer);
 

@@ -34,15 +34,19 @@ namespace Glesly
 
         void NextFrame(void);
 
-        virtual void Frame(void) { }
+        virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
 
      protected:
         Render(void);
 
+        virtual void ConvertMouseCoordinates(float & x, float & y) { }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
+
+        virtual void Frame(void) { }
 
         Glesly::CameraMatrix myCamera;
 

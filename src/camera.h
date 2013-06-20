@@ -81,6 +81,8 @@ namespace Glesly
             return *this;
         }
 
+        void ConvertMouseCoordinates(float & x, float & y) const;
+
         void RotateX(float angle);
         void RotateY(float angle);
         void RotateZ(float angle);

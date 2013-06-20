@@ -85,7 +85,10 @@ void Main::CloseRequest(void)
 void Main::MouseClick(int x, int y, int index, int count)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
- SYS_DEBUG(DL_INFO1, "KGY: Mouse click: button=" << index << ", x=" << x << ", y=" << y << ", count=" << count);
+
+ for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
+    (*i)->MouseClickRaw(x, y, index, count);
+ }
 }
 
 void Main::Clear(void)

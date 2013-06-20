@@ -68,4 +68,13 @@ void Object::NextFrame(void)
  UnbufferVariables();
 }
 
+bool Object::MouseClick(float x, float y, int index, int count)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO2, "Object::MouseClick(" << x << ", " << y << "); button " << index << ", count " << count << ": event is not used.");
+
+ return false; // not accepted
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

@@ -47,6 +47,12 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        inline Matrix<T,R,S> operator!() const
+        {
+            ASSERT_FATAL(R==S, "Cannot invert non-square matrix");
+            return invert();
+        }
+
         template <unsigned U, unsigned V>
         Matrix<T,R,V> operator*(const Matrix<T,U,V> & other)
         {
@@ -113,6 +119,12 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Matrix<T,R,S>");
+
+        inline Matrix<T,R,S> invert(void) const
+        {
+            Matrix<T,R,S> result(1.0f);
+            return result;
+        }
 
     }; // class Matrix
 

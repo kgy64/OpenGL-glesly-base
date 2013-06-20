@@ -124,4 +124,8 @@ void Transformation::Move(float x, float y, float z)
  (*this)[3][2] = z;
 }
 
+void Transformation::ConvertMouseCoordinates(float & x, float & y) const
+{
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
