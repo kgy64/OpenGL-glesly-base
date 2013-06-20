@@ -50,17 +50,21 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- float horiz = x;
- float vert = y;
+ try {
+    float horiz = x;
+    float vert = y;
 
- ConvertMouseCoordinates(horiz, vert);
+    ConvertMouseCoordinates(horiz, vert);
 
- ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+    ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    if ((*i)->MouseClick(horiz, vert, index, count)) {
-        break;
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+       if ((*i)->MouseClick(horiz, vert, index, count)) {
+           break;
+       }
     }
+ } catch(::EX::Assert & ex) {
+    SYS_DEBUG(DL_WARNING, "Cannot calculate mouse position!");
  }
 }
 

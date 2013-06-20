@@ -124,18 +124,43 @@ void Transformation::Move(float x, float y, float z)
  (*this)[3][2] = z;
 }
 
-void Transformation::ConvertMouseCoordinates(float & x, float & y) const
+bool Transformation::ConvertMouseCoordinates(float & x, float & y) const
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Matrix<float, 2, 1> mouse_pos({x, y});
+ float det =
+    + (*this)[0][0] * (*this)[1][1] * (*this)[2][2]
+    + (*this)[0][1] * (*this)[1][2] * (*this)[2][0]
+    + (*this)[1][0] * (*this)[2][1] * (*this)[0][2]
+    - (*this)[0][2] * (*this)[1][1] * (*this)[2][0]
+    - (*this)[0][1] * (*this)[1][0] * (*this)[2][2]
+    - (*this)[1][2] * (*this)[2][1] * (*this)[0][0];
 
- Matrix<float, 4, 1> result = ~*this * mouse_pos;
+ ASSERT(det != 0.0, "Matrix is not invertible");
 
- SYS_DEBUG(DL_INFO1, "KGY: result=" << result);
+ Matrix<float, 3, 3> inverted({
+    ((*this)[1][1]*(*this)[2][2] - (*this)[1][2]*(*this)[2][1])/det,
+    ((*this)[0][2]*(*this)[2][1] - (*this)[0][1]*(*this)[2][2])/det,
+    ((*this)[0][1]*(*this)[1][2] - (*this)[0][2]*(*this)[1][1])/det,
+    ((*this)[1][2]*(*this)[2][0] - (*this)[1][0]*(*this)[2][2])/det,
+    ((*this)[0][0]*(*this)[2][2] - (*this)[0][2]*(*this)[2][0])/det,
+    ((*this)[0][2]*(*this)[1][0] - (*this)[1][2]*(*this)[0][0])/det,
+    ((*this)[1][0]*(*this)[2][1] - (*this)[1][1]*(*this)[2][0])/det,
+    ((*this)[0][1]*(*this)[2][0] - (*this)[0][0]*(*this)[2][1])/det,
+    ((*this)[0][0]*(*this)[1][1] - (*this)[0][1]*(*this)[1][0])/det
+ });
+
+ Matrix<float, 2, 1> position({x - (*this)[3][0], y - (*this)[3][1]});
+ Matrix<float, 3, 1> result(inverted * position);
+
+ if (result[0][0] < -1.0f || result[0][0] > 1.0f || result[1][0] < -1.0f || result[1][0] > 1.0f) {
+    return false;
+ }
 
  x = result[0][0];
  y = result[1][0];
+
+ return true;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

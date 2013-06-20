@@ -47,18 +47,12 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        inline Matrix<T,R,S> operator~() const
-        {
-            ASSERT_FATAL(R==S, "Cannot invert non-square matrix");
-            return invert();
-        }
-
         /// Matrix multiplication
         /*! 
             \note   It is allowed to give smaller input matrix (U<S): in this case the
                     remaining part is assumed to be zero. */
         template <unsigned U, unsigned V>
-        Matrix<T,R,V> operator*(const Matrix<T,U,V> & other)
+        Matrix<T,R,V> operator*(const Matrix<T,U,V> & other) const
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             ASSERT_FATAL(U<=S, "Matrix multiplication: size problem");
@@ -123,13 +117,6 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Matrix<T,R,S>");
-
-        inline Matrix<T,R,S> invert(void) const
-        {
-            Matrix<T,R,S> result(1.0f);
-            // TODO!
-            return result;
-        }
 
     }; // class Matrix
 
