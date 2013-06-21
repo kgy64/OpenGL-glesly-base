@@ -23,8 +23,7 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Main::Main(void):
-    myFinished(false)
+Main::Main(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -42,8 +41,6 @@ void Main::Run(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myFinished = false;
-
  Initialize();
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
@@ -51,14 +48,14 @@ void Main::Run(void)
     (*i)->Initialize();
  }
 
- while (!myFinished) {
+ while (!IsFinished()) {
     {
         Threads::Lock _l(GetBackend().GetTarget()->GetGraphicMutex());
         NextFrame();
     }
 
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
-        if (myFinished) {
+        if (IsFinished()) {
             goto finished;
         }
         (*i)->NextFrame();

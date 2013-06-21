@@ -32,11 +32,6 @@ namespace Glesly
         void Run(void);
         void Clear(void);
 
-        inline void Finish(void)
-        {
-            myFinished = true;
-        }
-
         virtual void Initialize(void) =0;
         virtual void NextFrame(void) =0;
         virtual void Cleanup(void) =0;
@@ -56,7 +51,7 @@ namespace Glesly
      protected:
         Glesly::CameraMatrix myViewMatrix;
 
-        bool myFinished;
+        virtual bool IsFinished(void) const =0;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
