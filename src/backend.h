@@ -30,11 +30,6 @@ namespace Glesly
 
         void SwapBuffers(void);
 
-        inline void ProcessPendingEvents(Glesly::Main & main)
-        {
-            myTarget->ProcessPendingEvents(main);
-        }
-
         Glesly::Target & GetTarget(void)
         {
             return *myTarget;

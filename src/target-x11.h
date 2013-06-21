@@ -48,7 +48,7 @@ namespace Glesly
 
         virtual EGLDisplay GetEGLDisplay(void);
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config);
-        virtual void ProcessPendingEvents(Glesly::Main &);
+        virtual void ProcessPendingEvents(void);
 
         virtual int GetWidth(void) const
         {

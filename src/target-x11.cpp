@@ -179,7 +179,7 @@ EGLSurface TargetX11::CreateWindowSurface(EGLDisplay display, EGLConfig config)
  return result;
 }
 
-void TargetX11::ProcessPendingEvents(Glesly::Main & main)
+void TargetX11::ProcessPendingEvents(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 

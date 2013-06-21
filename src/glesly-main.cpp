@@ -61,7 +61,6 @@ void Main::Run(void)
         (*i)->NextFrame();
     }
     myBackend.SwapBuffers();
-    myBackend.ProcessPendingEvents(*this);
  }
 
 finished:;
