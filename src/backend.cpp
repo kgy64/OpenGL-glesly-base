@@ -123,12 +123,14 @@ void Backend::SwapBuffers(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ Threads::Lock _l(GetTarget()->GetGraphicMutex());
+
  eglSwapBuffers(myDisplay, mySurface);
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not eglSwapBuffers()");
  }
  // Note: it should be discussed...
- // GetTarget().Wait4Sync();
+ // GetTarget()->Wait4Sync();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

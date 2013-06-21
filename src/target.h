@@ -59,6 +59,11 @@ namespace Glesly
             }
         }
 
+        inline Threads::Mutex & GetGraphicMutex(void)
+        {
+            return myMutex;
+        }
+
      protected:
         Target(void);
 
@@ -89,6 +94,8 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Target");
 
         Glesly::MouseHandler myMouse;
+
+        Threads::Mutex myMutex;
 
     }; // class Target
 

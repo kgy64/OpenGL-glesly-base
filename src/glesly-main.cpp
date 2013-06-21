@@ -28,14 +28,14 @@ Main::Main(void):
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myBackend.RegisterParent(this);
+ GetBackend().RegisterParent(this);
 }
 
 Main::~Main()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myBackend.RegisterParent(NULL); // unregister
+ GetBackend().RegisterParent(NULL); // unregister
 }
 
 void Main::Run(void)
@@ -53,7 +53,7 @@ void Main::Run(void)
 
  while (!myFinished) {
     {
-        Threads::Lock _l(myX11_mutex);
+        Threads::Lock _l(GetBackend().GetTarget()->GetGraphicMutex());
         NextFrame();
     }
 
@@ -64,10 +64,7 @@ void Main::Run(void)
         (*i)->NextFrame();
     }
 
-    {
-        Threads::Lock _l(myX11_mutex);
-        myBackend.SwapBuffers();
-    }
+    GetBackend().SwapBuffers();
  }
 
 finished:;
@@ -77,15 +74,6 @@ finished:;
  }
 
  Cleanup();
-}
-
-void Main::CloseRequest(void)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- SYS_DEBUG(DL_INFO1, "KGY: Closing down...");
-
- myFinished = true;
 }
 
 void Main::MouseClick(int x, int y, int index, int count)

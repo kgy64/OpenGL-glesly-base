@@ -189,7 +189,14 @@ void TargetX11::ProcessPendingEvents(void)
  unsigned int mask;
  SYS::TimeDelay now;
 
- if (XQueryPointer(x11Display, x11Window, &root, &child, &rx, &ry, &wx, &wy, &mask)) {
+ bool result;
+
+ {
+    Threads::Lock _l(GetGraphicMutex());
+    result = XQueryPointer(x11Display, x11Window, &root, &child, &rx, &ry, &wx, &wy, &mask);
+ }
+
+ if (result) {
     if (wx >= 0 && wx < myWidth && wy >= 0 && wy < myHeight) {
         ShiftState(mask & ShiftMask);
         AltState(mask & LockMask);
@@ -206,7 +213,10 @@ void TargetX11::ProcessPendingEvents(void)
  int messages = XPending(x11Display);
  for( int i = 0; i < messages; i++ ) {
     XEvent event;
-    XNextEvent(x11Display, &event);
+    {
+        Threads::Lock _l(GetGraphicMutex());
+        XNextEvent(x11Display, &event);
+    }
     switch(event.type)
     {
         case ButtonPress: // Mouse click

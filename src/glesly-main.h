@@ -56,17 +56,14 @@ namespace Glesly
      protected:
         Glesly::CameraMatrix myViewMatrix;
 
-        Threads::Mutex myX11_mutex;
+        bool myFinished;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
 
-        virtual void CloseRequest(void);
         virtual void MouseClick(int x, int y, int index, int count);
 
         Glesly::Backend myBackend;
-
-        bool myFinished;
 
         typedef std::list<RenderPtr> RenderList;
         RenderList myRenders;
