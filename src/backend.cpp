@@ -20,8 +20,7 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Backend::Backend(TargetPtr & target):
-    myTarget(target),
+Backend::Backend(void):
     myParent(NULL),
     myEGLMajorVersion(0),
     myEGLMinorVersion(0),
@@ -31,18 +30,30 @@ Backend::Backend(TargetPtr & target):
     myContext(0)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- myTarget->RegisterParent(this);
-
- InitDisplay();
- InitSurface();
 }
 
 Backend::~Backend()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myTarget->RegisterParent(NULL); // unregister
+ SetTarget(); // unregister
+}
+
+void Backend::SetTarget(TargetPtr target)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myTarget.get()) {
+    myTarget->RegisterParent(NULL);
+ }
+
+ myTarget = target;
+
+ if (myTarget.get()) {
+    myTarget->RegisterParent(this);
+    InitDisplay();
+    InitSurface();
+ }
 }
 
 void Backend::CloseRequest(void)

@@ -190,15 +190,17 @@ void TargetX11::ProcessPendingEvents(void)
  SYS::TimeDelay now;
 
  if (XQueryPointer(x11Display, x11Window, &root, &child, &rx, &ry, &wx, &wy, &mask)) {
-    ShiftState(mask & ShiftMask);
-    AltState(mask & LockMask);
-    ControlState(mask & ControlMask);
-    MousePosition(wx, wy);
-    MouseButtonState(0, mask & Button1Mask, now);
-    MouseButtonState(1, mask & Button2Mask, now);
-    MouseButtonState(2, mask & Button3Mask, now);
-    MouseButtonState(3, mask & Button4Mask, now);
-    MouseButtonState(4, mask & Button5Mask, now);
+    if (wx >= 0 && wx < myWidth && wy >= 0 && wy < myHeight) {
+        ShiftState(mask & ShiftMask);
+        AltState(mask & LockMask);
+        ControlState(mask & ControlMask);
+        MousePosition(wx, wy);
+        MouseButtonState(0, mask & Button1Mask, now);
+        MouseButtonState(1, mask & Button2Mask, now);
+        MouseButtonState(2, mask & Button3Mask, now);
+        MouseButtonState(3, mask & Button4Mask, now);
+        MouseButtonState(4, mask & Button5Mask, now);
+    }
  }
 
  int messages = XPending(x11Display);
