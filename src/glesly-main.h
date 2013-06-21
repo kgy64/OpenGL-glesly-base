@@ -12,9 +12,9 @@
 #define __GLESLY_SRC_GLESLY_MAIN_H_INCLUDED__
 
 #include <list>
-
 #include <GLES2/gl2.h>
 
+#include <Threads/Threads.h>
 #include <glesly/backend.h>
 #include <glesly/render.h>
 #include <glesly/camera.h>
@@ -55,6 +55,8 @@ namespace Glesly
 
      protected:
         Glesly::CameraMatrix myViewMatrix;
+
+        Threads::Mutex myX11_mutex;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");

@@ -52,14 +52,22 @@ void Main::Run(void)
  }
 
  while (!myFinished) {
-    NextFrame();
+    {
+        Threads::Lock _l(myX11_mutex);
+        NextFrame();
+    }
+
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
         if (myFinished) {
             goto finished;
         }
         (*i)->NextFrame();
     }
-    myBackend.SwapBuffers();
+
+    {
+        Threads::Lock _l(myX11_mutex);
+        myBackend.SwapBuffers();
+    }
  }
 
 finished:;
