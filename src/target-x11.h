@@ -48,7 +48,7 @@ namespace Glesly
 
         virtual EGLDisplay GetEGLDisplay(void);
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config);
-        virtual void ProcessPendingEvents(void);
+        virtual void EnterEventLoop(Threads::Thread &);
 
         virtual int GetWidth(void) const
         {
@@ -60,6 +60,7 @@ namespace Glesly
             return myHeight;
         }
 
+        void ProcessPendingEvents(void);
         void SetupFullscreen(void);
         void SetupScreen(void);
         void CreateWindow(int width, int height, int redirect = 0);

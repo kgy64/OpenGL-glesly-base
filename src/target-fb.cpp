@@ -16,6 +16,7 @@
 #include <sys/ioctl.h>
 
 #include <glesly/error.h>
+#include <Threads/Threads.h>
 
 #include "target-fb.h"
 
@@ -73,14 +74,19 @@ EGLSurface TargetFB::CreateWindowSurface(EGLDisplay display, EGLConfig config)
  return result;
 }
 
-void TargetFB::ProcessPendingEvents(Glesly::Main & main)
+void TargetFB::EnterEventLoop(Threads::Thread & caller)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ while (!caller.Finished()) {
+    usleep(25000); // Temporary!
+ }
 }
 
 void TargetFB::Wait4Sync(void)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
  if (myFd > 2) {
     int arg = 0;
     ioctl(myFd, FBIO_WAITFORVSYNC, &arg);

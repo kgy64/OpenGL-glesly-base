@@ -9,6 +9,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <glesly/error.h>
+#include <Threads/Threads.h>
 
 #include "target-x11.h"
 
@@ -83,28 +84,6 @@ void TargetX11::SetupScreen(void)
  }
 }
 
-void TargetX11::CreateWindow(int width, int height, int redirect)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- SYS_DEBUG(DL_INFO1, "Creating window: size=" << width << "x" << height);
-
- x11Colormap = XCreateColormap(x11Display, RootWindow(x11Display, x11Screen), x11Visual.visual, AllocNone);
-
- XSetWindowAttributes attrib;
- memset(&attrib, 0, sizeof(attrib));
-
- attrib.override_redirect = redirect;
- attrib.colormap = x11Colormap;
- attrib.event_mask = StructureNotifyMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
-
- unsigned int mask = CWBackPixel | CWBorderPixel | CWEventMask | CWColormap;
-
- x11Window = XCreateWindow(x11Display, RootWindow(x11Display, x11Screen), 0, 0, width, height, 0, CopyFromParent, InputOutput, CopyFromParent, mask, &attrib);
-
- XMapWindow(x11Display, x11Window);
-}
-
 void TargetX11::SetupFullscreen(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -142,8 +121,10 @@ void TargetX11::SetupFullscreen(void)
 
  CreateWindow(10, 10, redirect);
 
- myWidth = DisplayWidth(x11Display, x11Screen);
- myHeight = DisplayHeight(x11Display, x11Screen);
+ myWidth = XDisplayWidth(x11Display, x11Screen);
+ myHeight = XDisplayHeight(x11Display, x11Screen);
+
+ SYS_DEBUG(DL_INFO3, "KGY: " << myWidth << "x" << myHeight);
 
  if (redirect) {
     // Not necessary to send any message:
@@ -162,6 +143,28 @@ void TargetX11::SetupFullscreen(void)
  XSetWMProtocols(x11Display, x11Window, &myDeleteMessage, 1);
 }
 
+void TargetX11::CreateWindow(int width, int height, int redirect)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO1, "Creating window: size=" << width << "x" << height);
+
+ x11Colormap = XCreateColormap(x11Display, RootWindow(x11Display, x11Screen), x11Visual.visual, AllocNone);
+
+ XSetWindowAttributes attrib;
+ memset(&attrib, 0, sizeof(attrib));
+
+ attrib.override_redirect = redirect;
+ attrib.colormap = x11Colormap;
+ attrib.event_mask = StructureNotifyMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
+
+ unsigned int mask = CWBackPixel | CWBorderPixel | CWEventMask | CWColormap;
+
+ x11Window = XCreateWindow(x11Display, RootWindow(x11Display, x11Screen), 0, 0, width, height, 0, CopyFromParent, InputOutput, CopyFromParent, mask, &attrib);
+
+ XMapWindow(x11Display, x11Window);
+}
+
 EGLDisplay TargetX11::GetEGLDisplay(void)
 {
  return eglGetDisplay((EGLNativeDisplayType)x11Display);
@@ -177,6 +180,16 @@ EGLSurface TargetX11::CreateWindowSurface(EGLDisplay display, EGLConfig config)
  }
 
  return result;
+}
+
+void TargetX11::EnterEventLoop(Threads::Thread & caller)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ while (!caller.Finished()) {
+    ProcessPendingEvents();
+    usleep(25000);
+ }
 }
 
 void TargetX11::ProcessPendingEvents(void)
