@@ -1,8 +1,8 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
- * Project:     
- * Purpose:     
- * Author:      
+ * Project:     Glesly: my GLES-based rendering library
+ * Purpose:     Classes representing my Objects
+ * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
  *
@@ -20,18 +20,5 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Threads::Mutex ObjectListBase::ObjectListInternal::myMutex;
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- *                                                                                       *
- *     Class LayerChangeEffectManager:                                                   *
- *                                                                                       *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void LayerChangeEffectManager::Frame(void)
-{
- for (ObjectListIterator i = myObjects->begin(); i != myObjects->end(); ++i) {
-    (*i)->NextFrame();
- }
-}
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

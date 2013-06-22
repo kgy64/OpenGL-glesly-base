@@ -1,8 +1,8 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
- * Project:     
- * Purpose:     
- * Author:      
+ * Project:     Glesly: my GLES-based rendering library
+ * Purpose:     Classes representing my Objects
+ * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
  *
@@ -15,6 +15,7 @@
 #include <stack>
 #include <glesly/object-ptr.h>
 #include <Threads/Mutex.h>
+#include <System/TimeDelay.h>
 #include <Debug/Debug.h>
 
 namespace Glesly
@@ -26,40 +27,6 @@ namespace Glesly
     typedef Objects::iterator ObjectListIterator;
 
     class ObjectListBase;
-
-    class LayerChangeEffectManager
-    {
-     public:
-        inline LayerChangeEffectManager(ObjectListBase & parent):
-            myParent(parent)
-        {
-        }
-
-        VIRTUAL_IF_DEBUG inline ~LayerChangeEffectManager()
-        {
-        }
-
-        void Add(ObjectPtr object)
-        {
-            if (!myObjects.get()) {
-                myObjects.reset(new Objects(*myObjects));
-            }
-            myObjects->push_front(object);
-        }
-
-        void Frame(void);
-        void Done(void);
-
-     private:
-        SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");
-
-        ObjectListBase & myParent;
-
-        ObjectListPtr myObjects;
-
-    }; // class LayerChangeEffectManager
-
-    typedef boost::shared_ptr<LayerChangeEffectManager> LayerEffecrPtr;
 
     class ObjectListBase
     {
@@ -105,17 +72,7 @@ namespace Glesly
 
         inline ObjectListPtr & GetObjectListPtr(void)
         {
-            return myObjects.top();
-        }
-
-        LayerEffecrPtr GetCurrentEffect(void)
-        {
-            return myEffect;
-        }
-
-        void Effect(LayerEffecrPtr effect = LayerEffecrPtr())
-        {
-            myEffect = effect;
+            return myLayers.top();
         }
 
      protected:
@@ -123,15 +80,13 @@ namespace Glesly
 
         inline ObjectListBase(void)
         {
-            myObjects.push(ObjectListPtr(new Objects));
+            myLayers.push(ObjectListPtr(new Objects));
         }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase");
 
-        ObjectLayerStack myObjects;
-
-        LayerEffecrPtr myEffect;
+        ObjectLayerStack myLayers;
 
     }; // class ObjectListBase
 
@@ -158,11 +113,6 @@ namespace Glesly
     }
 
     typedef ObjectListBase::ObjectListInternal ObjectList;
-
-    inline void LayerChangeEffectManager::Done(void)
-    {
-        myParent.Effect();
-    }
 
 } // namespace Glesly
 

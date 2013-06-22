@@ -53,12 +53,12 @@ namespace Glesly
 
         }; // class UniformBase
 
-        class UniformFloat: public UniformBase
+        class UniformFloat_ref: public UniformBase
         {
          public:
-            UniformFloat(UniformManager & obj, const char * name):
+            UniformFloat_ref(UniformManager & obj, const char * name, GLfloat & value):
                 UniformBase(obj, name),
-                myValue(0.0f)
+                myRef(value)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -66,8 +66,26 @@ namespace Glesly
             virtual void Activate(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO3, " - glUniform1f(" << GetUniformID() << "," << myValue << ");");
-                //glUniform1f(GetUniformID(), myValue);
+                SYS_DEBUG(DL_INFO3, " - glUniform1f(" << GetUniformID() << "," << myRef << ");");
+                glUniform1f(GetUniformID(), myRef);
+            }
+
+         protected:
+            GLfloat & myRef;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformFloat");
+
+        }; // class UniformFloat
+
+        class UniformFloat: public UniformFloat_ref
+        {
+         public:
+            UniformFloat(UniformManager & obj, const char * name):
+                UniformFloat_ref(obj, name, myValue),
+                myValue(0.0f)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
             inline GLfloat operator=(float value)

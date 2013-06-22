@@ -109,6 +109,27 @@ namespace Glesly
 
         }; // class UniformManager
 
+        class UniformManagerCopy: public UniformManager
+        {
+         public:
+            UniformManagerCopy(const UniformManager & other):
+                myParent(other)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+            virtual GLint GetUniformLocationSafe(const char * name) const
+            {
+                return myParent.GetUniformLocationSafe(name);
+            }
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformManagerCopy");
+
+            const UniformManager & myParent;
+
+        }; // class UniformManagerCopy
+
         class UniformList
         {
             friend class UniformManager;
