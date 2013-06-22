@@ -37,6 +37,12 @@ void Render::NextFrame(void)
 
  Frame();
 
+ LayerEffecrPtr effect = GetCurrentEffect();
+
+ if (effect.get()) {
+    effect->Frame();
+ }
+
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {

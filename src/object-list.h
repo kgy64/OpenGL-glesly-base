@@ -12,6 +12,7 @@
 #define __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
 
 #include <list>
+#include <stack>
 #include <glesly/object-ptr.h>
 #include <Threads/Mutex.h>
 #include <Debug/Debug.h>
@@ -20,13 +21,48 @@ namespace Glesly
 {
     typedef std::list<ObjectPtr> Objects;
 
+    typedef boost::shared_ptr<Objects> ObjectListPtr;
+
     typedef Objects::iterator ObjectListIterator;
+
+    class ObjectListBase;
+
+    class LayerChangeEffectManager
+    {
+     public:
+        inline LayerChangeEffectManager(ObjectListBase & parent):
+            myParent(parent)
+        {
+        }
+
+        VIRTUAL_IF_DEBUG inline ~LayerChangeEffectManager()
+        {
+        }
+
+        void Add(ObjectPtr object)
+        {
+            if (!myObjects.get()) {
+                myObjects.reset(new Objects(*myObjects));
+            }
+            myObjects->push_front(object);
+        }
+
+        void Frame(void);
+        void Done(void);
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");
+
+        ObjectListBase & myParent;
+
+        ObjectListPtr myObjects;
+
+    }; // class LayerChangeEffectManager
+
+    typedef boost::shared_ptr<LayerChangeEffectManager> LayerEffecrPtr;
 
     class ObjectListBase
     {
-     protected:
-        typedef boost::shared_ptr<Objects> ObjectListPtr;
-
      public:
         class ObjectListInternal
         {
@@ -58,6 +94,8 @@ namespace Glesly
 
             ObjectListPtr myObjects;
 
+            ObjectListPtr myModifiedObjects;
+
         }; // class ObjectListInternal
 
         inline ObjectListInternal GetObjectList(void)
@@ -67,42 +105,64 @@ namespace Glesly
 
         inline ObjectListPtr & GetObjectListPtr(void)
         {
-            return myObjects;
+            return myObjects.top();
+        }
+
+        LayerEffecrPtr GetCurrentEffect(void)
+        {
+            return myEffect;
+        }
+
+        void Effect(LayerEffecrPtr effect = LayerEffecrPtr())
+        {
+            myEffect = effect;
         }
 
      protected:
-        inline ObjectListBase(void):
-            myObjects(new Objects)
+        typedef std::stack<ObjectListPtr> ObjectLayerStack;
+
+        inline ObjectListBase(void)
         {
+            myObjects.push(ObjectListPtr(new Objects));
         }
 
      private:
-        friend class ObjectListInternal;
-
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase");
 
-        ObjectListPtr myObjects;
+        ObjectLayerStack myObjects;
+
+        LayerEffecrPtr myEffect;
 
     }; // class ObjectListBase
 
     inline ObjectListBase::ObjectListInternal::ObjectListInternal(ObjectListBase & parent):
         myParent(parent),
         myLock(myMutex),
-        myObjects(parent.myObjects)
+        myObjects(parent.GetObjectListPtr())
     {
     }
 
     inline ObjectListBase::ObjectListInternal::~ObjectListInternal()
     {
-        myParent.myObjects = myObjects;
+        if (myModifiedObjects.get()) {
+            myParent.GetObjectListPtr() = myModifiedObjects;
+        }
     }
 
     inline void ObjectListBase::ObjectListInternal::Add(ObjectPtr object)
     {
-        myObjects->push_front(object);
+        if (!myModifiedObjects.get()) {
+            myModifiedObjects.reset(new Objects(*myObjects));
+        }
+        myModifiedObjects->push_front(object);
     }
 
     typedef ObjectListBase::ObjectListInternal ObjectList;
+
+    inline void LayerChangeEffectManager::Done(void)
+    {
+        myParent.Effect();
+    }
 
 } // namespace Glesly
 

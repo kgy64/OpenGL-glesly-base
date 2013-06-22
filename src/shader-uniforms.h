@@ -53,6 +53,41 @@ namespace Glesly
 
         }; // class UniformBase
 
+        class UniformFloat: public UniformBase
+        {
+         public:
+            UniformFloat(UniformManager & obj, const char * name):
+                UniformBase(obj, name),
+                myValue(0.0f)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+            virtual void Activate(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                SYS_DEBUG(DL_INFO3, " - glUniform1f(" << GetUniformID() << "," << myValue << ");");
+                //glUniform1f(GetUniformID(), myValue);
+            }
+
+            inline GLfloat operator=(float value)
+            {
+                return myValue = value;
+            }
+
+            inline operator float() const
+            {
+                return myValue;
+            }
+
+         protected:
+            GLfloat myValue;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformFloat");
+
+        }; // class UniformFloat
+
         class UniformTexture: public UniformBase, public Texture2DRaw
         {
          public:
