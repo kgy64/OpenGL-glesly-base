@@ -128,37 +128,19 @@ bool Transformation::ConvertMouseCoordinates(float & x, float & y) const
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- float det =
-    + (*this)[0][0] * (*this)[1][1] * (*this)[2][2]
-    + (*this)[0][1] * (*this)[1][2] * (*this)[2][0]
-    + (*this)[1][0] * (*this)[2][1] * (*this)[0][2]
-    - (*this)[0][2] * (*this)[1][1] * (*this)[2][0]
-    - (*this)[0][1] * (*this)[1][0] * (*this)[2][2]
-    - (*this)[1][2] * (*this)[2][1] * (*this)[0][0];
+ SYS_DEBUG(DL_INFO3, "KGY: - Got raw coordinates: " << x << ":" << y);
 
- ASSERT(det != 0.0, "Matrix is not invertible");
+ ASSERT((*this)[0][0] != 0.0f && (*this)[1][1] != 0.0f, "Matrix is not invertible");
 
- Matrix<float, 3, 3> inverted({
-    ((*this)[1][1]*(*this)[2][2] - (*this)[1][2]*(*this)[2][1])/det,
-    ((*this)[0][2]*(*this)[2][1] - (*this)[0][1]*(*this)[2][2])/det,
-    ((*this)[0][1]*(*this)[1][2] - (*this)[0][2]*(*this)[1][1])/det,
-    ((*this)[1][2]*(*this)[2][0] - (*this)[1][0]*(*this)[2][2])/det,
-    ((*this)[0][0]*(*this)[2][2] - (*this)[0][2]*(*this)[2][0])/det,
-    ((*this)[0][2]*(*this)[1][0] - (*this)[1][2]*(*this)[0][0])/det,
-    ((*this)[1][0]*(*this)[2][1] - (*this)[1][1]*(*this)[2][0])/det,
-    ((*this)[0][1]*(*this)[2][0] - (*this)[0][0]*(*this)[2][1])/det,
-    ((*this)[0][0]*(*this)[1][1] - (*this)[0][1]*(*this)[1][0])/det
- });
+ x = (x - (*this)[3][0]) * (1.0f/(*this)[0][0]);
+ y = (y - (*this)[3][1]) * (1.0f/(*this)[1][1]);
 
- Matrix<float, 2, 1> position({x - (*this)[3][0], y - (*this)[3][1]});
- Matrix<float, 3, 1> result(inverted * position);
-
- if (result[0][0] < -1.0f || result[0][0] > 1.0f || result[1][0] < -1.0f || result[1][0] > 1.0f) {
+ if (x < -1.0f || x > 1.0f || y < -1.0f || y > 1.0f) {
+    SYS_DEBUG(DL_INFO3, "KGY: - Position " << x << ":" << y << " is out of bounds");
     return false;
  }
 
- x = result[0][0];
- y = result[1][0];
+ SYS_DEBUG(DL_INFO3, "KGY: - Position " << x << ":" << y << " is accepted");
 
  return true;
 }
