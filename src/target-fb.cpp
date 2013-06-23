@@ -14,6 +14,7 @@
 #include <string.h>
 #include <linux/fb.h>
 #include <sys/ioctl.h>
+#include <tslib.h>
 
 #include <glesly/error.h>
 #include <Threads/Threads.h>
@@ -78,8 +79,35 @@ void TargetFB::EnterEventLoop(Threads::Thread & caller)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ const char * tsdevice = getenv("TSLIB_TSDEVICE");
+ if (tsdevice == NULL) {
+    tsdevice = "/dev/input/touchscreen0";
+ }
+
+ struct tsdev * ts = ts_open(tsdevice, 0);
+
+ if (ts == NULL) {
+    SYS_DEBUG(DL_ERROR, "Could not open touchscreen device '" << tsdevice << "'");
+    return;
+ }
+
+ if (ts_config(ts)) {
+    SYS_DEBUG(DL_ERROR, "Could not config touchscreen device '" << tsdevice << "'");
+    return;
+ }
+
  while (!caller.Finished()) {
-    usleep(25000); // Temporary!
+    struct ts_sample samp;
+    if (ts_read(ts, &samp, 1) < 0) {
+        SYS_DEBUG(DL_ERROR, "Could not read touchscreen sample");
+        sleep(1);
+        continue;
+    }
+
+    MousePosition(samp.x, samp.y);
+    MouseButtonState(0, samp.pressure > 15);
+
+    usleep(25000);
  }
 }
 
