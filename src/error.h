@@ -12,11 +12,26 @@
 #define __GLESLY_SRC_ERROR_H_INCLUDED__
 
 #include <Exceptions/Exceptions.h>
+#include <EGL/egl.h>
 
 namespace Glesly
 {
     /// Generic error within Glesly
     typedef EX::Error Error;
+
+    inline void CheckEGLError(const char * msg = NULL)
+    {
+        int error = eglGetError();
+        if (error != EGL_SUCCESS) {
+            Error e("EGL Error");
+            e << error;
+            if (msg) {
+                e << ": " << msg;
+            }
+            throw e;
+        }
+    }
+
 } // namespace Glesly
 
 #endif /* __GLESLY_SRC_ERROR_H_INCLUDED__ */

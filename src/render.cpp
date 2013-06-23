@@ -50,6 +50,10 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ if (IsInputBlocked()) {
+    return;
+ }
+
  try {
     float horiz = x;
     float vert = y;

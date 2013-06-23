@@ -15,16 +15,60 @@
 
 #include <glesly/shader-uniforms.h>
 #include <glesly/object-list.h>
-#include <glesly/math/matrix.h>
+#include <glesly/camera.h>
 
 namespace Glesly
 {
+    class LayerChangeEffectManager;
+
     class LayerChangeEffectBase
     {
+        friend class LayerChangeEffectManager;
+
      public:
-        void Frame(void);
+        virtual ~LayerChangeEffectBase()
+        {
+        }
+
+        ObjectListPtr & GetObjects(void)
+        {
+            return myObjects;
+        }
+
+        struct EffectParameters
+        {
+            struct Params {
+                inline Params(float initial_fade):
+                    fade(initial_fade)
+                {
+                }
+
+                GLfloat fade;
+                Glesly::Transformation projection;
+            };
+
+            inline EffectParameters(void):
+                fade_in(1.0f),
+                fade_out(1.0f)
+            {
+            }
+
+            Params fade_in;
+
+            Params fade_out;
+        };
 
      protected:
+        inline LayerChangeEffectBase(LayerChangeEffectManager & parent, ObjectListPtr & objects):
+            myParent(parent),
+            myObjects(objects)
+        {
+        }
+
+        EffectParameters & GetEffectParameters(void);
+
+        LayerChangeEffectManager & myParent;
+
         ObjectListPtr myObjects;
 
         SYS::TimeDelay myStart;
@@ -32,28 +76,47 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectBase");
 
+        void Frame(void);
+
+        virtual bool Step(void) =0;
+
     }; // class LayerChangeEffectBase
 
     typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffecrPtr;
 
+    class FadeInEffect: public LayerChangeEffectBase
+    {
+        inline FadeInEffect(LayerChangeEffectManager & parent, ObjectListPtr & objects, float time):
+            LayerChangeEffectBase(parent, objects),
+            myTime(time)
+        {
+        }
+
+     public:
+        static inline LayerEffecrPtr Create(LayerChangeEffectManager & parent, ObjectListPtr & objects, float time)
+        {
+            return LayerEffecrPtr(new FadeInEffect(parent, objects, time));
+        }
+
+     protected:
+        float myTime;
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectBase");
+
+        virtual bool Step(void);
+
+    }; // class FadeInEffect
+
     class LayerChangeEffectManager
     {
+        friend class Glesly::LayerChangeEffectBase;
+
         class EffectUniforms: public Glesly::Shaders::UniformManagerCopy
         {
             friend class LayerChangeEffectManager;
 
-            EffectUniforms(const Glesly::Shaders::UniformManager & manager):
-                Glesly::Shaders::UniformManagerCopy(manager),
-                myEffectFade(1.0),
-                myEffectMatrix(1.0),
-                myFade_var(*this, "effect_fade", myEffectFade),
-                myEffectMatrix_var(*this, "effect_matrix", myEffectMatrix)
-            {
-            }
-
-            GLfloat myEffectFade;
-
-            Glesly::Matrix<float, 4, 4> myEffectMatrix;
+            EffectUniforms(const Glesly::Shaders::UniformManager & manager, Glesly::LayerChangeEffectBase::EffectParameters::Params & params);
 
             Glesly::Shaders::UniformFloat_ref myFade_var;
 
@@ -67,10 +130,12 @@ namespace Glesly
 
         EffectUniforms myEffectFadeOut;
 
+        Glesly::LayerChangeEffectBase::EffectParameters myEffectParams;
+
      public:
         inline LayerChangeEffectManager(const Glesly::Shaders::UniformManager & manager):
-            myEffectFadeIn(manager),
-            myEffectFadeOut(manager)
+            myEffectFadeIn(manager, myEffectParams.fade_in),
+            myEffectFadeOut(manager, myEffectParams.fade_out)
         {
         }
 
@@ -83,13 +148,20 @@ namespace Glesly
             myEffect = effect;
         }
 
+        inline bool IsEffectActive(void) const
+        {
+            return myEffect.get();
+        }
+
         inline void FadeIn(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             myEffectFadeIn.ActivateVariables();
         }
 
         inline void FadeOut(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             myEffectFadeOut.ActivateVariables();
         }
 
@@ -100,7 +172,14 @@ namespace Glesly
 
         LayerEffecrPtr myEffect;
 
+        virtual void EffectFinished(LayerEffecrPtr & effect) =0;
+
     }; // class LayerChangeEffectManager
+
+    inline LayerChangeEffectBase::EffectParameters & LayerChangeEffectBase::GetEffectParameters(void)
+    {
+        return myParent.myEffectParams;
+    }
 
 } // namespace Glesly
 

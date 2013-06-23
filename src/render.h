@@ -40,6 +40,11 @@ namespace Glesly
      protected:
         Render(void);
 
+        virtual bool IsInputBlocked(void) const
+        {
+            return false;
+        }
+
         virtual void ConvertMouseCoordinates(float & x, float & y) { }
         virtual void Frame(void) { }
 

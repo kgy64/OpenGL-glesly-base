@@ -31,6 +31,7 @@ namespace Glesly
 
         static inline ProgramPtr Create(void)
         {
+            SYS_DEBUG_STATIC(DM_GLESLY);
             return ProgramPtr(new Program());
         }
 
@@ -39,22 +40,24 @@ namespace Glesly
 
         inline void BindAttribLocation(GLuint index, const char * name)
         {
-            glBindAttribLocation(myProgram, index, name);
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO1, " - glBindAttribLocation(" << GetProgramID() << ", " << index << ", '" << name << "');");
+            glBindAttribLocation(GetProgramID(), index, name);
         }
 
         inline GLint GetUniformLocation(const char * name) const
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            GLint result = glGetUniformLocation(myProgram, name);
-            SYS_DEBUG(DL_INFO1, "Uniform '" << name << "' location: " << result);
+            GLint result = glGetUniformLocation(GetProgramID(), name);
+            SYS_DEBUG(DL_INFO1, " - glGetUniformLocation(" << GetProgramID() << ", '" << name << "'): location=" << result);
             return result;
         }
 
         inline GLint GetAttribLocation(const char * name) const
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            GLint result = glGetAttribLocation(myProgram, name);
-            SYS_DEBUG(DL_INFO1, "Attribute '" << name << "' location: " << result);
+            GLint result = glGetAttribLocation(GetProgramID(), name);
+            SYS_DEBUG(DL_INFO1, " - glGetAttribLocation(" << GetProgramID() << ", '" << name << "'): location=" << result);
             return result;
         }
 

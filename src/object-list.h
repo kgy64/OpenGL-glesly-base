@@ -75,12 +75,23 @@ namespace Glesly
             return myLayers.top();
         }
 
+        inline void PopLayer(void)
+        {
+            myLayers.pop();
+        }
+
      protected:
         typedef std::stack<ObjectListPtr> ObjectLayerStack;
 
         inline ObjectListBase(void)
         {
-            myLayers.push(ObjectListPtr(new Objects));
+            ObjectListPtr p(new Objects);
+            PushLayer(p);
+        }
+
+        inline void PushLayer(ObjectListPtr & objects)
+        {
+            myLayers.push(objects);
         }
 
      private:

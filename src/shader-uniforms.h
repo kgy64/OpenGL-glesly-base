@@ -14,6 +14,7 @@
 #include <glesly/shader-vars.h>
 #include <glesly/texture.h>
 #include <glesly/math/matrix.h>
+#include <glesly/error.h>
 
 namespace Glesly
 {
@@ -68,6 +69,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO3, " - glUniform1f(" << GetUniformID() << "," << myRef << ");");
                 glUniform1f(GetUniformID(), myRef);
+                CheckEGLError("glUniform1f()");
             }
 
          protected:
@@ -137,6 +139,7 @@ namespace Glesly
                 glActiveTexture(GL_TEXTURE0 + myIndex);
                 SYS_DEBUG(DL_INFO3, " - glUniform1i(" << GetUniformID() << "," << myIndex << ");");
                 glUniform1i(GetUniformID(), myIndex);
+                CheckEGLError("glUniform1i()");
                 Bind();
             }
 
@@ -171,14 +174,17 @@ namespace Glesly
                     case 2:
                         SYS_DEBUG(DL_INFO3, " - glUniformMatrix2fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
                         glUniformMatrix2fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
+                        CheckEGLError("glUniformMatrix2fv()");
                     break;
                     case 3:
                         SYS_DEBUG(DL_INFO3, " - glUniformMatrix3fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
                         glUniformMatrix3fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
+                        CheckEGLError("glUniformMatrix3fv()");
                     break;
                     case 4:
                         SYS_DEBUG(DL_INFO3, " - glUniformMatrix4fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
                         glUniformMatrix4fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
+                        CheckEGLError("glUniformMatrix4fv()");
                     break;
                 }
             }

@@ -41,9 +41,7 @@ void Object::DrawArrays(GLenum mode, GLint first, GLsizei count)
  SYS_DEBUG(DL_INFO3, " - glDrawArrays(" << (int)mode << "," << (int)first << "," << (int)count << ");");
 
  glDrawArrays(mode, first, count);
- if (eglGetError() != EGL_SUCCESS) {
-    throw Error("Could not glDrawArrays()");
- }
+ CheckEGLError("glDrawArrays()");
 }
 
 void Object::DrawElements(GLenum mode, GLsizei count)
@@ -53,9 +51,7 @@ void Object::DrawElements(GLenum mode, GLsizei count)
  SYS_DEBUG(DL_INFO3, " - glDrawElements(" << (int)mode << "," << (int)count << ",GL_UNSIGNED_SHORT,0);");
 
  glDrawElements(mode, count, GL_UNSIGNED_SHORT, (void*)0);
- if (eglGetError() != EGL_SUCCESS) {
-    throw Error("Could not glDrawElements()");
- }
+ CheckEGLError("glDrawElements()");
 }
 
 void Object::NextFrame(void)

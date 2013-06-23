@@ -116,6 +116,8 @@ void MouseButton::Pressed(void)
 
  SYS_DEBUG(DL_INFO3, "Mouse button " << myIndex << " is pressed");
 
+ myParent.MouseClick(myIndex, 0);
+
  ++myPressCount;
 }
 
