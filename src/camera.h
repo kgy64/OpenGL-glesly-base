@@ -86,6 +86,7 @@ namespace Glesly
         void RotateX(float angle, float scale = 1.0);
         void RotateY(float angle, float scale = 1.0);
         void RotateZ(float angle, float scale = 1.0);
+        void RotateZ(float angle, float scale, float aspect);
         void Move(float x, float y, float z);
 
         inline float GetAngleX(void) const

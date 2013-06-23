@@ -117,6 +117,24 @@ void Transformation::RotateZ(float angle, float scale)
  (*this)[2][2] = scale;
 }
 
+void Transformation::RotateZ(float angle, float scale, float aspect)
+{
+ zAngle = angle;
+
+ float s = sinf(angle) * scale;
+ float c = cosf(angle) * scale;
+
+ (*this)[0][0] = c * aspect;
+ (*this)[0][1] = s * aspect;
+ (*this)[0][2] = 0.0;
+ (*this)[1][0] = -s / aspect;
+ (*this)[1][1] = c / aspect;
+ (*this)[1][2] = 0.0;
+ (*this)[2][0] = 0.0;
+ (*this)[2][1] = 0.0;
+ (*this)[2][2] = scale;
+}
+
 void Transformation::Move(float x, float y, float z)
 {
  (*this)[3][0] = x;
