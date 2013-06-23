@@ -29,16 +29,6 @@ Texture2DRaw::Texture2DRaw(void * pixels, int width, int height, GLenum format):
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Initialize();
-
- SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB," << myWidth << "," << myHeight << ", 0, " << format << ", GL_UNSIGNED_BYTE, " << myPixels << ");");
-
- glTexImage2D(
-    GL_TEXTURE_2D, 0,           /* target, level */
-    format,                     /* internal format */
-    myWidth, myHeight, 0,       /* width, height, border */
-    format, GL_UNSIGNED_BYTE,   /* external format, type */
-    myPixels                    /* pixels */
- );
 }
 
 Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_now):
@@ -65,10 +55,17 @@ Texture2DRaw::~Texture2DRaw()
  SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
 
  glDeleteTextures(1, &myTexture);
+ CheckEGLError("glDeleteTextures()");
 }
 
 void Texture2DRaw::Update(void)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Bind();
+
+ SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
+
  glTexImage2D(
     GL_TEXTURE_2D, 0,           /* target, level */
     myFormat,                   /* internal format */
@@ -76,6 +73,7 @@ void Texture2DRaw::Update(void)
     myFormat, GL_UNSIGNED_BYTE, /* external format, type */
     myPixels                    /* pixels */
  );
+ CheckEGLError("glTexImage2D()");
 }
 
 void Texture2DRaw::Initialize(void)

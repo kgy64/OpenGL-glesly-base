@@ -137,6 +137,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO3, " - glActiveTexture(GL_TEXTURE" << myIndex << ");");
                 glActiveTexture(GL_TEXTURE0 + myIndex);
+                CheckEGLError("glActiveTexture()");
                 SYS_DEBUG(DL_INFO3, " - glUniform1i(" << GetUniformID() << "," << myIndex << ");");
                 glUniform1i(GetUniformID(), myIndex);
                 CheckEGLError("glUniform1i()");

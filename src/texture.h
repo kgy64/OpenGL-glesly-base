@@ -15,6 +15,7 @@
 
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
+#include <glesly/error.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
 
@@ -39,6 +40,7 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << myTexture << ");");
             glBindTexture(GL_TEXTURE_2D, myTexture);
+            CheckEGLError("glBindTexture()");
         }
 
         GLuint myTexture;
