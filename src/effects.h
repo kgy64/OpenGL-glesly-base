@@ -35,6 +35,12 @@ namespace Glesly
             return myObjects;
         }
 
+        void RestartTimer(void)
+        {
+            SYS::TimeDelay now;
+            myStart = now;
+        }
+
         struct EffectParameters
         {
             struct Params {
@@ -45,6 +51,7 @@ namespace Glesly
 
                 GLfloat fade;
                 Glesly::Transformation projection;
+                Glesly::Transformation object;
             };
 
             inline EffectParameters(void):
@@ -120,7 +127,9 @@ namespace Glesly
 
             Glesly::Shaders::UniformFloat_ref myFade_var;
 
-            Glesly::Shaders::UniformMatrix_ref<float, 4> myEffectMatrix_var;
+            Glesly::Shaders::UniformMatrix_ref<float, 4> myProjectionMatrix_var;
+
+            Glesly::Shaders::UniformMatrix_ref<float, 4> myObjectMatrix_var;
 
             SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager::EffectUniforms");
 
@@ -145,6 +154,9 @@ namespace Glesly
 
         inline void Effect(LayerEffecrPtr effect = LayerEffecrPtr())
         {
+            if (effect.get()) {
+                effect->RestartTimer();
+            }
             myEffect = effect;
         }
 

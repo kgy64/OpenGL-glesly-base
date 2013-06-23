@@ -22,7 +22,8 @@ using namespace Glesly;
 LayerChangeEffectManager::EffectUniforms::EffectUniforms(const Glesly::Shaders::UniformManager & manager, Glesly::LayerChangeEffectBase::EffectParameters::Params & params):
     Glesly::Shaders::UniformManagerCopy(manager),
     myFade_var(*this, "effect_fade", params.fade),
-    myEffectMatrix_var(*this, "effect_matrix", params.projection)
+    myProjectionMatrix_var(*this, "projection_effect", params.projection),
+    myObjectMatrix_var(*this, "object_effect", params.object)
 {
 }
 
@@ -91,8 +92,11 @@ bool FadeInEffect::Step(void)
  float opposite = 1.0f - state;
 
  params.fade_in.fade = state;
+ params.fade_in.object.RotateZ(-opposite*M_PI/1.0f, state);
 
  params.fade_out.fade = opposite;
+ params.fade_out.object.RotateZ(0.0, opposite);
+ params.fade_out.projection.Move(2.0f*state, 0.0f, 0.0f);
 
  return status;
 }
