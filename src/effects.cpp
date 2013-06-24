@@ -74,16 +74,18 @@ void LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters
         layerContainer->pop();
         params.Reset();
         active = false;
-        return;
+        state = 1.0f;
+    } else {
+        state = 1.0f - state;
     }
-    SetState(params, 1.0f-state);
  } else {
     if (state >= 1.0f) {
         active = false;
-        return;
+        state = 1.0f;
     }
-    SetState(params, state);
  }
+
+ SetState(params, state);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
