@@ -11,23 +11,14 @@
 #ifndef __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
 
-#include <list>
 #include <stack>
-#include <glesly/object-ptr.h>
+#include <glesly/effects.h>
 #include <Threads/Mutex.h>
 #include <System/TimeDelay.h>
 #include <Debug/Debug.h>
 
 namespace Glesly
 {
-    typedef std::list<ObjectPtr> Objects;
-
-    typedef boost::shared_ptr<Objects> ObjectListPtr;
-
-    typedef Objects::iterator ObjectListIterator;
-
-    class ObjectListBase;
-
     class ObjectListBase
     {
      public:
@@ -70,9 +61,11 @@ namespace Glesly
             return ObjectListInternal(*this);
         }
 
-        inline ObjectListPtr & GetObjectListPtr(void)
+        inline void PushLayer(LayerEffecrPtr & effect)
         {
-            return myLayers.top();
+            effect->SetPreviousObjects(GetObjectListPtr());
+            myLayers.push(effect);
+            effect->RestartTimer();
         }
 
         inline void PopLayer(void)
@@ -81,17 +74,32 @@ namespace Glesly
         }
 
      protected:
-        typedef std::stack<ObjectListPtr> ObjectLayerStack;
-
         inline ObjectListBase(void)
         {
-            ObjectListPtr p(new Objects);
-            PushLayer(p);
+            LayerEffecrPtr root_effect = JumpEffect::Create();
+            myLayers.push(root_effect);
         }
 
-        inline void PushLayer(ObjectListPtr & objects)
+        typedef std::stack<LayerEffecrPtr> ObjectLayerStack;
+
+        inline LayerEffecrPtr & GetActualEffect(void)
         {
-            myLayers.push(objects);
+            return myLayers.top();
+        }
+
+        inline const LayerEffecrPtr & GetActualEffect(void) const
+        {
+            return myLayers.top();
+        }
+
+        inline ObjectListPtr & GetObjectListPtr(void)
+        {
+            return GetActualEffect()->GetObjects();
+        }
+
+        bool IsEffectActive(void) const
+        {
+            return GetActualEffect()->IsActive();
         }
 
      private:
@@ -118,7 +126,11 @@ namespace Glesly
     inline void ObjectListBase::ObjectListInternal::Add(ObjectPtr object)
     {
         if (!myModifiedObjects.get()) {
-            myModifiedObjects.reset(new Objects(*myObjects));
+            if (myObjects.get()) {
+                myModifiedObjects.reset(new Objects(*myObjects));
+            } else {
+                myModifiedObjects.reset(new Objects);
+            }
         }
         myModifiedObjects->push_front(object);
     }

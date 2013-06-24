@@ -27,27 +27,18 @@ LayerChangeEffectManager::EffectUniforms::EffectUniforms(const Glesly::Shaders::
 {
 }
 
-void LayerChangeEffectManager::EffectFrame(void)
+void LayerChangeEffectManager::EffectFrame(LayerEffecrPtr & effect)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- LayerEffecrPtr effect = myEffect; // Copy to be thread-safe
+ effect->Step(myEffectParams);
 
- if (!effect.get()) {
-    FadeIn();
-    return;
+ if (effect->IsActive()) {
+    FadeOut();
+    effect->Frame();
  }
-
- bool is_over = effect->Step();
 
  FadeIn();
-
- effect->Frame();
- if (is_over) {
-    EffectFinished(effect);
- } else {
-    FadeOut();
- }
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -60,7 +51,7 @@ void LayerChangeEffectBase::Frame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- for (ObjectListIterator i = myObjects->begin(); i != myObjects->end(); ++i) {
+ for (ObjectListIterator i = previousObjects->begin(); i != previousObjects->end(); ++i) {
     (*i)->NextFrame();
  }
 }
@@ -71,23 +62,23 @@ void LayerChangeEffectBase::Frame(void)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FadeInEffect::Step(void)
+void FadeInEffect::Step(Glesly::LayerChangeEffectBase::EffectParameters & params)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (!active) {
+    return;
+ }
 
  SYS::TimeDelay now;
  float state = 1e-3*(float)(now - myStart).ToMillisecond()/myTime;
 
  SYS_DEBUG(DL_INFO2, "KGY: state=" << state);
 
- bool status = false;
-
  if (state >= 1.0f) {
-    status = true;
+    active = false;
     state = 1.0f;
  }
-
- EffectParameters & params(GetEffectParameters());
 
  float opposite = 1.0f - state;
 
@@ -97,8 +88,11 @@ bool FadeInEffect::Step(void)
  params.fade_out.fade = opposite;
  params.fade_out.object.RotateZ(0.0, opposite);
  params.fade_out.projection.Move(2.0f*state, 0.0f, 0.0f);
+}
 
- return status;
+void FadeInEffect::Start(void)
+{
+ active = true;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

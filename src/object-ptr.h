@@ -11,6 +11,7 @@
 #ifndef __GLESLY_SRC_OBJECT_PTR_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_PTR_H_INCLUDED__
 
+#include <list>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
@@ -37,6 +38,12 @@ namespace Glesly
         }
 
     }; // ObjectPtr
+
+    typedef std::list<ObjectPtr> Objects;
+
+    typedef Objects::iterator ObjectListIterator;
+
+    typedef boost::shared_ptr<Objects> ObjectListPtr;
 
 } // namespace Glesly
 

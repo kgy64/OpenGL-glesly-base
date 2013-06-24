@@ -13,8 +13,9 @@
 
 #include <GLES2/gl2.h>
 
+#include <System/TimeDelay.h>
 #include <glesly/shader-uniforms.h>
-#include <glesly/object-list.h>
+#include <glesly/object-ptr.h>
 #include <glesly/camera.h>
 
 namespace Glesly
@@ -30,15 +31,21 @@ namespace Glesly
         {
         }
 
+        inline void SetPreviousObjects(ObjectListPtr & obj)
+        {
+            previousObjects = obj;
+        }
+
         ObjectListPtr & GetObjects(void)
         {
             return myObjects;
         }
 
-        void RestartTimer(void)
+        inline void RestartTimer(void)
         {
             SYS::TimeDelay now;
             myStart = now;
+            Start();
         }
 
         struct EffectParameters
@@ -65,18 +72,21 @@ namespace Glesly
             Params fade_out;
         };
 
+        virtual void Step(Glesly::LayerChangeEffectBase::EffectParameters &) { }
+
+        virtual void Start(void) { }
+
+        virtual bool IsActive(void) const =0;
+
      protected:
-        inline LayerChangeEffectBase(LayerChangeEffectManager & parent, ObjectListPtr & objects):
-            myParent(parent),
+        inline LayerChangeEffectBase(ObjectListPtr & objects):
             myObjects(objects)
         {
         }
 
-        EffectParameters & GetEffectParameters(void);
-
-        LayerChangeEffectManager & myParent;
-
         ObjectListPtr myObjects;
+
+        ObjectListPtr previousObjects;
 
         SYS::TimeDelay myStart;
 
@@ -85,24 +95,47 @@ namespace Glesly
 
         void Frame(void);
 
-        virtual bool Step(void) =0;
-
     }; // class LayerChangeEffectBase
 
     typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffecrPtr;
 
-    class FadeInEffect: public LayerChangeEffectBase
+    class JumpEffect: public LayerChangeEffectBase
     {
-        inline FadeInEffect(LayerChangeEffectManager & parent, ObjectListPtr & objects, float time):
-            LayerChangeEffectBase(parent, objects),
-            myTime(time)
+     protected:
+        JumpEffect(ObjectListPtr & objects):
+            LayerChangeEffectBase(objects)
         {
         }
 
      public:
-        static inline LayerEffecrPtr Create(LayerChangeEffectManager & parent, ObjectListPtr & objects, float time)
+        static inline LayerEffecrPtr Create(ObjectListPtr objects = ObjectListPtr())
         {
-            return LayerEffecrPtr(new FadeInEffect(parent, objects, time));
+            return LayerEffecrPtr(new JumpEffect(objects));
+        }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::JumpEffect");
+
+        virtual bool IsActive(void) const
+        {
+            return false;
+        }
+
+    }; // class JumpEffect
+
+    class FadeInEffect: public LayerChangeEffectBase
+    {
+        inline FadeInEffect(ObjectListPtr & objects, float time):
+            LayerChangeEffectBase(objects),
+            myTime(time),
+            active(true)
+        {
+        }
+
+     public:
+        static inline LayerEffecrPtr Create(ObjectListPtr & objects, float time)
+        {
+            return LayerEffecrPtr(new FadeInEffect(objects, time));
         }
 
      protected:
@@ -111,7 +144,16 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectBase");
 
-        virtual bool Step(void);
+        bool active;
+
+        virtual void Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
+
+        virtual bool IsActive(void) const
+        {
+            return active;
+        }
+
+        virtual void Start(void);
 
     }; // class FadeInEffect
 
@@ -152,19 +194,6 @@ namespace Glesly
         {
         }
 
-        inline void Effect(LayerEffecrPtr effect = LayerEffecrPtr())
-        {
-            if (effect.get()) {
-                effect->RestartTimer();
-            }
-            myEffect = effect;
-        }
-
-        inline bool IsEffectActive(void) const
-        {
-            return myEffect.get();
-        }
-
         inline void FadeIn(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -177,21 +206,12 @@ namespace Glesly
             myEffectFadeOut.ActivateVariables();
         }
 
-        void EffectFrame(void);
+        void EffectFrame(LayerEffecrPtr & effect);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");
 
-        LayerEffecrPtr myEffect;
-
-        virtual void EffectFinished(LayerEffecrPtr & effect) =0;
-
     }; // class LayerChangeEffectManager
-
-    inline LayerChangeEffectBase::EffectParameters & LayerChangeEffectBase::GetEffectParameters(void)
-    {
-        return myParent.myEffectParams;
-    }
 
 } // namespace Glesly
 
