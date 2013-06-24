@@ -56,13 +56,7 @@ void LayerChangeEffectBase::Frame(void)
  }
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- *                                                                                       *
- *     Class FadeInEffect:                                                               *
- *                                                                                       *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FadeInEffect::Step(Glesly::LayerChangeEffectBase::EffectParameters & params)
+void LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters & params)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -78,18 +72,25 @@ void FadeInEffect::Step(Glesly::LayerChangeEffectBase::EffectParameters & params
  if (layerContainer) {
     if (state >= 1.0f) {
         layerContainer->pop();
+        params.Reset();
         active = false;
-        state = 0.0f;
+        return;
     }
     SetState(params, 1.0f-state);
  } else {
     if (state >= 1.0f) {
         active = false;
-        state = 1.0f;
+        return;
     }
     SetState(params, state);
  }
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     Class FadeInEffect:                                                               *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 void FadeInEffect::SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state)
 {

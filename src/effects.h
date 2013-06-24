@@ -42,19 +42,19 @@ namespace Glesly
             return myObjects;
         }
 
-        inline void RestartTimer(void)
-        {
-            SYS::TimeDelay now;
-            myStart = now;
-            Start();
-        }
-
         struct EffectParameters
         {
             struct Params {
                 inline Params(float initial_fade):
                     fade(initial_fade)
                 {
+                }
+
+                inline void Reset(void)
+                {
+                    fade = 1.0;
+                    projection = 1.0;
+                    object = 1.0;
                 }
 
                 GLfloat fade;
@@ -71,19 +71,47 @@ namespace Glesly
             Params fade_in;
 
             Params fade_out;
+
+            inline void Reset(void)
+            {
+                fade_in.Reset();
+                fade_out.Reset();
+            }
         };
 
-        virtual void Step(Glesly::LayerChangeEffectBase::EffectParameters &) { }
+        bool IsActive(void) const
+        {
+            return active;
+        }
 
-        virtual void Start(void) { }
+        void Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
 
-        virtual void Drop(Glesly::ObjectLayerStack &) { }
+        inline void RestartTimer(void)
+        {
+            SYS::TimeDelay now;
+            myStart = now;
+        }
 
-        virtual bool IsActive(void) const =0;
+        inline void Start(void)
+        {
+            RestartTimer();
+            layerContainer = NULL;
+            active = true;
+        }
+
+        inline void Drop(Glesly::ObjectLayerStack & layers)
+        {
+            RestartTimer();
+            layerContainer = &layers;
+            active = true;
+        }
 
      protected:
-        inline LayerChangeEffectBase(ObjectListPtr & objects):
-            myObjects(objects)
+        inline LayerChangeEffectBase(ObjectListPtr & objects, float time = 1.0):
+            myObjects(objects),
+            active(false),
+            myTime(time),
+            layerContainer(NULL)
         {
         }
 
@@ -93,10 +121,18 @@ namespace Glesly
 
         SYS::TimeDelay myStart;
 
+        bool active;
+
+        float myTime;
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectBase");
 
+        ObjectLayerStack * layerContainer;
+
         void Frame(void);
+
+        virtual void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state) { }
 
     }; // class LayerChangeEffectBase
 
@@ -122,15 +158,18 @@ namespace Glesly
             return false;
         }
 
+        virtual void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float)
+        {
+            active = false;
+            params.Reset();
+        }
+
     }; // class JumpEffect
 
     class FadeInEffect: public LayerChangeEffectBase
     {
         inline FadeInEffect(ObjectListPtr & objects, float time):
-            LayerChangeEffectBase(objects),
-            myTime(time),
-            active(true),
-            layerContainer(NULL)
+            LayerChangeEffectBase(objects, time)
         {
         }
 
@@ -140,36 +179,10 @@ namespace Glesly
             return LayerEffecrPtr(new FadeInEffect(objects, time));
         }
 
-     protected:
-        float myTime;
-
      private:
-        SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectBase");
+        SYS_DEFINE_CLASS_NAME("Glesly::FadeInEffect");
 
-        bool active;
-
-        ObjectLayerStack * layerContainer;
-
-        virtual void Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
-
-        virtual bool IsActive(void) const
-        {
-            return active;
-        }
-
-        virtual void Start(void)
-        {
-            layerContainer = NULL;
-            active = true;
-        }
-
-        virtual void Drop(Glesly::ObjectLayerStack & layers)
-        {
-            layerContainer = &layers;
-            active = true;
-        }
-
-        void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state);
+        virtual void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state);
 
     }; // class FadeInEffect
 

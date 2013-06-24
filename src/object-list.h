@@ -64,13 +64,12 @@ namespace Glesly
         {
             effect->SetPreviousObjects(GetObjectListPtr());
             myLayers.push(effect);
-            effect->RestartTimer();
+            effect->Start();
         }
 
         inline void PopLayer(void)
         {
             LayerEffecrPtr effect = GetActualEffect();
-            effect->RestartTimer();
             effect->Drop(myLayers);
         }
 
