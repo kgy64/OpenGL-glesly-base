@@ -73,12 +73,27 @@ void FadeInEffect::Step(Glesly::LayerChangeEffectBase::EffectParameters & params
  SYS::TimeDelay now;
  float state = 1e-3*(float)(now - myStart).ToMillisecond()/myTime;
 
- SYS_DEBUG(DL_INFO2, "KGY: state=" << state);
+ SYS_DEBUG(DL_INFO2, "KGY: state=" << state << ", " << (layerContainer ? "outgoing" : "incoming"));
 
- if (state >= 1.0f) {
-    active = false;
-    state = 1.0f;
+ if (layerContainer) {
+    if (state >= 1.0f) {
+        layerContainer->pop();
+        active = false;
+        state = 0.0f;
+    }
+    SetState(params, 1.0f-state);
+ } else {
+    if (state >= 1.0f) {
+        active = false;
+        state = 1.0f;
+    }
+    SetState(params, state);
  }
+}
+
+void FadeInEffect::SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  float opposite = 1.0f - state;
 
@@ -88,11 +103,6 @@ void FadeInEffect::Step(Glesly::LayerChangeEffectBase::EffectParameters & params
  params.fade_out.fade = opposite;
  params.fade_out.object.RotateZ(0.0, opposite);
  params.fade_out.projection.Move(2.0f*state, 0.0f, 0.0f);
-}
-
-void FadeInEffect::Start(void)
-{
- active = true;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

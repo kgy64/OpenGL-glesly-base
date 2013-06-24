@@ -11,7 +11,6 @@
 #ifndef __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
 
-#include <stack>
 #include <glesly/effects.h>
 #include <Threads/Mutex.h>
 #include <System/TimeDelay.h>
@@ -70,7 +69,9 @@ namespace Glesly
 
         inline void PopLayer(void)
         {
-            myLayers.pop();
+            LayerEffecrPtr effect = GetActualEffect();
+            effect->RestartTimer();
+            effect->Drop(myLayers);
         }
 
      protected:
@@ -80,9 +81,7 @@ namespace Glesly
             myLayers.push(root_effect);
         }
 
-        typedef std::stack<LayerEffecrPtr> ObjectLayerStack;
-
-        inline LayerEffecrPtr & GetActualEffect(void)
+        inline LayerEffecrPtr GetActualEffect(void)
         {
             return myLayers.top();
         }

@@ -16,6 +16,7 @@
 #include <System/TimeDelay.h>
 #include <glesly/shader-uniforms.h>
 #include <glesly/object-ptr.h>
+#include <glesly/effect-ptr.h>
 #include <glesly/camera.h>
 
 namespace Glesly
@@ -76,6 +77,8 @@ namespace Glesly
 
         virtual void Start(void) { }
 
+        virtual void Drop(Glesly::ObjectLayerStack &) { }
+
         virtual bool IsActive(void) const =0;
 
      protected:
@@ -96,8 +99,6 @@ namespace Glesly
         void Frame(void);
 
     }; // class LayerChangeEffectBase
-
-    typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffecrPtr;
 
     class JumpEffect: public LayerChangeEffectBase
     {
@@ -128,7 +129,8 @@ namespace Glesly
         inline FadeInEffect(ObjectListPtr & objects, float time):
             LayerChangeEffectBase(objects),
             myTime(time),
-            active(true)
+            active(true),
+            layerContainer(NULL)
         {
         }
 
@@ -146,6 +148,8 @@ namespace Glesly
 
         bool active;
 
+        ObjectLayerStack * layerContainer;
+
         virtual void Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
 
         virtual bool IsActive(void) const
@@ -153,7 +157,19 @@ namespace Glesly
             return active;
         }
 
-        virtual void Start(void);
+        virtual void Start(void)
+        {
+            layerContainer = NULL;
+            active = true;
+        }
+
+        virtual void Drop(Glesly::ObjectLayerStack & layers)
+        {
+            layerContainer = &layers;
+            active = true;
+        }
+
+        void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state);
 
     }; // class FadeInEffect
 
