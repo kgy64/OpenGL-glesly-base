@@ -166,26 +166,6 @@ namespace Glesly
 
     }; // class JumpEffect
 
-    class FadeInEffect: public LayerChangeEffectBase
-    {
-        inline FadeInEffect(ObjectListPtr & objects, float time):
-            LayerChangeEffectBase(objects, time)
-        {
-        }
-
-     public:
-        static inline LayerEffecrPtr Create(ObjectListPtr & objects, float time)
-        {
-            return LayerEffecrPtr(new FadeInEffect(objects, time));
-        }
-
-     private:
-        SYS_DEFINE_CLASS_NAME("Glesly::FadeInEffect");
-
-        virtual void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state);
-
-    }; // class FadeInEffect
-
     class LayerChangeEffectManager
     {
         friend class Glesly::LayerChangeEffectBase;

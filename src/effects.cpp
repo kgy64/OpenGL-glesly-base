@@ -88,24 +88,4 @@ void LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters
  SetState(params, state);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- *                                                                                       *
- *     Class FadeInEffect:                                                               *
- *                                                                                       *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FadeInEffect::SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- float opposite = 1.0f - state;
-
- params.fade_in.fade = state;
- params.fade_in.object.RotateZ(-opposite*M_PI/1.0f, state);
-
- params.fade_out.fade = opposite;
- params.fade_out.object.RotateZ(0.0, opposite);
- params.fade_out.projection.Move(2.0f*state, 0.0f, 0.0f);
-}
-
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
