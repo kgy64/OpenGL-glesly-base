@@ -26,9 +26,9 @@ namespace Glesly
     class PaCaObject: public Glesly::RectangleObject<2,2>, private _RectangleInit
     {
      protected:
-         inline PaCaObject(Glesly::Render & render, int width, int height):
+         inline PaCaObject(Glesly::Render & render, int width, int height, float aspect = 1.0f):
             Glesly::RectangleObject<2,2>(render),
-            myPaca(width, height),
+            myPaca(width, height, aspect),
             texture(*this, "texture", myPaca, 0, GL_RGBA)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);

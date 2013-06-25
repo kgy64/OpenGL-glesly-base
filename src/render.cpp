@@ -16,7 +16,8 @@
 
 using namespace Glesly;
 
-Render::Render():
+Render::Render(float aspect):
+    myScreenAspect(aspect),
     myCameraMatrix(*this, "camera_matrix", myCamera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);

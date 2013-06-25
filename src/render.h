@@ -37,8 +37,13 @@ namespace Glesly
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
 
+        float GetScreenAspect(void) const
+        {
+            return myScreenAspect;
+        }
+
      protected:
-        Render(void);
+        Render(float aspect = 1.0f);
 
         virtual bool IsInputBlocked(void) const
         {
@@ -47,6 +52,8 @@ namespace Glesly
 
         virtual void ConvertMouseCoordinates(float & x, float & y) { }
         virtual void Frame(void) { }
+
+        float myScreenAspect;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");

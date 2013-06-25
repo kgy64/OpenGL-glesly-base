@@ -127,8 +127,8 @@ void Transformation::RotateZ(float angle, float scale, float aspect)
  (*this)[0][0] = c * aspect;
  (*this)[0][1] = s * aspect;
  (*this)[0][2] = 0.0;
- (*this)[1][0] = -s / aspect;
- (*this)[1][1] = c / aspect;
+ (*this)[1][0] = -s;
+ (*this)[1][1] = c;
  (*this)[1][2] = 0.0;
  (*this)[2][0] = 0.0;
  (*this)[2][1] = 0.0;
