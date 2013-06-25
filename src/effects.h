@@ -233,6 +233,9 @@ namespace Glesly
 
         virtual LayerEffecrPtr GetEffect(Glesly::MenuRender &) =0;
 
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::LayerEffectCreatorBase");
+
     }; // class LayerEffectCreatorBase
 
 } // namespace Glesly
