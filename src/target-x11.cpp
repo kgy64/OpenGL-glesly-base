@@ -124,7 +124,7 @@ void TargetX11::SetupFullscreen(void)
  myWidth = XDisplayWidth(x11Display, x11Screen);
  myHeight = XDisplayHeight(x11Display, x11Screen);
 
- SYS_DEBUG(DL_INFO3, "KGY: " << myWidth << "x" << myHeight);
+ SYS_DEBUG(DL_INFO3, "Size: " << myWidth << "x" << myHeight);
 
  if (redirect) {
     // Not necessary to send any message:

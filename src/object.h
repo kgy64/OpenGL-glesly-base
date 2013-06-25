@@ -33,14 +33,18 @@ namespace Glesly
      public:
         virtual ~Object();
 
-        inline GLint GetUniformLocation(const char * name) const
-        {
-            return GetProgram().GetUniformLocation(name);
-        }
+        void NextFrame(void);
+
+        virtual bool MouseClick(float x, float y, int index, int count);
 
         virtual GLint GetUniformLocationSafe(const char * name) const
         {
             return GetProgram().GetUniformLocationSafe(name);
+        }
+
+        inline GLint GetUniformLocation(const char * name) const
+        {
+            return GetProgram().GetUniformLocation(name);
         }
 
         inline GLint GetAttribLocation(const char * name) const
@@ -53,7 +57,10 @@ namespace Glesly
             return GetProgram().GetAttribLocationSafe(name);
         }
 
-        virtual bool MouseClick(float x, float y, int index, int count);
+        inline Glesly::Transformation & GetProjection(void)
+        {
+            return myProjection;
+        }
 
      protected:
         Object(Render & renderer);
@@ -73,12 +80,9 @@ namespace Glesly
             return myProgram;
         }
 
-     public:
-        void NextFrame(void);
-
-        Glesly::Transformation & GetProjection(void)
+        inline void Enable(bool enable = true)
         {
-            return myProjection;
+            myEnabled = enable;
         }
 
      private:
@@ -92,6 +96,8 @@ namespace Glesly
         Glesly::Transformation myProjection;
 
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
+
+        bool myEnabled;
 
     }; // class Object
 

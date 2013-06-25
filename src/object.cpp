@@ -24,7 +24,8 @@ using namespace Glesly;
 
 Object::Object(Render & renderer):
     myProgram(renderer),
-    p_matrix(*this, "p_matrix", myProjection)
+    p_matrix(*this, "p_matrix", myProjection),
+    myEnabled(true)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -57,6 +58,10 @@ void Object::DrawElements(GLenum mode, GLsizei count)
 void Object::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (!myEnabled) {
+    return;
+ }
 
  ActivateVariables();
  BufferVariables();

@@ -146,7 +146,7 @@ bool Transformation::ConvertMouseCoordinates(float & x, float & y) const
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO3, "KGY: - Got raw coordinates: " << x << ":" << y);
+ SYS_DEBUG(DL_INFO3, "Got raw coordinates: " << x << ":" << y);
 
  ASSERT((*this)[0][0] != 0.0f && (*this)[1][1] != 0.0f, "Matrix is not invertible");
 
@@ -154,11 +154,11 @@ bool Transformation::ConvertMouseCoordinates(float & x, float & y) const
  y = (y - (*this)[3][1]) * (1.0f/(*this)[1][1]);
 
  if (x < -1.0f || x > 1.0f || y < -1.0f || y > 1.0f) {
-    SYS_DEBUG(DL_INFO3, "KGY: - Position " << x << ":" << y << " is out of bounds");
+    SYS_DEBUG(DL_INFO3, "Position " << x << ":" << y << " is out of bounds");
     return false;
  }
 
- SYS_DEBUG(DL_INFO3, "KGY: - Position " << x << ":" << y << " is accepted");
+ SYS_DEBUG(DL_INFO3, "Position " << x << ":" << y << " is accepted");
 
  return true;
 }
