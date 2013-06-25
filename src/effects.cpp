@@ -31,9 +31,7 @@ void LayerChangeEffectManager::EffectFrame(LayerEffecrPtr & effect)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- effect->Step(myEffectParams);
-
- if (effect->IsActive()) {
+ if (effect->Step(myEffectParams)) {
     FadeOut();
     effect->Frame();
  }
@@ -56,22 +54,23 @@ void LayerChangeEffectBase::Frame(void)
  }
 }
 
-void LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters & params)
+bool LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters & params)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!active) {
-    return;
+ if (!IsActive()) {
+    return false;
  }
 
  SYS::TimeDelay now;
  float state = 1e-3*(float)(now - myStart).ToMillisecond()/myTime;
 
- SYS_DEBUG(DL_INFO2, "KGY: state=" << state << ", " << (layerContainer ? "outgoing" : "incoming"));
+ SYS_DEBUG(DL_INFO2, "Layer Effect: State=" << state << ", " << (layerContainer ? "outgoing" : "incoming"));
 
  if (layerContainer) {
     if (state >= 1.0f) {
         layerContainer->pop();
+        layerContainer = NULL;
         params.Reset();
         active = false;
         state = 1.0f;
@@ -86,6 +85,8 @@ void LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters
  }
 
  SetState(params, state);
+
+ return true;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

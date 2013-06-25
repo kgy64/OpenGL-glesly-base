@@ -22,6 +22,7 @@
 namespace Glesly
 {
     class LayerChangeEffectManager;
+    class MenuRender;
 
     class LayerChangeEffectBase
     {
@@ -84,7 +85,7 @@ namespace Glesly
             return active;
         }
 
-        void Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
+        bool Step(Glesly::LayerChangeEffectBase::EffectParameters & params);
 
         inline void RestartTimer(void)
         {
@@ -136,6 +137,7 @@ namespace Glesly
 
     }; // class LayerChangeEffectBase
 
+    /// The most simple effect: Jump to the new layer
     class JumpEffect: public LayerChangeEffectBase
     {
      protected:
@@ -221,6 +223,17 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");
 
     }; // class LayerChangeEffectManager
+
+    class LayerEffectCreatorBase
+    {
+     public:
+        virtual ~LayerEffectCreatorBase()
+        {
+        }
+
+        virtual LayerEffecrPtr GetEffect(Glesly::MenuRender &) =0;
+
+    }; // class LayerEffectCreatorBase
 
 } // namespace Glesly
 

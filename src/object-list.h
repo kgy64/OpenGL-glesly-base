@@ -60,17 +60,27 @@ namespace Glesly
             return ObjectListInternal(*this);
         }
 
-        inline void PushLayer(LayerEffecrPtr & effect)
+        inline void CheckNextLayer(Glesly::MenuRender & render)
         {
-            effect->SetPreviousObjects(GetObjectListPtr());
-            myLayers.push(effect);
-            effect->Start();
+            LayerCreatorPtr creator = myNextLayer;
+            if (creator.get()) {
+                myNextLayer.reset();
+                // Put it on the stack:
+                LayerEffecrPtr effect = creator->GetEffect(render);
+                effect->SetPreviousObjects(GetObjectListPtr());
+                myLayers.push(effect);
+                effect->Start();
+            }
+        }
+
+        inline void PushLayer(LayerCreatorPtr creator)
+        {
+            myNextLayer = creator; // Don't worry if overwrites the previous one
         }
 
         inline void PopLayer(void)
         {
-            LayerEffecrPtr effect = GetActualEffect();
-            effect->Drop(myLayers);
+            GetActualEffect()->Drop(myLayers);
         }
 
      protected:
@@ -95,7 +105,7 @@ namespace Glesly
             return GetActualEffect()->GetObjects();
         }
 
-        bool IsEffectActive(void) const
+        inline bool IsEffectActive(void) const
         {
             return GetActualEffect()->IsActive();
         }
@@ -104,6 +114,8 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase");
 
         ObjectLayerStack myLayers;
+
+        LayerCreatorPtr myNextLayer;
 
     }; // class ObjectListBase
 

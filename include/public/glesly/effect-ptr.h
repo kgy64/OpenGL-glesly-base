@@ -22,6 +22,10 @@ namespace Glesly
 
     typedef std::stack<LayerEffecrPtr> ObjectLayerStack;
 
+    class LayerEffectCreatorBase;
+
+    typedef boost::shared_ptr<LayerEffectCreatorBase> LayerCreatorPtr;
+
 }; // namespace Glesly
 
 #endif /* __GLESLY_INCLUDE_PUBLIC_GLESLY_EFFECT_PTR_H_INCLUDED__ */
