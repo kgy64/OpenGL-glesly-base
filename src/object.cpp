@@ -63,6 +63,12 @@ void Object::NextFrame(void)
     return;
  }
 
+ ObjectExecutorPtr executor = myExecute;
+ if (executor.get()) {
+    myExecute.reset();
+    executor->Execute(*this);
+ }
+
  ActivateVariables();
  BufferVariables();
  Frame();

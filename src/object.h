@@ -67,6 +67,21 @@ namespace Glesly
 
         ObjectWeak mySelf;
 
+        class ObjectExecutor
+        {
+            friend class Glesly::Object;
+            virtual void Execute(Glesly::Object & obj) =0;
+        }; // class ObjectExecutor
+
+        typedef boost::shared_ptr<ObjectExecutor> ObjectExecutorPtr;
+
+        ObjectExecutorPtr myExecute;
+
+        inline void Execute(ObjectExecutorPtr execute)
+        {
+            myExecute = execute;
+        }
+
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
 
