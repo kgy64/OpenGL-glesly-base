@@ -63,9 +63,9 @@ void Object::NextFrame(void)
     return;
  }
 
- ObjectExecutorPtr executor = myExecute;
+ ObjectCallbackPtr executor = myCallback;
  if (executor.get()) {
-    myExecute.reset();
+    myCallback.reset();
     executor->Execute(*this);
  }
 
