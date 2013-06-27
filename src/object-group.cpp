@@ -38,4 +38,15 @@ bool ObjectGroup::MouseClick(float x, float y, int index, int count)
  return false;
 }
 
+void ObjectGroup::KeyboardClick(UTF8::WChar key)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+   (*i)->KeyboardClick(key);
+ }
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

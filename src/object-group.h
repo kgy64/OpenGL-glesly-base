@@ -30,11 +30,13 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-     private:
-        SYS_DEFINE_CLASS_NAME("Glesly::ObjectGroup");
-
+     protected:
         virtual void NextFrame(void);
         virtual bool MouseClick(float x, float y, int index, int count);
+        virtual void KeyboardClick(UTF8::WChar key);
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::ObjectGroup");
 
     }; // class ObjectGroup
 

@@ -18,6 +18,7 @@
 #include <glesly/object-list+effect.h>
 #include <glesly/render-ptr.h>
 #include <glesly/shader-uniforms.h>
+#include <International/utf8.h>
 
 namespace Glesly
 {
@@ -36,6 +37,7 @@ namespace Glesly
         virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
+        virtual void KeyboardClick(UTF8::WChar key);
 
         float GetScreenAspect(void) const
         {

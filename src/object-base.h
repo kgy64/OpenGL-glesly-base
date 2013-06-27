@@ -12,6 +12,7 @@
 #define __GLESLY_SRC_OBJECT_BASE_H_INCLUDED__
 
 #include <glesly/object-ptr.h>
+#include <International/utf8.h>
 #include <Debug/Debug.h>
 
 namespace Glesly
@@ -29,7 +30,15 @@ namespace Glesly
         }
 
         virtual void NextFrame(void) =0;
-        virtual bool MouseClick(float x, float y, int index, int count) =0;
+
+        virtual bool MouseClick(float x, float y, int index, int count)
+        {
+            return false;
+        }
+
+        virtual void KeyboardClick(UTF8::WChar key)
+        {
+        }
 
      protected:
         ObjectBase(Glesly::Render & renderer):

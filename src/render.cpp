@@ -73,4 +73,19 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
  }
 }
 
+void Render::KeyboardClick(UTF8::WChar key)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (IsInputBlocked()) {
+    return;
+ }
+
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+   (*i)->KeyboardClick(key);
+ }
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
