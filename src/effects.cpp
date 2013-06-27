@@ -27,7 +27,7 @@ LayerChangeEffectManager::EffectUniforms::EffectUniforms(const Glesly::Shaders::
 {
 }
 
-void LayerChangeEffectManager::EffectFrame(LayerEffecrPtr & effect)
+void LayerChangeEffectManager::EffectFrame(LayerEffectPtr & effect)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 

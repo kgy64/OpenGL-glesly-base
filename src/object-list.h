@@ -66,7 +66,7 @@ namespace Glesly
             if (creator.get()) {
                 myNextLayer.reset();
                 // Put it on the stack:
-                LayerEffecrPtr effect = creator->GetEffect(render);
+                LayerEffectPtr effect = creator->GetEffect(render);
                 effect->SetPreviousObjects(GetObjectListPtr());
                 myLayers.push(effect);
                 effect->Start();
@@ -86,16 +86,16 @@ namespace Glesly
      protected:
         inline ObjectListBase(void)
         {
-            LayerEffecrPtr root_effect = JumpEffect::Create();
+            LayerEffectPtr root_effect = JumpEffect::Create();
             myLayers.push(root_effect);
         }
 
-        inline LayerEffecrPtr GetActualEffect(void)
+        inline LayerEffectPtr GetActualEffect(void)
         {
             return myLayers.top();
         }
 
-        inline const LayerEffecrPtr & GetActualEffect(void) const
+        inline const LayerEffectPtr & GetActualEffect(void) const
         {
             return myLayers.top();
         }

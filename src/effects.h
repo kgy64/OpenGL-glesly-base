@@ -147,9 +147,9 @@ namespace Glesly
         }
 
      public:
-        static inline LayerEffecrPtr Create(ObjectListPtr objects = ObjectListPtr())
+        static inline LayerEffectPtr Create(ObjectListPtr objects = ObjectListPtr())
         {
-            return LayerEffecrPtr(new JumpEffect(objects));
+            return LayerEffectPtr(new JumpEffect(objects));
         }
 
      private:
@@ -217,7 +217,7 @@ namespace Glesly
             myEffectFadeOut.ActivateVariables();
         }
 
-        void EffectFrame(LayerEffecrPtr & effect);
+        void EffectFrame(LayerEffectPtr & effect);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");
@@ -231,7 +231,7 @@ namespace Glesly
         {
         }
 
-        virtual LayerEffecrPtr GetEffect(Glesly::MenuRender &) =0;
+        virtual LayerEffectPtr GetEffect(Glesly::MenuRender &) =0;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerEffectCreatorBase");

@@ -18,9 +18,9 @@ namespace Glesly
 {
     class LayerChangeEffectBase;
 
-    typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffecrPtr;
+    typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffectPtr;
 
-    typedef std::stack<LayerEffecrPtr> ObjectLayerStack;
+    typedef std::stack<LayerEffectPtr> ObjectLayerStack;
 
     class LayerEffectCreatorBase;
 
