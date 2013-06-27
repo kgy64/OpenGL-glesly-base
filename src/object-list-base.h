@@ -1,20 +1,18 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  * Project:     Glesly: my GLES-based rendering library
- * Purpose:     Classes representing my Objects
+ * Purpose:     Low-level base of all Objects
  * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifndef __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
-#define __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__
+#ifndef __GLESLY_SRC_OBJECT_LIST_BASE_H_INCLUDED__
+#define __GLESLY_SRC_OBJECT_LIST_BASE_H_INCLUDED__
 
-#include <glesly/effects.h>
+#include <glesly/object-ptr.h>
 #include <Threads/Mutex.h>
-#include <System/TimeDelay.h>
-#include <Debug/Debug.h>
 
 namespace Glesly
 {
@@ -58,29 +56,6 @@ namespace Glesly
             return ObjectListInternal(*this);
         }
 
-        inline void CheckNextLayer(Glesly::MenuRender & render)
-        {
-            LayerCreatorPtr creator = myNextLayer;
-            if (creator.get()) {
-                myNextLayer.reset();
-                // Put it on the stack:
-                LayerEffectPtr effect = creator->GetEffect(render);
-                effect->SetPreviousObjects(GetObjectListPtr());
-                myLayers.push(effect);
-                effect->Start();
-            }
-        }
-
-        inline void PushLayer(LayerCreatorPtr creator)
-        {
-            myNextLayer = creator; // Don't worry if overwrites the previous one
-        }
-
-        inline void PopLayer(void)
-        {
-            GetActualEffect()->Drop(myLayers);
-        }
-
         Threads::Mutex & GetObjectMutex(void)
         {
             return myObjectMutex;
@@ -89,36 +64,17 @@ namespace Glesly
      protected:
         inline ObjectListBase(void)
         {
-            LayerEffectPtr root_effect = JumpEffect::Create();
-            myLayers.push(root_effect);
         }
 
-        inline LayerEffectPtr GetActualEffect(void)
+        virtual ObjectListPtr & GetObjectListPtr(void)
         {
-            return myLayers.top();
-        }
-
-        inline const LayerEffectPtr & GetActualEffect(void) const
-        {
-            return myLayers.top();
-        }
-
-        inline ObjectListPtr & GetObjectListPtr(void)
-        {
-            return GetActualEffect()->GetObjects();
-        }
-
-        inline bool IsEffectActive(void) const
-        {
-            return GetActualEffect()->IsActive();
+            return myObjects;
         }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase");
 
-        ObjectLayerStack myLayers;
-
-        LayerCreatorPtr myNextLayer;
+        ObjectListPtr myObjects;
 
         Threads::Mutex myObjectMutex;
 
@@ -154,6 +110,6 @@ namespace Glesly
 
 } // namespace Glesly
 
-#endif /* __GLESLY_SRC_OBJECT_LIST_H_INCLUDED__ */
+#endif /* __GLESLY_SRC_OBJECT_LIST_BASE_H_INCLUDED__ */
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

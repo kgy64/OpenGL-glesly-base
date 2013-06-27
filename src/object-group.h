@@ -11,7 +11,7 @@
 #ifndef __GLESLY_SRC_OBJECT_GROUP_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_GROUP_H_INCLUDED__
 
-#include <glesly/object-list.h>
+#include <glesly/object-list+effect.h>
 #include <glesly/object-base.h>
 
 namespace Glesly

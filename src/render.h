@@ -15,14 +15,14 @@
 
 #include <glesly/camera.h>
 #include <glesly/program.h>
-#include <glesly/object-list.h>
+#include <glesly/object-list+effect.h>
 #include <glesly/render-ptr.h>
 #include <glesly/shader-uniforms.h>
 
 namespace Glesly
 {
     /// An OpenGL program with Objects
-    class Render: public Glesly::Program, public Glesly::ObjectListBase
+    class Render: public Glesly::Program, public Glesly::ObjectsWithEffect
     {
      public:
         virtual ~Render();
