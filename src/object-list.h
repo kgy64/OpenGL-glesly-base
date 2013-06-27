@@ -43,8 +43,6 @@ namespace Glesly
          private:
             ObjectListInternal(ObjectListBase & parent);
 
-            static Threads::Mutex myMutex;
-
             ObjectListBase & myParent;
 
             Threads::Lock myLock;
@@ -83,6 +81,11 @@ namespace Glesly
             GetActualEffect()->Drop(myLayers);
         }
 
+        Threads::Mutex & GetObjectMutex(void)
+        {
+            return myObjectMutex;
+        }
+
      protected:
         inline ObjectListBase(void)
         {
@@ -117,11 +120,13 @@ namespace Glesly
 
         LayerCreatorPtr myNextLayer;
 
+        Threads::Mutex myObjectMutex;
+
     }; // class ObjectListBase
 
     inline ObjectListBase::ObjectListInternal::ObjectListInternal(ObjectListBase & parent):
         myParent(parent),
-        myLock(myMutex),
+        myLock(parent.GetObjectMutex()),
         myObjects(parent.GetObjectListPtr())
     {
     }

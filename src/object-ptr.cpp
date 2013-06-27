@@ -13,8 +13,8 @@
 
 using namespace Glesly;
 
-ObjectPtr::ObjectPtr(Object * obj):
-    boost::shared_ptr<Object>(obj)
+ObjectPtr::ObjectPtr(ObjectBase * obj):
+    boost::shared_ptr<ObjectBase>(obj)
 {
  obj->mySelf = *this;
 };

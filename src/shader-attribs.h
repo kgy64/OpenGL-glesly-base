@@ -15,6 +15,8 @@
 
 namespace Glesly
 {
+    class Object;
+
     namespace Shaders
     {
         class VBOAttribBase: public AttribList

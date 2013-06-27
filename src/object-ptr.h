@@ -17,23 +17,23 @@
 
 namespace Glesly
 {
-    class Object;
+    class ObjectBase;
 
-    typedef boost::weak_ptr<Object> ObjectWeak;
+    typedef boost::weak_ptr<ObjectBase> ObjectWeak;
 
-    class ObjectPtr: public boost::shared_ptr<Object>
+    class ObjectPtr: public boost::shared_ptr<ObjectBase>
     {
      public:
-        ObjectPtr(Object * obj);
+        ObjectPtr(ObjectBase * obj);
 
-        inline ObjectPtr(boost::shared_ptr<Object> & obj):
-            boost::shared_ptr<Object>(obj)
+        inline ObjectPtr(boost::shared_ptr<ObjectBase> & obj):
+            boost::shared_ptr<ObjectBase>(obj)
         {
         }
 
-        inline ObjectPtr & operator=(boost::shared_ptr<Object> & obj)
+        inline ObjectPtr & operator=(boost::shared_ptr<ObjectBase> & obj)
         {
-            static_cast<boost::shared_ptr<Object>&>(*this) = obj;
+            static_cast<boost::shared_ptr<ObjectBase>&>(*this) = obj;
             return *this;
         }
 

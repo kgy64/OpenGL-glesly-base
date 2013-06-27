@@ -14,27 +14,25 @@
 #include <glesly/render.h>
 #include <glesly/texture.h>
 #include <glesly/shader-ptr.h>
-#include <glesly/object-ptr.h>
+#include <glesly/object-base.h>
 #include <glesly/math/matrix.h>
 #include <glesly/shader-uniforms.h>
 #include <glesly/shader-attribs.h>
 
 namespace Glesly
 {
-    class Object: public Glesly::Shaders::VarManager
+    class Object: public ObjectBase, public Glesly::Shaders::VarManager
     {
         class UniformList;
         class VBOAttribBase;
 
         friend class UniformList;
         friend class VBOAttribBase;
-        friend ObjectPtr;
 
      public:
         virtual ~Object();
 
-        void NextFrame(void);
-
+        virtual void NextFrame(void);
         virtual bool MouseClick(float x, float y, int index, int count);
 
         virtual GLint GetUniformLocationSafe(const char * name) const
@@ -65,8 +63,6 @@ namespace Glesly
      protected:
         Object(Render & renderer);
 
-        ObjectWeak mySelf;
-
         class ObjectCallback
         {
             friend class Glesly::Object;
@@ -85,16 +81,6 @@ namespace Glesly
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
 
-        inline Render & GetProgram(void)
-        {
-            return myProgram;
-        }
-
-        inline const Render & GetProgram(void) const
-        {
-            return myProgram;
-        }
-
         inline void Enable(bool enable = true)
         {
             myEnabled = enable;
@@ -104,8 +90,6 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
         virtual void Frame(void) { };
-
-        Render & myProgram;
 
         /// The object's Projection Matrix
         Glesly::Transformation myProjection;
