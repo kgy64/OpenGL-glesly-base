@@ -47,12 +47,12 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        inline Render & GetProgram(void)
+        inline Render & GetRenderer(void)
         {
             return myProgram;
         }
 
-        inline const Render & GetProgram(void) const
+        inline const Render & GetRenderer(void) const
         {
             return myProgram;
         }

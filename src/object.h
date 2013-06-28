@@ -37,22 +37,22 @@ namespace Glesly
 
         virtual GLint GetUniformLocationSafe(const char * name) const
         {
-            return GetProgram().GetUniformLocationSafe(name);
+            return GetRenderer().GetUniformLocationSafe(name);
         }
 
         inline GLint GetUniformLocation(const char * name) const
         {
-            return GetProgram().GetUniformLocation(name);
+            return GetRenderer().GetUniformLocation(name);
         }
 
         inline GLint GetAttribLocation(const char * name) const
         {
-            return GetProgram().GetAttribLocation(name);
+            return GetRenderer().GetAttribLocation(name);
         }
 
         inline GLint GetAttribLocationSafe(const char * name) const
         {
-            return GetProgram().GetAttribLocationSafe(name);
+            return GetRenderer().GetAttribLocationSafe(name);
         }
 
         inline Glesly::Transformation & GetProjection(void)
