@@ -62,8 +62,7 @@ bool LayerChangeEffectBase::Step(Glesly::LayerChangeEffectBase::EffectParameters
     return false;
  }
 
- SYS::TimeDelay now;
- float state = 1e-3*(float)(now - myStart).ToMillisecond()/myTime;
+ float state = 1e-3*(float)SYS::TimeElapsed(myStart).ToMillisecond()/myTime;
 
  SYS_DEBUG(DL_INFO2, "Layer Effect: State=" << state << ", " << (layerContainer ? "outgoing" : "incoming"));
 

@@ -89,8 +89,7 @@ namespace Glesly
 
         inline void MouseButtonState(int index, bool pressed)
         {
-            SYS::TimeDelay now;
-            myMouse.ButtonState(index, pressed, now);
+            myMouse.ButtonState(index, pressed, SYS::TimeDelay());
         }
 
         TargetHolder * myParent;

@@ -13,7 +13,7 @@
 
 #include <GLES2/gl2.h>
 
-#include <System/TimeDelay.h>
+#include <System/TimeElapsed.h>
 #include <glesly/shader-uniforms.h>
 #include <glesly/object-ptr.h>
 #include <glesly/effect-ptr.h>
@@ -89,8 +89,7 @@ namespace Glesly
 
         inline void RestartTimer(void)
         {
-            SYS::TimeDelay now;
-            myStart = now;
+            myStart = SYS::TimeDelay();
         }
 
         inline void Start(void)
