@@ -8,9 +8,10 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "shader.h"
-
+#include <glesly/config.h>
 #include <glesly/error.h>
+
+#include "shader.h"
 
 using namespace Glesly;
 
@@ -63,17 +64,24 @@ std::string Shader::GetLogInfo(void)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool Shader::Reader::fromFile = true;
+bool Shader::Reader::fromFile = USE_SHADER_FILES;
 
 Shader::Reader::Reader(const char * source)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (fromFile) {
-    myFile.reset(new FILES::FileMap(source));
+    try {
+        myFile.reset(new FILES::FileMap(source));
+    } catch (EX::Assert & ex) {
+        SYS_DEBUG(DL_WARNING, "Shader File '" << source << "' could not be loaded, using built-in sources.");
+        fromFile = false;
+        goto use_built_in;
+    }
     mySource = reinterpret_cast<const char *>(myFile->GetData());
     myLength = myFile->GetSize();
  } else {
+use_built_in:;
     mySource = source;
     myLength = strlen(source);
  }
@@ -84,10 +92,17 @@ Shader::Reader::Reader(const Glesly::ShaderSource & source)
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (fromFile) {
-    myFile.reset(new FILES::FileMap(source.filename));
+    try {
+        myFile.reset(new FILES::FileMap(source.filename));
+    } catch (EX::Assert & ex) {
+        SYS_DEBUG(DL_WARNING, "Shader File '" << source.filename << "' could not be loaded, using built-in sources.");
+        fromFile = false;
+        goto use_built_in;
+    }
     mySource = reinterpret_cast<const char *>(myFile->GetData());
     myLength = myFile->GetSize(); // It is not null-terminated
  } else {
+use_built_in:;
     mySource = source.content;
     myLength = strlen(mySource);
  }

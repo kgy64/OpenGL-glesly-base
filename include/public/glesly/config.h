@@ -4,7 +4,8 @@
  * Purpose:     Generic coinfiguration info
  * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
- * Comments:    
+ * Comments:    Most of these definitions can be given in the build environment.
+ *              The values set here basically for development.
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -12,8 +13,11 @@
 #define __GLESLY_INCLUDE_PUBLIC_GLESLY_CONFIG_H_INCLUDED__
 
 #ifndef CONFIG_BASE_DIR
-// It is defined externally for release build, this definition is only for development:
-#define CONFIG_BASE_DIR "./config/data/"
+#define CONFIG_BASE_DIR     "./config/data/"
+#endif
+
+#ifndef USE_SHADER_FILES
+#define USE_SHADER_FILES    true
 #endif
 
 #endif /* __GLESLY_INCLUDE_PUBLIC_GLESLY_CONFIG_H_INCLUDED__ */
