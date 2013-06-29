@@ -24,8 +24,7 @@ using namespace Glesly;
 
 Object::Object(Render & renderer):
     ObjectBase(renderer),
-    p_matrix(*this, "p_matrix", myProjection),
-    myEnabled(true)
+    p_matrix(*this, "p_matrix", myProjection)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -59,7 +58,7 @@ void Object::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!myEnabled) {
+ if (!IsEnabled()) {
     return;
  }
 

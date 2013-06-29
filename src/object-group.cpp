@@ -16,6 +16,10 @@ void ObjectGroup::NextFrame(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ if (!IsEnabled()) {
+    return;
+ }
+
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
@@ -26,6 +30,10 @@ void ObjectGroup::NextFrame(void)
 bool ObjectGroup::MouseClick(float x, float y, int index, int count)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (!IsEnabled()) {
+    return false;
+ }
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 

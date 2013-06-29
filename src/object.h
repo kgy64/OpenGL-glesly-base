@@ -81,11 +81,6 @@ namespace Glesly
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
 
-        inline void Enable(bool enable = true)
-        {
-            myEnabled = enable;
-        }
-
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
@@ -95,8 +90,6 @@ namespace Glesly
         Glesly::Transformation myProjection;
 
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
-
-        bool myEnabled;
 
     }; // class Object
 

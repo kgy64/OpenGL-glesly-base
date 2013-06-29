@@ -40,9 +40,17 @@ namespace Glesly
         {
         }
 
+        inline void Enable(bool enable = true)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO2, "now it is " << (enable ? "enabled" : "disabled"));
+            myEnabled = enable;
+        }
+
      protected:
         ObjectBase(Glesly::Render & renderer):
-            myProgram(renderer)
+            myProgram(renderer),
+            myEnabled(true)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
@@ -57,12 +65,21 @@ namespace Glesly
             return myProgram;
         }
 
+        inline bool IsEnabled(void) const
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO3, "the object is " << (myEnabled ? "enabled" : "disabled"));
+            return myEnabled;
+        }
+
         ObjectWeak mySelf;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectBase");
 
         Render & myProgram;
+
+        bool myEnabled;
 
     }; // class ObjectBase
 

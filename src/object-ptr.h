@@ -24,6 +24,10 @@ namespace Glesly
     class ObjectPtr: public boost::shared_ptr<ObjectBase>
     {
      public:
+        inline ObjectPtr(void)
+        {
+        }
+
         ObjectPtr(ObjectBase * obj);
 
         inline ObjectPtr(boost::shared_ptr<ObjectBase> & obj):
