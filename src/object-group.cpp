@@ -12,7 +12,7 @@
 
 using namespace Glesly;
 
-void ObjectGroup::NextFrame(void)
+void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -23,7 +23,7 @@ void ObjectGroup::NextFrame(void)
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    (*i)->NextFrame();
+    (*i)->NextFrame(frame_start_time);
  }
 }
 

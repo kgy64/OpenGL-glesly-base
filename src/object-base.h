@@ -11,9 +11,12 @@
 #ifndef __GLESLY_SRC_OBJECT_BASE_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_BASE_H_INCLUDED__
 
+#include <System/TimeElapsed.h>
 #include <glesly/object-ptr.h>
 #include <International/utf8.h>
 #include <Debug/Debug.h>
+
+SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
@@ -29,7 +32,7 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        virtual void NextFrame(void) =0;
+        virtual void NextFrame(const SYS::TimeDelay & frame_start_time) =0;
 
         virtual bool MouseClick(float x, float y, int index, int count)
         {
@@ -63,14 +66,7 @@ namespace Glesly
 
         typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
 
-        void ExecuteCallback(void)
-        {
-            ObjectCallbackPtr executor = myCallback;
-            if (executor.get()) {
-                myCallback.reset();
-                executor->Execute(*this);
-            }
-        }
+        void ExecuteCallback(const SYS::TimeDelay & frame_start_time);
 
         inline void Execute(ObjectCallbackPtr callback)
         {

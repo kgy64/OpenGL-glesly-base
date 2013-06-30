@@ -58,7 +58,7 @@ void Main::Run(void)
         if (IsFinished()) {
             goto finished;
         }
-        (*i)->NextFrame();
+        (*i)->NextFrame(myFrameStartTime);
     }
 
     GetBackend().SwapBuffers();

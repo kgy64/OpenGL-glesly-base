@@ -51,6 +51,8 @@ namespace Glesly
      protected:
         Glesly::CameraMatrix myViewMatrix;
 
+        SYS::TimeDelay myFrameStartTime;
+
         virtual bool IsFinished(void) const =0;
 
      private:

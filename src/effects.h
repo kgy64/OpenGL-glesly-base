@@ -130,7 +130,7 @@ namespace Glesly
 
         ObjectLayerStack * layerContainer;
 
-        void Frame(void);
+        void Frame(const SYS::TimeDelay & frame_start_time);
 
         virtual void SetState(Glesly::LayerChangeEffectBase::EffectParameters & params, float state) { }
 
@@ -216,7 +216,7 @@ namespace Glesly
             myEffectFadeOut.ActivateVariables();
         }
 
-        void EffectFrame(LayerEffectPtr & effect);
+        void EffectFrame(LayerEffectPtr & effect, const SYS::TimeDelay & frame_start_time);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerChangeEffectManager");

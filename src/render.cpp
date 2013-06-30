@@ -28,7 +28,7 @@ Render::~Render()
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
-void Render::NextFrame(void)
+void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -36,12 +36,12 @@ void Render::NextFrame(void)
 
  ActivateVariables();
 
- Frame();
+ Frame(frame_start_time);
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    (*i)->NextFrame();
+    (*i)->NextFrame(frame_start_time);
  }
 
  UnuseProgram();

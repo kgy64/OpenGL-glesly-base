@@ -27,13 +27,13 @@ LayerChangeEffectManager::EffectUniforms::EffectUniforms(const Glesly::Shaders::
 {
 }
 
-void LayerChangeEffectManager::EffectFrame(LayerEffectPtr & effect)
+void LayerChangeEffectManager::EffectFrame(LayerEffectPtr & effect, const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (effect->Step(myEffectParams)) {
     FadeOut();
-    effect->Frame();
+    effect->Frame(frame_start_time);
  }
 
  FadeIn();
@@ -45,12 +45,12 @@ void LayerChangeEffectManager::EffectFrame(LayerEffectPtr & effect)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void LayerChangeEffectBase::Frame(void)
+void LayerChangeEffectBase::Frame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  for (ObjectListIterator i = previousObjects->begin(); i != previousObjects->end(); ++i) {
-    (*i)->NextFrame();
+    (*i)->NextFrame(frame_start_time);
  }
 }
 

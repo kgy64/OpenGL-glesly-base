@@ -54,7 +54,7 @@ void Object::DrawElements(GLenum mode, GLsizei count)
  CheckEGLError("glDrawElements()");
 }
 
-void Object::NextFrame(void)
+void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -62,7 +62,7 @@ void Object::NextFrame(void)
     return;
  }
 
- ExecuteCallback();
+ ExecuteCallback(frame_start_time);
 
  ActivateVariables();
  BufferVariables();

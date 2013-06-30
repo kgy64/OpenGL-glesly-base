@@ -31,7 +31,7 @@ namespace Glesly
         }
 
      protected:
-        virtual void NextFrame(void);
+        virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
         virtual bool MouseClick(float x, float y, int index, int count);
         virtual void KeyboardClick(UTF8::WChar key);
 

@@ -33,7 +33,7 @@ namespace Glesly
             return myCamera;
         }
 
-        virtual void NextFrame(void);
+        virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
         virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
@@ -53,7 +53,7 @@ namespace Glesly
         }
 
         virtual void ConvertMouseCoordinates(float & x, float & y) { }
-        virtual void Frame(void) { }
+        virtual void Frame(const SYS::TimeDelay & frame_start_time) { }
 
         float myScreenAspect;
 
