@@ -200,7 +200,6 @@ void TargetX11::ProcessPendingEvents(void)
  Window child;
  int rx, ry, wx, wy;
  unsigned int mask;
- SYS::TimeDelay now;
 
  bool result;
 
@@ -215,6 +214,8 @@ void TargetX11::ProcessPendingEvents(void)
         AltState(mask & LockMask);
         ControlState(mask & ControlMask);
         MousePosition(wx, wy);
+        SYS::TimeDelay now;
+        now.SetNow();
         MouseButtonState(0, mask & Button1Mask, now);
         MouseButtonState(1, mask & Button2Mask, now);
         MouseButtonState(2, mask & Button3Mask, now);

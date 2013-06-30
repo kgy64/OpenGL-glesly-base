@@ -63,21 +63,6 @@ namespace Glesly
      protected:
         Object(Render & renderer);
 
-        class ObjectCallback
-        {
-            friend class Glesly::Object;
-            virtual void Execute(Glesly::Object & obj) =0;
-        }; // class ObjectCallback
-
-        typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
-
-        ObjectCallbackPtr myCallback;
-
-        inline void Execute(ObjectCallbackPtr callback)
-        {
-            myCallback = callback;
-        }
-
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
 

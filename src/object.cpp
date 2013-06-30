@@ -62,11 +62,7 @@ void Object::NextFrame(void)
     return;
  }
 
- ObjectCallbackPtr executor = myCallback;
- if (executor.get()) {
-    myCallback.reset();
-    executor->Execute(*this);
- }
+ ExecuteCallback();
 
  ActivateVariables();
  BufferVariables();

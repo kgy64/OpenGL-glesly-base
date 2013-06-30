@@ -89,7 +89,7 @@ namespace Glesly
 
         inline void RestartTimer(void)
         {
-            myStart = SYS::TimeDelay();
+            myStart.SetNow();
         }
 
         inline void Start(void)

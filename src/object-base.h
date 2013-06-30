@@ -49,20 +49,42 @@ namespace Glesly
 
      protected:
         ObjectBase(Glesly::Render & renderer):
-            myProgram(renderer),
+            myRenderer(renderer),
             myEnabled(true)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        class ObjectCallback
+        {
+            friend class Glesly::ObjectBase;
+            virtual void Execute(Glesly::ObjectBase & obj) =0;
+        }; // class ObjectCallback
+
+        typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
+
+        void ExecuteCallback(void)
+        {
+            ObjectCallbackPtr executor = myCallback;
+            if (executor.get()) {
+                myCallback.reset();
+                executor->Execute(*this);
+            }
+        }
+
+        inline void Execute(ObjectCallbackPtr callback)
+        {
+            myCallback = callback;
+        }
+
         inline Render & GetRenderer(void)
         {
-            return myProgram;
+            return myRenderer;
         }
 
         inline const Render & GetRenderer(void) const
         {
-            return myProgram;
+            return myRenderer;
         }
 
         inline bool IsEnabled(void) const
@@ -77,9 +99,11 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectBase");
 
-        Render & myProgram;
+        Render & myRenderer;
 
         bool myEnabled;
+
+        ObjectCallbackPtr myCallback;
 
     }; // class ObjectBase
 
