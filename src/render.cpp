@@ -88,4 +88,9 @@ void Render::KeyboardClick(UTF8::WChar key)
  }
 }
 
+int Render::GetCallbackTimeLimit(void) const
+{
+ return 30; // TODO: be configurable!
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

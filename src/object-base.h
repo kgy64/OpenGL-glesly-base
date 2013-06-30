@@ -51,17 +51,22 @@ namespace Glesly
         }
 
      protected:
-        ObjectBase(Glesly::Render & renderer):
-            myRenderer(renderer),
-            myEnabled(true)
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-        }
+        ObjectBase(Glesly::Render & renderer);
 
         class ObjectCallback
         {
+            /*! Only the class \ref Glesly::ObjectBase is allowed to call the callback
+             *  function \ref ObjectCallback::Execute().
+             *  \see ObjectBase::ExecuteCallback() for details. */
             friend class Glesly::ObjectBase;
-            virtual void Execute(Glesly::ObjectBase & obj) =0;
+
+            /// Callback function to execute sometning on the given object
+            /*! This function will be called before the next frame rendering.
+             *  \param  obj     The target object of the callback.
+             *  \retval true    Delete the callback from the object.
+             *  \retval false   Keep the callback. It will be called before the next frame too. */
+            virtual bool Execute(Glesly::ObjectBase & obj) =0;
+
         }; // class ObjectCallback
 
         typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
@@ -98,6 +103,8 @@ namespace Glesly
         Render & myRenderer;
 
         bool myEnabled;
+
+        int myCallbackTimeLimit;
 
         ObjectCallbackPtr myCallback;
 

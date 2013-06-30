@@ -44,6 +44,8 @@ namespace Glesly
             return myScreenAspect;
         }
 
+        int GetCallbackTimeLimit(void) const;
+
      protected:
         Render(float aspect = 1.0f);
 
