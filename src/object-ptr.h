@@ -30,7 +30,7 @@ namespace Glesly
 
         ObjectPtr(ObjectBase * obj);
 
-        inline ObjectPtr(boost::shared_ptr<ObjectBase> & obj):
+        inline ObjectPtr(boost::shared_ptr<ObjectBase> obj):
             boost::shared_ptr<ObjectBase>(obj)
         {
         }
@@ -42,6 +42,42 @@ namespace Glesly
         }
 
     }; // ObjectPtr
+
+    template<class OBJ>
+    class ObjectWrapper: public ObjectPtr
+    {
+     public:
+        inline ObjectWrapper(void)
+        {
+        }
+
+        inline ObjectWrapper(OBJ * obj):
+            ObjectPtr(obj)
+        {
+        }
+
+        inline ObjectWrapper(ObjectPtr obj):
+            ObjectPtr(obj)
+        {
+        }
+
+        inline ObjectWrapper<OBJ> & operator=(ObjectPtr & obj)
+        {
+            static_cast<ObjectPtr&>(*this) = obj;
+            return *this;
+        }
+
+        inline OBJ * operator->()
+        {
+            return static_cast<OBJ*>(get());
+        }
+
+        inline const OBJ * operator->() const
+        {
+            return static_cast<OBJ*>(get());
+        }
+
+    }; // class ObjectWrapper
 
     typedef std::list<ObjectPtr> Objects;
 

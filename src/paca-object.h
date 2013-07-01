@@ -40,6 +40,11 @@ namespace Glesly
             return myPaca;
         };
 
+        inline void UpdateTexture(void)
+        {
+            texture.Update();
+        }
+
         virtual void Frame(void);
 
      public:
@@ -53,7 +58,6 @@ namespace Glesly
 
         PaCaLib::PacaTarget myPaca;
 
-     protected:
         Glesly::Shaders::UniformTexture texture;
 
     }; // class PaCaObject
