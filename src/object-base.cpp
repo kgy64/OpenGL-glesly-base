@@ -27,20 +27,27 @@ void ObjectBase::ExecuteCallback(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- ObjectCallbackPtr executor = myCallback;
- if (executor.get()) {
-    SYS::TimeElapsed elapsed(frame_start_time);
-    SYS_DEBUG(DL_INFO2, "Time from frame start: " << elapsed.ToMillisecond() << " ms");
-    // Note: in debug mode, this time can be significantly longer, so ignore it instead:
-    if (!SYS_DEBUG_ON) {
-        if (elapsed.ToMillisecond() > myCallbackTimeLimit) {
-            myCallbackTimeLimit += 1 + myCallbackTimeLimit / 8; // Exponential increase
-            return;
-        }
-        myCallbackTimeLimit = myRenderer.GetCallbackTimeLimit();
+ // TODO Lock?
+ if (myCallbacks.empty()) {
+    return;
+ }
+
+ SYS::TimeElapsed elapsed(frame_start_time);
+ SYS_DEBUG(DL_INFO2, "Time from frame start: " << elapsed.ToMillisecond() << " ms");
+
+ // Note: in debug mode, this time can be significantly longer, so ignore it instead:
+ if (!SYS_DEBUG_ON) {
+    if (elapsed.ToMillisecond() > myCallbackTimeLimit) {
+        myCallbackTimeLimit += 1 + myCallbackTimeLimit / 8; // Exponential increase
+        return;
     }
-    if (executor->Execute(*this)) {
-        myCallback.reset();
+    myCallbackTimeLimit = myRenderer.GetCallbackTimeLimit();
+ }
+
+ for (std::list<ObjectCallbackPtr>::iterator i = myCallbacks.begin(); i != myCallbacks.end(); ) {
+    std::list<ObjectCallbackPtr>::iterator obj = i++;
+    if ((*obj)->Execute(*this)) {
+        myCallbacks.erase(obj);
     }
  }
 }

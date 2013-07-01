@@ -11,6 +11,8 @@
 #ifndef __GLESLY_SRC_OBJECT_BASE_H_INCLUDED__
 #define __GLESLY_SRC_OBJECT_BASE_H_INCLUDED__
 
+#include <list>
+
 #include <System/TimeElapsed.h>
 #include <glesly/object-ptr.h>
 #include <International/utf8.h>
@@ -75,7 +77,8 @@ namespace Glesly
 
         inline void Execute(ObjectCallbackPtr callback)
         {
-            myCallback = callback;
+            // TODO Lock?
+            myCallbacks.push_back(callback);
         }
 
         inline Render & GetRenderer(void)
@@ -106,7 +109,7 @@ namespace Glesly
 
         int myCallbackTimeLimit;
 
-        ObjectCallbackPtr myCallback;
+        std::list<ObjectCallbackPtr> myCallbacks;
 
     }; // class ObjectBase
 
