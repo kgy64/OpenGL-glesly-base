@@ -25,8 +25,33 @@ namespace Glesly
 
     class PaCaObject: public Glesly::RectangleObject<2,2>, private _RectangleInit
     {
+        class TextureUpdateCallback;
+        friend class TextureUpdateCallback;
+
+        inline void UpdateTextureInternal(void)
+        {
+            texture.Update();
+        }
+
+        class TextureUpdateCallback: public ObjectCallback
+        {
+            friend class PaCaObject;
+
+            static ObjectCallbackPtr Create(void)
+            {
+                return ObjectCallbackPtr(new TextureUpdateCallback);
+            }
+
+            virtual bool Execute(Glesly::ObjectBase & obj)
+            {
+                static_cast<PaCaObject&>(obj).UpdateTextureInternal();
+                return true; // One-shot
+            }
+
+        }; // class TextureUpdateCallback
+
      protected:
-         inline PaCaObject(Glesly::Render & render, int width, int height, float aspect = 1.0f):
+        inline PaCaObject(Glesly::Render & render, int width, int height, float aspect = 1.0f):
             Glesly::RectangleObject<2,2>(render),
             myPaca(width, height, aspect),
             texture(*this, "texture", myPaca, 0, GL_RGBA)
@@ -42,7 +67,7 @@ namespace Glesly
 
         inline void UpdateTexture(void)
         {
-            texture.Update();
+            Execute(TextureUpdateCallback::Create());
         }
 
         virtual void Frame(void);
