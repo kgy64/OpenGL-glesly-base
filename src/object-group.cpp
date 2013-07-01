@@ -22,6 +22,14 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
+ if (!p.get()) {
+    // If a stupid group has no objects at all:
+    SYS_DEBUG(DL_INFO2, "Having no objects");
+    return;
+ }
+
+ SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
     (*i)->NextFrame(frame_start_time);
  }

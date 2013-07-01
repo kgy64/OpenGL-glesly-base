@@ -28,17 +28,9 @@ namespace Glesly
 
             void Add(ObjectPtr object);
 
-            ObjectListIterator begin(void)
-            {
-                return myObjects->begin();
-            }
-
-            ObjectListIterator end(void)
-            {
-                return myObjects->end();
-            }
-
          private:
+            SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase::ObjectListInternal");
+
             ObjectListInternal(ObjectListBase & parent);
 
             ObjectListBase & myParent;
@@ -85,21 +77,27 @@ namespace Glesly
         myLock(parent.GetObjectMutex()),
         myObjects(parent.GetObjectListPtr())
     {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
     }
 
     inline ObjectListBase::ObjectListInternal::~ObjectListInternal()
     {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
         if (myModifiedObjects.get()) {
+            SYS_DEBUG(DL_INFO1, "Passing " << myModifiedObjects->size() << " objects");
             myParent.GetObjectListPtr() = myModifiedObjects;
         }
     }
 
     inline void ObjectListBase::ObjectListInternal::Add(ObjectPtr object)
     {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
         if (!myModifiedObjects.get()) {
             if (myObjects.get()) {
+                SYS_DEBUG(DL_INFO1, "Copying " << myObjects->size() << " objects");
                 myModifiedObjects.reset(new Objects(*myObjects));
             } else {
+                SYS_DEBUG(DL_INFO1, "Creating empty container");
                 myModifiedObjects.reset(new Objects);
             }
         }
