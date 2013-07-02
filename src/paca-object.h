@@ -30,6 +30,7 @@ namespace Glesly
 
         inline void UpdateTextureInternal(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             texture.Update();
         }
 
