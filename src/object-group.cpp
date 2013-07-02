@@ -31,6 +31,9 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
  SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+    if (!(*i)->IsEnabled()) {
+        continue;
+    }
     (*i)->NextFrame(frame_start_time);
  }
 }
@@ -46,9 +49,12 @@ bool ObjectGroup::MouseClick(float x, float y, int index, int count)
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-   if ((*i)->MouseClick(x, y, index, count)) {
+    if (!(*i)->IsEnabled()) {
+        continue;
+    }
+    if ((*i)->MouseClick(x, y, index, count)) {
        return true;
-   }
+    }
  }
 
  return false;
@@ -61,7 +67,10 @@ void ObjectGroup::KeyboardClick(UTF8::WChar key)
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-   (*i)->KeyboardClick(key);
+    if (!(*i)->IsEnabled()) {
+        continue;
+    }
+    (*i)->KeyboardClick(key);
  }
 }
 

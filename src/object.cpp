@@ -58,10 +58,6 @@ void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!IsEnabled()) {
-    return;
- }
-
  ExecuteCallback(frame_start_time);
 
  ActivateVariables();

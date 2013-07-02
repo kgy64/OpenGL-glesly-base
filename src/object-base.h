@@ -23,10 +23,12 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 namespace Glesly
 {
     class Render;
+    class ObjectGroup;
 
     class ObjectBase
     {
         friend class ObjectPtr;
+        friend class ObjectGroup;
 
      public:
         virtual ~ObjectBase()
