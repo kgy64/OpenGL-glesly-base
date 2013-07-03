@@ -48,6 +48,8 @@ bool ObjectGroup::MouseClick(float x, float y, int index, int count)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
+ SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
     if (!(*i)->IsEnabled()) {
         continue;
@@ -63,6 +65,10 @@ bool ObjectGroup::MouseClick(float x, float y, int index, int count)
 void ObjectGroup::KeyboardClick(UTF8::WChar key)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (!IsEnabled()) {
+    return;
+ }
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 

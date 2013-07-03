@@ -11,67 +11,37 @@
 #ifndef __GLESLY_SRC_PACA_OBJECT_H_INCLUDED__
 #define __GLESLY_SRC_PACA_OBJECT_H_INCLUDED__
 
-#include <glesly/rectangle-object.h>
+#include <glesly/paca-ref.h>
 #include <pacalib/pacalib.h>
 
 namespace Glesly
 {
-    class _RectangleInit
+    class _PacaObject_Base
     {
      protected:
-        static void RectangleVerticesInit(Glesly::Shaders::VBOAttribFloatVector<4, 3> & position, Glesly::Shaders::VBOAttribFloatVector<4, 2> & texcoord, Shaders::VBOAttribBase & elements);
-
-    }; // class _RectangleInit
-
-    class PaCaObject: public Glesly::RectangleObject<2,2>, private _RectangleInit
-    {
-        class TextureUpdateCallback;
-        friend class TextureUpdateCallback;
-
-        inline void UpdateTextureInternal(void)
+        inline _PacaObject_Base(int width, int height):
+            myPaca(width, height)
         {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            texture.Update();
         }
 
-        class TextureUpdateCallback: public ObjectCallback
-        {
-            friend class PaCaObject;
+        PaCaLib::PacaTarget myPaca;
 
-            static ObjectCallbackPtr Create(void)
-            {
-                return ObjectCallbackPtr(new TextureUpdateCallback);
-            }
+    }; // class _PacaObject_Base
 
-            virtual bool Execute(Glesly::ObjectBase & obj)
-            {
-                static_cast<PaCaObject&>(obj).UpdateTextureInternal();
-                return true; // One-shot
-            }
-
-        }; // class TextureUpdateCallback
-
+    class PaCaObject: public _PacaObject_Base, public Glesly::PaCaRef
+    {
      protected:
-        inline PaCaObject(Glesly::Render & render, int width, int height, float aspect = 1.0f):
-            Glesly::RectangleObject<2,2>(render),
-            myPaca(width, height, aspect),
-            texture(*this, "texture", myPaca, 0, GL_RGBA)
+        inline PaCaObject(Glesly::Render & render, int width, int height):
+            _PacaObject_Base(width, height),
+            PaCaRef(render, myPaca)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            RectangleVerticesInit(position, texcoord, elements);
         }
 
         inline PaCaLib::PacaTarget & PaCa(void)
         {
             return myPaca;
         };
-
-        inline void UpdateTexture(void)
-        {
-            Execute(TextureUpdateCallback::Create());
-        }
-
-        virtual void Frame(void);
 
      public:
         virtual ~PaCaObject()
@@ -81,10 +51,6 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::PaCaObject");
-
-        PaCaLib::PacaTarget myPaca;
-
-        Glesly::Shaders::UniformTexture texture;
 
     }; // class PaCaObject
 

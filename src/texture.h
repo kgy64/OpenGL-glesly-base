@@ -26,7 +26,6 @@ namespace Glesly
     class Texture2DRaw
     {
      protected:
-        Texture2DRaw(void * pixels, int width, int height, GLenum format = GL_RGB);
         Texture2DRaw(const Target2D & target, GLenum format = GL_RGB, bool update_now = true);
         virtual ~Texture2DRaw();
 
@@ -51,7 +50,7 @@ namespace Glesly
 
         GLenum myFormat;
 
-        const void * myPixels;
+        const Target2D & myTarget;
 
      public:
         int GetWidth(void) const

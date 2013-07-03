@@ -63,6 +63,8 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
 
     ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
+    SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+
     for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
        if ((*i)->MouseClick(horiz, vert, index, count)) {
            break;
@@ -82,6 +84,8 @@ void Render::KeyboardClick(UTF8::WChar key)
  }
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
    (*i)->KeyboardClick(key);

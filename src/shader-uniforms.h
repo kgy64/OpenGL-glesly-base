@@ -111,14 +111,6 @@ namespace Glesly
         class UniformTexture: public UniformBase, public Texture2DRaw
         {
          public:
-            UniformTexture(UniformManager & obj, const char * name, void * pixels, int width, int height, int index = 0, GLenum format = GL_RGB):
-                UniformBase(obj, name),
-                Texture2DRaw(pixels, width, height, format),
-                myIndex(index)
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-            }
-
             UniformTexture(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
                 Texture2DRaw(target, format, false),

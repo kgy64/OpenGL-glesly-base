@@ -20,22 +20,11 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Texture2DRaw::Texture2DRaw(void * pixels, int width, int height, GLenum format):
-    myWidth(width),
-    myHeight(height),
-    myFormat(format),
-    myPixels(pixels)
-{
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- Initialize();
-}
-
 Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_now):
     myWidth(target.GetWidth()),
     myHeight(target.GetHeight()),
     myFormat(format),
-    myPixels(target.GetPixelData())
+    myTarget(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -71,7 +60,7 @@ void Texture2DRaw::Update(void)
     myFormat,                   /* internal format */
     myWidth, myHeight, 0,       /* width, height, border */
     myFormat, GL_UNSIGNED_BYTE, /* external format, type */
-    myPixels                    /* pixels */
+    myTarget.GetPixelData()     /* pixels */
  );
  CheckEGLError("glTexImage2D()");
 }

@@ -54,6 +54,16 @@ namespace Glesly
             myEnabled = enable;
         }
 
+        inline Render & GetRenderer(void)
+        {
+            return myRenderer;
+        }
+
+        inline bool IsEnabled(void) const
+        {
+            return myEnabled;
+        }
+
      protected:
         ObjectBase(Glesly::Render & renderer);
 
@@ -83,21 +93,9 @@ namespace Glesly
             myCallbacks.push_back(callback);
         }
 
-        inline Render & GetRenderer(void)
-        {
-            return myRenderer;
-        }
-
         inline const Render & GetRenderer(void) const
         {
             return myRenderer;
-        }
-
-        inline bool IsEnabled(void) const
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            SYS_DEBUG(DL_INFO3, "the object is " << (myEnabled ? "enabled" : "disabled"));
-            return myEnabled;
         }
 
         ObjectWeak mySelf;
