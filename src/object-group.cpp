@@ -20,6 +20,8 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
     return;
  }
 
+ ExecuteCallback(frame_start_time);
+
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  if (!p.get()) {

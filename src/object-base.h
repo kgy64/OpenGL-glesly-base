@@ -69,6 +69,19 @@ namespace Glesly
 
         class ObjectCallback
         {
+         public:
+            virtual ~ObjectCallback()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+         protected:
+            inline ObjectCallback(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+         private:
             /*! Only the class \ref Glesly::ObjectBase is allowed to call the callback
              *  function \ref ObjectCallback::Execute().
              *  \see ObjectBase::ExecuteCallback() for details. */
@@ -80,6 +93,8 @@ namespace Glesly
              *  \retval true    Delete the callback from the object.
              *  \retval false   Keep the callback. It will be called before the next frame too. */
             virtual bool Execute(Glesly::ObjectBase & obj) =0;
+
+            SYS_DEFINE_CLASS_NAME("Glesly::ObjectBase::ObjectCallback");
 
         }; // class ObjectCallback
 
