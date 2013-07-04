@@ -49,6 +49,14 @@ namespace Glesly
             RectangleVerticesInit(position, texcoord, elements);
         }
 
+        virtual void Frame(void);
+
+     public:
+        virtual ~PaCaRef()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+        }
+
         inline void UpdateTexture(void)
         {
             Execute(TextureUpdateCallback::Create());
@@ -58,14 +66,6 @@ namespace Glesly
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             texture.Update();
-        }
-
-        virtual void Frame(void);
-
-     public:
-        virtual ~PaCaRef()
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
      private:
