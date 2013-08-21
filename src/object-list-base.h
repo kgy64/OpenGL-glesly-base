@@ -26,12 +26,15 @@ namespace Glesly
          public:
             ~ObjectListInternal();
 
-            void Add(ObjectPtr object);
+            void Insert(ObjectPtr object);
+            void Append(ObjectPtr object);
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase::ObjectListInternal");
 
             ObjectListInternal(ObjectListBase & parent);
+
+            void CopyObjects(void);
 
             ObjectListBase & myParent;
 
@@ -89,9 +92,8 @@ namespace Glesly
         }
     }
 
-    inline void ObjectListBase::ObjectListInternal::Add(ObjectPtr object)
+    inline void ObjectListBase::ObjectListInternal::CopyObjects(void)
     {
-        SYS_DEBUG_MEMBER(DM_GLESLY);
         if (!myModifiedObjects.get()) {
             if (myObjects.get()) {
                 SYS_DEBUG(DL_INFO1, "Copying " << myObjects->size() << " objects");
@@ -101,7 +103,20 @@ namespace Glesly
                 myModifiedObjects.reset(new Objects);
             }
         }
+    }
+
+    inline void ObjectListBase::ObjectListInternal::Insert(ObjectPtr object)
+    {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
+        CopyObjects();
         myModifiedObjects->push_front(object);
+    }
+
+    inline void ObjectListBase::ObjectListInternal::Append(ObjectPtr object)
+    {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
+        CopyObjects();
+        myModifiedObjects->push_back(object);
     }
 
     typedef ObjectListBase::ObjectListInternal ObjectList;
