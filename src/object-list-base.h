@@ -86,14 +86,13 @@ namespace Glesly
     inline ObjectListBase::ObjectListInternal::~ObjectListInternal()
     {
         SYS_DEBUG_MEMBER(DM_GLESLY);
-        if (myModifiedObjects.get()) {
-            SYS_DEBUG(DL_INFO1, "Passing " << myModifiedObjects->size() << " objects");
-            myParent.GetObjectListPtr() = myModifiedObjects;
-        }
+        SYS_DEBUG(DL_INFO1, "Passing " << (myModifiedObjects.get() ? myModifiedObjects->size() : 0) << " objects");
+        myParent.GetObjectListPtr() = myModifiedObjects;
     }
 
     inline void ObjectListBase::ObjectListInternal::CopyObjects(void)
     {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
         if (!myModifiedObjects.get()) {
             if (myObjects.get()) {
                 SYS_DEBUG(DL_INFO1, "Copying " << myObjects->size() << " objects");

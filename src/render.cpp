@@ -16,9 +16,9 @@
 
 using namespace Glesly;
 
-Render::Render(float aspect):
+Render::Render(Glesly::CameraMatrix & camera, float aspect):
     myScreenAspect(aspect),
-    myCameraMatrix(*this, "camera_matrix", myCamera)
+    myCameraMatrix(*this, "camera_matrix", camera)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -40,8 +40,10 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    (*i)->NextFrame(frame_start_time);
+ if (p.get()) {
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+        (*i)->NextFrame(frame_start_time);
+    }
  }
 
  UnuseProgram();
@@ -63,12 +65,13 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
 
     ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
-    SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
-
-    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-       if ((*i)->MouseClick(horiz, vert, index, count)) {
-           break;
-       }
+    if (p.get()) {
+        SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+        for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+           if ((*i)->MouseClick(horiz, vert, index, count)) {
+               break;
+           }
+        }
     }
  } catch(::EX::Assert & ex) {
     SYS_DEBUG(DL_WARNING, "Cannot calculate mouse position!");
@@ -85,10 +88,11 @@ void Render::KeyboardClick(UTF8::WChar key)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
-
- for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-   (*i)->KeyboardClick(key);
+ if (p.get()) {
+    SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+       (*i)->KeyboardClick(key);
+    }
  }
 }
 

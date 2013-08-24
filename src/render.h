@@ -28,16 +28,16 @@ namespace Glesly
      public:
         virtual ~Render();
 
-        inline Glesly::CameraMatrix & GetCamera(void)
-        {
-            return myCamera;
-        }
-
         virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
         virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
         virtual void Cleanup(void) { }
         virtual void KeyboardClick(UTF8::WChar key);
+
+        virtual Glesly::Transformation * GetTransform(unsigned index)
+        {
+            return NULL;
+        }
 
         float GetScreenAspect(void) const
         {
@@ -47,7 +47,7 @@ namespace Glesly
         int GetCallbackTimeLimit(void) const;
 
      protected:
-        Render(float aspect = 1.0f);
+        Render(Glesly::CameraMatrix & camera, float aspect = 1.0f);
 
         virtual bool IsInputBlocked(void) const
         {
@@ -62,11 +62,57 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
 
-        Glesly::CameraMatrix myCamera;
-
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
 
     }; // class Render
+
+    class Render3D: public Render
+    {
+     public:
+        struct RenderInfo
+        {
+            Glesly::CameraMatrix myCamera;
+
+            Glesly::Transformation myTransform[4];
+
+        }; // struct RenderInfo
+
+        virtual Glesly::Transformation * GetTransform(unsigned index)
+        {
+            if (index >= 4) {
+                return NULL;
+            }
+            return myRenderInfo.myTransform + index;
+        }
+
+     protected:
+        inline Render3D(RenderInfo & renderInfo, int width, int height):
+            Render(renderInfo.myCamera),
+            myRenderInfo(renderInfo),
+            myT1Matrix(*this, "t0_matrix", renderInfo.myTransform[0]),
+            myT2Matrix(*this, "t1_matrix", renderInfo.myTransform[1]),
+            myT3Matrix(*this, "t2_matrix", renderInfo.myTransform[2]),
+            myT4Matrix(*this, "t3_matrix", renderInfo.myTransform[3])
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+        }
+
+        virtual ~Render3D()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+        }
+
+        RenderInfo & myRenderInfo;
+
+        Shaders::UniformMatrix_ref<float, 4> myT1Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT2Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT3Matrix;
+        Shaders::UniformMatrix_ref<float, 4> myT4Matrix;
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::Render3D");
+
+    }; // class Render3D
 
 }; // namespace Glesly
 

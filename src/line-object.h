@@ -1,7 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  * Project:     Glesly: my GLES-based rendering library
- * Purpose:     Generic rectangle-shaped object
+ * Purpose:     Generic lines
  * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
@@ -15,37 +15,33 @@
 
 namespace Glesly
 {
-    template <unsigned W, unsigned H>
-    class RectangleObject: public Glesly::Object
+    template <unsigned N>
+    class LineObject: public Glesly::Object
     {
      protected:
-        RectangleObject(Glesly::Render & render):
+        LineObject(Glesly::Render & render):
             Glesly::Object(render),
-            position(*this, "position", GL_STREAM_DRAW),
-            texcoord(*this, "texcoord", GL_STREAM_DRAW),
+            position(*this, "position"),
             elements(*this, "elements")
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        virtual ~RectangleObject()
+        virtual ~LineObject()
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
         /// Vertex positions, 3D
-        Glesly::Shaders::VBOAttribFloatVector<W*H, 3> position;
-
-        /// Texture positions, 2D
-        Glesly::Shaders::VBOAttribFloatVector<W*H, 2> texcoord;
+        Glesly::Shaders::VBOAttribFloatVector<N, 3> position;
 
         /// Element indices
-        Glesly::Shaders::VBOUShortElementBuffer<6*(W-1)*(H-1)> elements;
+        Glesly::Shaders::VBOUShortElementBuffer<2*N> elements;
 
      private:
-        SYS_DEFINE_CLASS_NAME("Glesly::RectangleObject");
+        SYS_DEFINE_CLASS_NAME("Glesly::LineObject");
 
-    }; // class RectangleObject
+    }; // class LineObject
 
 } // namespace Glesly
 

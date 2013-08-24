@@ -38,7 +38,12 @@ namespace Glesly
 
         virtual void WindowSizeChanged(int w, int h) { }
 
-        inline void AddRender(RenderPtr rp)
+        inline void InsertRenderer(RenderPtr rp)
+        {
+            myRenders.push_front(rp);
+        }
+
+        inline void AppendRenderer(RenderPtr rp)
         {
             myRenders.push_back(rp);
         }
