@@ -23,7 +23,7 @@ namespace Glesly
             Glesly::Object(render),
             position(*this, "position", GL_STREAM_DRAW),
             texcoord(*this, "texcoord", GL_STREAM_DRAW),
-            elements(*this, "elements")
+            elements(*this)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }

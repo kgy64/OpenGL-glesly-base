@@ -94,7 +94,9 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");
-                glBufferData(myTarget, elements ? elements * myElementSize : myByteSize, myData, myUsage);
+                if (myUsage == GL_STATIC_DRAW) { // else will be called in BufferData()
+                    glBufferData(myTarget, elements ? elements * myElementSize : myByteSize, myData, myUsage);
+                }
             }
 
          private:
@@ -366,8 +368,8 @@ namespace Glesly
         class VBOUShortElementBuffer: public VBOAttribBase
         {
          public:
-            inline VBOUShortElementBuffer(Glesly::Object & parent, const char * name = "<noname>"):
-                VBOAttribBase(parent, name, NULL, 1, sizeof(GLushort), N, GL_INT /*not used here*/, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER)
+            inline VBOUShortElementBuffer(Glesly::Object & parent):
+                VBOAttribBase(parent, "__No_Name__", NULL, 1, sizeof(GLushort), N, GL_INT /*not used here*/, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER)
             {
             }
 

@@ -8,8 +8,8 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifndef __GLESLY_SRC_RECTANGLE_OBJECT_H_INCLUDED__
-#define __GLESLY_SRC_RECTANGLE_OBJECT_H_INCLUDED__
+#ifndef __GLESLY_SRC_LINE_OBJECT_H_INCLUDED__
+#define __GLESLY_SRC_LINE_OBJECT_H_INCLUDED__
 
 #include <glesly/object.h>
 
@@ -21,8 +21,9 @@ namespace Glesly
      protected:
         LineObject(Glesly::Render & render):
             Glesly::Object(render),
-            position(*this, "position"),
-            elements(*this, "elements")
+            position(*this, "position", GL_STREAM_DRAW),
+            colour(*this, "colour", GL_STREAM_DRAW),
+            elements(*this)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
@@ -33,7 +34,10 @@ namespace Glesly
         }
 
         /// Vertex positions, 3D
-        Glesly::Shaders::VBOAttribFloatVector<N, 3> position;
+        Glesly::Shaders::VBOAttribFloatVector<N+1, 3> position;
+
+        /// Vertex colours, RGBA
+        Glesly::Shaders::VBOAttribFloatVector<N+1, 4> colour;
 
         /// Element indices
         Glesly::Shaders::VBOUShortElementBuffer<2*N> elements;
@@ -45,6 +49,6 @@ namespace Glesly
 
 } // namespace Glesly
 
-#endif /* __GLESLY_SRC_RECTANGLE_OBJECT_H_INCLUDED__ */
+#endif /* __GLESLY_SRC_LINE_OBJECT_H_INCLUDED__ */
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
