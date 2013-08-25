@@ -19,11 +19,13 @@ namespace Glesly
     class LineObject: public Glesly::Object
     {
      protected:
-        LineObject(Glesly::Render & render):
+        LineObject(Glesly::Render & render, GLenum mode = GL_LINES):
             Glesly::Object(render),
             position(*this, "position", GL_STREAM_DRAW),
             colour(*this, "colour", GL_STREAM_DRAW),
-            elements(*this)
+            elements(*this),
+            myNoOfElements(0),
+            myMode(mode)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
@@ -33,6 +35,13 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        virtual void Frame(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            DrawElements(myMode, myNoOfElements);
+        }
+
+
         /// Vertex positions, 3D
         Glesly::Shaders::VBOAttribFloatVector<N+1, 3> position;
 
@@ -41,6 +50,10 @@ namespace Glesly
 
         /// Element indices
         Glesly::Shaders::VBOUShortElementBuffer<2*N> elements;
+
+        int myNoOfElements;
+
+        GLenum myMode;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LineObject");
