@@ -58,6 +58,11 @@ namespace Glesly
             return *reinterpret_cast<const tga_header*>(GetData());
         }
 
+        inline const pixel_data * operator[](int index) const
+        {
+            return reinterpret_cast<const pixel_data *>(GetPixelData()) + index * GetWidth();
+        }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
