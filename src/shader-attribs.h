@@ -230,6 +230,11 @@ namespace Glesly
                 return this->GetData(index);
             }
 
+            inline const T_HOST * operator[](int index) const
+            {
+                return this->GetData(index);
+            }
+
             inline T_HOST * operator=(const T_HOST * source)
             {
                 memcpy(this->GetData(), source, this->GetSize());

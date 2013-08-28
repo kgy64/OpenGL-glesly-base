@@ -22,40 +22,56 @@ namespace Glesly
      *                      for details). Increasing this value by one means dividing all triangles into four smaller
      *                      triangles, resulting in a higher resolution sphere. Be careful to use high values here! */
     template <unsigned N = 0U>
-    class SurfacedIcosahedron: public Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>, public IcosahedronBase
+    class SurfacedIcosahedron: public Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>, public IcosahedronBase
     {
      protected:
         SurfacedIcosahedron(Glesly::Render & render):
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>(render),
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>(render),
             textureFile(CONFIG_ICON_DIR "/earth-001.tga", true),
             texture(*this, "texture", textureFile),
+            myCurrentVertex(0U),
             myCurrentElement(0U)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             Initialize(N);
         }
 
-        virtual void RegisterVertex(unsigned index, float x, float y, float z, float lon, float lat)
+        virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex)
         {
-            ASSERT(index < 22*(int)pow(2,N), "Vertex index is out of range");
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::position[index][0] = x;
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::position[index][1] = y;
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::position[index][2] = z;
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::texcoord[index][0] = lon;
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::texcoord[index][1] = lat;
+            ASSERT(myCurrentVertex < (int)(24.0*(pow(4.0,N)+2.0)), "Vertex index is out of range");
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::position[myCurrentVertex][0] = vertex.x;
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::position[myCurrentVertex][1] = vertex.y;
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::position[myCurrentVertex][2] = vertex.z;
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::texcoord[myCurrentVertex][0] = vertex.lon;
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::texcoord[myCurrentVertex][1] = vertex.lat;
+            return myCurrentVertex++;
         }
 
-        virtual void RegisterTriangle(GLushort a, GLushort b, GLushort c)
+        virtual const float * GetVertex(unsigned index) const
         {
-            ASSERT(myCurrentElement <= 3*20*(int)pow(4,N)-3, "Too many triangles are registered: " << myCurrentElement);
-            myElems[myCurrentElement++] = a;
-            myElems[myCurrentElement++] = b;
-            myElems[myCurrentElement++] = c;
+            ASSERT(index < myCurrentVertex, "Requesting nonexistent vertex");
+            return Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::position[index];
+        }
+
+        virtual const float * GetTexcoord(unsigned index) const
+        {
+            ASSERT(index < myCurrentVertex, "Requesting nonexistent texcoord");
+            return Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::texcoord[index];
+        }
+
+        virtual void RegisterTriangle(const IcosahedronBase::Triangle & triangle)
+        {
+            ASSERT(myCurrentElement <= 3*20*(int)pow(4,N)-3, "Too many triangles are registered, element count: " << myCurrentElement);
+            myElems[myCurrentElement++] = triangle.a;
+            myElems[myCurrentElement++] = triangle.b;
+            myElems[myCurrentElement++] = triangle.c;
         }
 
         virtual void RegisterFinished(void)
         {
-            Glesly::GenericSurfaceObject<22*(int)pow(2,N), 3*20*(int)pow(4,N)>::elements.Bind(myElems, myCurrentElement);
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << (int)(24.0*(pow(4.0,N)+2.0)) << " vertices and " << myCurrentElement << " of " << 3*20*(int)pow(4,N) << " elements");
+            Glesly::GenericSurfaceObject<(int)(24.0*(pow(4.0,N)+2.0)), 3*20*(int)pow(4,N)>::elements.Bind(myElems, myCurrentElement);
             texture.Update();
         }
 
@@ -78,6 +94,8 @@ namespace Glesly
         Glesly::Shaders::UniformTexture texture;
 
         GLushort myElems[3*20*(int)pow(4,N)];
+
+        unsigned myCurrentVertex;
 
         unsigned myCurrentElement;
 

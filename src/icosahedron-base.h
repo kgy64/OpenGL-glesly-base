@@ -11,9 +11,13 @@
 #ifndef __GLESLY_NAVI_GLESLY_BASE_SRC_ICOSAHEDRON_BASE_H_INCLUDED__
 #define __GLESLY_NAVI_GLESLY_BASE_SRC_ICOSAHEDRON_BASE_H_INCLUDED__
 
-#include <Debug/Debug.h>
 #include <math.h>
+#include <map>
 #include <GLES2/gl2.h>
+
+#include <Debug/Debug.h>
+
+SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
@@ -40,10 +44,6 @@ namespace Glesly
      protected:
         void Initialize(unsigned level);
 
-        virtual void RegisterVertex(unsigned index, float x, float y, float z, float lon, float lat) =0;
-        virtual void RegisterTriangle(GLushort a, GLushort b, GLushort c) =0;
-        virtual void RegisterFinished(void) =0;
-
         struct Vec3
         {
             float x;
@@ -61,6 +61,12 @@ namespace Glesly
             GLushort c;
 
         }; // struct Triangle
+
+        virtual unsigned RegisterVertex(const Vec3 & vertex) =0;
+        virtual const float * GetVertex(unsigned index) const =0;
+        virtual const float * GetTexcoord(unsigned index) const =0;
+        virtual void RegisterTriangle(const Triangle & triangle) =0;
+        virtual void RegisterFinished(void) =0;
 
         enum {
             NO_OF_TRIANGLES     =   20,
@@ -108,6 +114,9 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::IcosahedronBase");
 
         /// Helper class to handle Triangles and their Vertices
+        /*! The main purpose of this class is to divide the triangles into four smaller triangles. It also handles
+         *  the vertices to prevent duplicated ones.
+         */
         class TriangleDivider
         {
             friend class Glesly::IcosahedronBase;
@@ -115,12 +124,33 @@ namespace Glesly
             TriangleDivider(Glesly::IcosahedronBase & parent);
             ~TriangleDivider();
 
-            void RegisterVertex(int index, const Vec3 & vertex);
+            unsigned RegisterVertex(const Vec3 & vertex);
             void RegisterTriangle(unsigned level, const Triangle & triangle);
+            unsigned VertexInterpolate(unsigned v1, unsigned v2);
+
+            inline const float * GetVertex(unsigned index) const
+            {
+                return myParent.GetVertex(index);
+            }
+
+            inline const float * GetTexcoord(unsigned index) const
+            {
+                return myParent.GetTexcoord(index);
+            }
+
+            inline void RegisterTriangle(unsigned level, unsigned a, unsigned b, unsigned c)
+            {
+                Triangle t = { (GLushort)a, (GLushort)b, (GLushort)c };
+                RegisterTriangle(level, t);
+            }
 
             SYS_DEFINE_CLASS_NAME("Glesly::IcosahedronBase::TriangleDivider");
 
             Glesly::IcosahedronBase & myParent;
+
+            typedef std::map<unsigned, std::map<unsigned, unsigned> > VertexMap;
+
+            VertexMap myVerticeCache;
 
         }; // class Glesly::IcosahedronBase::TriangleDivider
 

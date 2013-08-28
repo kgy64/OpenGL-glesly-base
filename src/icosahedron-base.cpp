@@ -90,8 +90,8 @@ void IcosahedronBase::Initialize(unsigned level)
  TriangleDivider triangles(*this);
 
  for (int i = 0; i < NO_OF_VERTICES; ++i) {
-    SYS_DEBUG(DL_INFO1, i << ": " << (int)(basic_positions[i].lon * 4096.0f + 0.5f) << ", " << (int)(basic_positions[i].lat * 2048.0f + 0.5f));
-    triangles.RegisterVertex(i, basic_positions[i]);
+    SYS_DEBUG(DL_INFO1, "Vertex " << i << ": lon=" << basic_positions[i].lon << ", lat=" << basic_positions[i].lat);
+    triangles.RegisterVertex(basic_positions[i]);
  }
 
  for (int i = 0; i < NO_OF_TRIANGLES; ++i) {
@@ -119,18 +119,78 @@ IcosahedronBase::TriangleDivider::~TriangleDivider()
  myParent.RegisterFinished();
 }
 
-void IcosahedronBase::TriangleDivider::RegisterVertex(int index, const Vec3 & vertex)
+unsigned IcosahedronBase::TriangleDivider::RegisterVertex(const Vec3 & vertex)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myParent.RegisterVertex(index, vertex.x, vertex.y, vertex.z, vertex.lon, vertex.lat);
+ return myParent.RegisterVertex(vertex);
 }
 
 void IcosahedronBase::TriangleDivider::RegisterTriangle(unsigned level, const Triangle & triangle)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- myParent.RegisterTriangle(triangle.a, triangle.b, triangle.c);
+ if (level == 0U) {
+    myParent.RegisterTriangle(triangle);
+    // Nothing more to do:
+    return;
+ }
+
+ // Go down one level:
+ --level;
+
+ unsigned vertex_ab = VertexInterpolate(triangle.a, triangle.b);
+ unsigned vertex_bc = VertexInterpolate(triangle.b, triangle.c);
+ unsigned vertex_ac = VertexInterpolate(triangle.a, triangle.c);
+
+ RegisterTriangle(level, triangle.a, vertex_ab, vertex_ac);
+ RegisterTriangle(level, triangle.b, vertex_bc, vertex_ab);
+ RegisterTriangle(level, triangle.c, vertex_ac, vertex_bc);
+ RegisterTriangle(level, vertex_ab, vertex_bc, vertex_ac);
+}
+
+unsigned IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsigned v2)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO2, "Interpolating between " << v1 << " and " << v2);
+
+ unsigned & cached = myVerticeCache[v1][v2];
+
+ if (cached) {
+    SYS_DEBUG(DL_INFO1, "Using cached vertex entry " << cached << " between " << v1 << " and " << v2);
+    return cached;
+ }
+
+ Vec3 interpolated;
+
+ const float * v1_pos = GetVertex(v1);
+ const float * v2_pos = GetVertex(v2);
+
+ const float * v1_tex = GetTexcoord(v1);
+ const float * v2_tex = GetTexcoord(v2);
+
+ interpolated.x = (v1_pos[0] + v2_pos[0]) / 2.0f;
+ interpolated.y = (v1_pos[1] + v2_pos[1]) / 2.0f;
+ interpolated.z = (v1_pos[2] + v2_pos[2]) / 2.0f;
+
+ // Adjust a unity vector:
+ float size = sqrtf(interpolated.x * interpolated.x + interpolated.y * interpolated.y + interpolated.z * interpolated.z);
+ interpolated.x /= size;
+ interpolated.y /= size;
+ interpolated.z /= size;
+
+ interpolated.lon = (v1_tex[0] + v2_tex[0]) / 2.0f;
+ interpolated.lat = (v1_tex[1] + v2_tex[1]) / 2.0f;
+
+ unsigned result = RegisterVertex(interpolated);
+
+ SYS_DEBUG(DL_INFO1, "Registered vertex " << result << ", interpolated between " << v1 << " and " << v2);
+
+ // Store the result in both combinations:
+ myVerticeCache[v2][v1] = cached = result;
+
+ return result;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
