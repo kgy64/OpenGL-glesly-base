@@ -42,6 +42,12 @@ namespace Glesly
         friend class TriangleDivider;
 
      protected:
+        IcosahedronBase(float size = 1.0f):
+            mySize(size)
+        {
+            SYS_DEFINE_CLASS_NAME("Glesly::IcosahedronBase");
+        }
+
         void Initialize(unsigned level);
 
         struct Vec3
@@ -75,6 +81,8 @@ namespace Glesly
             /// The number of vertices in the Basic Icosahedron
             NO_OF_VERTICES      =   22
         };
+
+        float mySize;
 
         /*! The <a href="http://en.wikipedia.org/wiki/Golden_ratio">Golden Ratio</a>, used in the formulas
          *  in this class.

@@ -37,8 +37,9 @@ namespace Glesly
     class SurfacedIcosahedron: public Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>, public IcosahedronBase
     {
      protected:
-        SurfacedIcosahedron(Glesly::Render & render):
+        SurfacedIcosahedron(Glesly::Render & render, float size):
             Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>(render),
+            IcosahedronBase(size),
             textureFile(CONFIG_ICON_DIR "/earth-001.tga", true),
             texture(*this, "texture", textureFile),
             myCurrentVertex(0U),
@@ -93,9 +94,9 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        inline static Glesly::ObjectPtr Create(Glesly::Render & render)
+        inline static Glesly::ObjectPtr Create(Glesly::Render & render, float size = 1.0f)
         {
-            return Glesly::ObjectPtr(new SurfacedIcosahedron(render));
+            return Glesly::ObjectPtr(new SurfacedIcosahedron(render, size));
         }
 
      private:

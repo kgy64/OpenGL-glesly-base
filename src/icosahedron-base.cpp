@@ -91,7 +91,14 @@ void IcosahedronBase::Initialize(unsigned level)
 
  for (int i = 0; i < NO_OF_VERTICES; ++i) {
     SYS_DEBUG(DL_INFO1, "Vertex " << i << ": lon=" << basic_positions[i].lon << ", lat=" << basic_positions[i].lat);
-    triangles.RegisterVertex(basic_positions[i]);
+    Vec3 pos = {
+        basic_positions[i].x * mySize,
+        basic_positions[i].y * mySize,
+        basic_positions[i].z * mySize,
+        basic_positions[i].lat,
+        basic_positions[i].lon
+    };
+    triangles.RegisterVertex(pos);
  }
 
  for (int i = 0; i < NO_OF_TRIANGLES; ++i) {
@@ -175,7 +182,7 @@ unsigned IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsign
  interpolated.z = (v1_pos[2] + v2_pos[2]) / 2.0f;
 
  // Adjust a unity vector:
- float size = sqrtf(interpolated.x * interpolated.x + interpolated.y * interpolated.y + interpolated.z * interpolated.z);
+ float size = sqrtf(interpolated.x * interpolated.x + interpolated.y * interpolated.y + interpolated.z * interpolated.z) / myParent.mySize;
  interpolated.x /= size;
  interpolated.y /= size;
  interpolated.z /= size;
