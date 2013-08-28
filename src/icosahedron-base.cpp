@@ -20,12 +20,12 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/// Positions of the basic Icosahedron (X,Y,Z)
-/*! Such an <a href="http://en.wikipedia.org/wiki/Icosahedron">Icosahedron</a> can be built from form three
- *  orthogonal golden rectangles (see the web page). These are the vertices of those rectangles. However,
- *  the displayed Icosahedron is built from triangles, not rectangles. This is just for simplicity.<br>
- *  There are 12 vertices.
- *  \see \ref basic_triangles   The triangle vertices of the basic Icosahedron
+/// Positions of the basic Icosahedron
+/*! The <b>x,y,z</b> are the real position, and the <b>lat,lon</b> are the corresponding texture positions.
+ *  The simple Icosahedron is built from 12 vertices, but we need more because of texture positions.
+ *  It is necessary to have different pole coordinates for 5+5 triangles at the poles, and we need 1+1 additional
+ *  vertex to close the latitude rings (a longitude with overflow). The full number of vertices is 22 this way.
+ *  \see \ref basic_triangles   Builds the triangles of the basic Icosahedron.
  *  */
 const IcosahedronBase::Vec3 IcosahedronBase::basic_positions[NO_OF_VERTICES] = {
     // ----- X: -------- Y: -------- Z: ---------- Lat: -------- Lon: --------

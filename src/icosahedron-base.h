@@ -69,7 +69,10 @@ namespace Glesly
         virtual void RegisterFinished(void) =0;
 
         enum {
+            /// The number of triangles in the Basic Icosahedron
             NO_OF_TRIANGLES     =   20,
+
+            /// The number of vertices in the Basic Icosahedron
             NO_OF_VERTICES      =   22
         };
 
