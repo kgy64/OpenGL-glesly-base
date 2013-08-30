@@ -11,6 +11,7 @@
 #ifndef __GLESLY_NAVI_GLESLY_BASE_SRC_SURFACED_ICOSAHEDRON_H_INCLUDED__
 #define __GLESLY_NAVI_GLESLY_BASE_SRC_SURFACED_ICOSAHEDRON_H_INCLUDED__
 
+#include <glesly/read-tga.h>
 #include <glesly/config.h>
 #include <glesly/generic-surface-object.h>
 #include <glesly/icosahedron-base.h>
