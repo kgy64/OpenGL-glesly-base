@@ -45,7 +45,7 @@ namespace Glesly
         IcosahedronBase(float size = 1.0f):
             mySize(size)
         {
-            SYS_DEFINE_CLASS_NAME("Glesly::IcosahedronBase");
+            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
         void Initialize(unsigned level);
