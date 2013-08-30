@@ -22,7 +22,7 @@
 namespace Glesly
 {
     class LayerChangeEffectManager;
-    class MenuRender;
+    class SheetRender;
 
     class LayerChangeEffectBase
     {
@@ -230,7 +230,7 @@ namespace Glesly
         {
         }
 
-        virtual LayerEffectPtr GetEffect(Glesly::MenuRender &) =0;
+        virtual LayerEffectPtr GetEffect(Glesly::SheetRender &) =0;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LayerEffectCreatorBase");

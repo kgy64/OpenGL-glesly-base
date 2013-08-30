@@ -16,6 +16,12 @@
 
 using namespace Glesly;
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *       Class Render:                                                                   *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 Render::Render(Glesly::CameraMatrix & camera, float aspect):
     myScreenAspect(aspect),
     myCameraMatrix(*this, "camera_matrix", camera)
@@ -32,6 +38,8 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ BeforeFrame();
+
  UseProgram();
 
  ActivateVariables();
@@ -47,6 +55,8 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
  }
 
  UnuseProgram();
+
+ AfterFrame();
 }
 
 void Render::MouseClickRaw(int x, int y, int index, int count)
@@ -99,6 +109,28 @@ void Render::KeyboardClick(UTF8::WChar key)
 int Render::GetCallbackTimeLimit(void) const
 {
  return 30; // TODO: be configurable!
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *       Class Render3D:                                                                 *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Render3D::Render3D(RenderInfo & renderInfo, int width, int height):
+    Render(renderInfo.myCamera),
+    myRenderInfo(renderInfo),
+    myT1Matrix(*this, "t0_matrix", renderInfo.myTransform[0]),
+    myT2Matrix(*this, "t1_matrix", renderInfo.myTransform[1]),
+    myT3Matrix(*this, "t2_matrix", renderInfo.myTransform[2]),
+    myT4Matrix(*this, "t3_matrix", renderInfo.myTransform[3])
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+}
+
+Render3D::~Render3D()
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

@@ -22,7 +22,7 @@ namespace Glesly
     class ObjectsWithEffect: public Glesly::ObjectListBase
     {
      public:
-        inline void CheckNextLayer(Glesly::MenuRender & render)
+        inline void CheckNextLayer(Glesly::SheetRender & render)
         {
             LayerCreatorPtr creator = myNextLayer;
             if (creator.get()) {

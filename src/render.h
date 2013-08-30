@@ -56,6 +56,8 @@ namespace Glesly
 
         virtual void ConvertMouseCoordinates(float & x, float & y) { }
         virtual void Frame(const SYS::TimeDelay & frame_start_time) { }
+        virtual void BeforeFrame(void) { }
+        virtual void AfterFrame(void) { }
 
         float myScreenAspect;
 
@@ -86,21 +88,8 @@ namespace Glesly
         }
 
      protected:
-        inline Render3D(RenderInfo & renderInfo, int width, int height):
-            Render(renderInfo.myCamera),
-            myRenderInfo(renderInfo),
-            myT1Matrix(*this, "t0_matrix", renderInfo.myTransform[0]),
-            myT2Matrix(*this, "t1_matrix", renderInfo.myTransform[1]),
-            myT3Matrix(*this, "t2_matrix", renderInfo.myTransform[2]),
-            myT4Matrix(*this, "t3_matrix", renderInfo.myTransform[3])
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-        }
-
-        virtual ~Render3D()
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-        }
+        Render3D(RenderInfo & renderInfo, int width, int height);
+        virtual ~Render3D();
 
         RenderInfo & myRenderInfo;
 
