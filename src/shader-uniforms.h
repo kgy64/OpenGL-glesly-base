@@ -12,7 +12,7 @@
 #define __GLESLY_SRC_SHADER_UNIFORMS_H_INCLUDED__
 
 #include <glesly/shader-vars.h>
-#include <glesly/texture.h>
+#include <glesly/texture-2d.h>
 #include <glesly/math/matrix.h>
 #include <glesly/error.h>
 

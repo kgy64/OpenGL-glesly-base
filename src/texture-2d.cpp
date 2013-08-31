@@ -8,7 +8,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "texture.h"
+#include "texture-2d.h"
 
 #include <glesly/target2d.h>
 

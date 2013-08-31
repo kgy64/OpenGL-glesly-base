@@ -12,7 +12,7 @@
 #define __GLESLY_SRC_OBJECT_H_INCLUDED__
 
 #include <glesly/render.h>
-#include <glesly/texture.h>
+#include <glesly/texture-2d.h>
 #include <glesly/shader-ptr.h>
 #include <glesly/object-base.h>
 #include <glesly/math/matrix.h>
