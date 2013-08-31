@@ -73,7 +73,7 @@ namespace Glesly
 
         Glesly::Target2D & myTarget;
 
-        Glesly::Shaders::UniformTexture texture;
+        Glesly::Shaders::UniformTexture2D texture;
 
     }; // class PaCaRef
 

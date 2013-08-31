@@ -16,18 +16,21 @@
 #include <glesly/generic-surface-object.h>
 #include <glesly/icosahedron-base.h>
 
-/// The number of elements (3*triangles) in the interpolated Icosahedron
-#define     IH_ELEM     (3*20*(int)pow(4,N))
-
-/// The number of vertices in the interpolated Icosahedron
-/*! \note   This gives not an exact value, just a heuristic algorythm, can be used for <b>0<=N<=5</b>. If you want
- *          to use N=6, the exponent must be 3.856, I have not tried other values. However, N=3 seems enough.<br>
- *          There are some more (<2%) vertices will be allocated this way, I hope it is not a problem.
- */
-#define     IH_VERT     (20+(int)floor(12.5*pow(3.85,N)))
-
 namespace Glesly
 {
+    /// The number of elements (3*triangles) in the interpolated Icosahedron
+    unsigned constexpr IH_ELEM(unsigned N) { return 3*20*(int)pow(4,N); }
+
+    /// The number of vertices in the interpolated Icosahedron
+    /*! \note   This gives not an exact value, just a heuristic algorythm, can be used for <b>0<=N<=5</b>. If you want
+     *          to use N=6, the exponent must be 3.856, I have not tried other values. However, N=3 seems enough.<br>
+     *          There are some more (<2%) vertices will be allocated this way, I hope it is not a problem.
+     */
+    unsigned constexpr IH_VERT(unsigned N) { return 20+(int)floor(12.5*pow(3.85,N)); }
+
+    template <unsigned N>
+    using IcosahedronParent = Glesly::GenericSurfaceObject<IH_VERT(N), IH_ELEM(N), 3>;
+
     /// A surfaced Icosahedron object with any resolution
     /*! \param      N       If this is zero (the default), the basic Icosahedron is displayed (see \ref IcosahedronBase
      *                      for details). Increasing this value by one means dividing all triangles into four smaller
@@ -35,14 +38,22 @@ namespace Glesly
      *  \see        IH_VERT The number of vertices
      *  \see        IH_ELEM The number of elements */
     template <unsigned N = 0U>
-    class SurfacedIcosahedron: public Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>, public IcosahedronBase
+    class SurfacedIcosahedron: public IcosahedronParent<N>, public IcosahedronBase
     {
+        typedef IcosahedronParent<N> ParentType;
+
      protected:
         SurfacedIcosahedron(Glesly::Render & render, float size):
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>(render),
+            IcosahedronParent<N>(render),
             IcosahedronBase(size),
-            textureFile(CONFIG_ICON_DIR "/earth-001.tga", true),
-            texture(*this, "texture", textureFile),
+            textureTargets { &textureFile_0, &textureFile_1, &textureFile_2, &textureFile_3, &textureFile_4, &textureFile_5 },
+            textureFile_0(CONFIG_ICON_DIR "/earth+X.tga", true),
+            textureFile_1(CONFIG_ICON_DIR "/earth-X.tga", true),
+            textureFile_2(CONFIG_ICON_DIR "/earth+Y.tga", true),
+            textureFile_3(CONFIG_ICON_DIR "/earth-Y.tga", true),
+            textureFile_4(CONFIG_ICON_DIR "/earth+Z.tga", true),
+            textureFile_5(CONFIG_ICON_DIR "/earth-Z.tga", true),
+            texture(*this, "texture", textureTargets),
             myCurrentVertex(0U),
             myCurrentElement(0U)
         {
@@ -52,30 +63,31 @@ namespace Glesly
 
         virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex)
         {
-            ASSERT(myCurrentVertex < IH_VERT, "Vertex index is out of range");
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::position[myCurrentVertex][0] = vertex.x;
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::position[myCurrentVertex][1] = vertex.y;
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::position[myCurrentVertex][2] = vertex.z;
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::texcoord[myCurrentVertex][0] = vertex.lon;
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::texcoord[myCurrentVertex][1] = vertex.lat;
+            ASSERT(myCurrentVertex < IH_VERT(N), "Vertex index is out of range");
+            IcosahedronParent<N>::position[myCurrentVertex][0] = vertex.x;
+            IcosahedronParent<N>::position[myCurrentVertex][1] = vertex.y;
+            IcosahedronParent<N>::position[myCurrentVertex][2] = vertex.z;
+            IcosahedronParent<N>::texcoord[myCurrentVertex][0] = vertex.x;
+            IcosahedronParent<N>::texcoord[myCurrentVertex][1] = vertex.y;
+            IcosahedronParent<N>::texcoord[myCurrentVertex][2] = vertex.z;
             return myCurrentVertex++;
         }
 
         virtual const float * GetVertex(unsigned index) const
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent vertex");
-            return Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::position[index];
+            return IcosahedronParent<N>::position[index];
         }
 
         virtual const float * GetTexcoord(unsigned index) const
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent texcoord");
-            return Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::texcoord[index];
+            return IcosahedronParent<N>::texcoord[index];
         }
 
         virtual void RegisterTriangle(const IcosahedronBase::Triangle & triangle)
         {
-            ASSERT(myCurrentElement <= IH_ELEM-3, "Too many triangles are registered, element count: " << myCurrentElement);
+            ASSERT(myCurrentElement <= IH_ELEM(N)-3, "Too many triangles are registered, element count: " << myCurrentElement);
             myElems[myCurrentElement++] = triangle.a;
             myElems[myCurrentElement++] = triangle.b;
             myElems[myCurrentElement++] = triangle.c;
@@ -84,8 +96,8 @@ namespace Glesly
         virtual void RegisterFinished(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT << " vertices and " << myCurrentElement << " of " << IH_ELEM << " elements");
-            Glesly::GenericSurfaceObject<IH_VERT, IH_ELEM>::elements.Bind(myElems, myCurrentElement);
+            SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT(N) << " vertices and " << myCurrentElement << " of " << IH_ELEM(N) << " elements");
+            IcosahedronParent<N>::elements.Bind(myElems, myCurrentElement);
             texture.Update();
         }
 
@@ -103,11 +115,18 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
 
-        Glesly::ReadTGA textureFile;
+        const Glesly::Target2D * textureTargets[6];
 
-        Glesly::Shaders::UniformTexture texture;
+        Glesly::ReadTGA textureFile_0;
+        Glesly::ReadTGA textureFile_1;
+        Glesly::ReadTGA textureFile_2;
+        Glesly::ReadTGA textureFile_3;
+        Glesly::ReadTGA textureFile_4;
+        Glesly::ReadTGA textureFile_5;
 
-        GLushort myElems[IH_ELEM];
+        Glesly::Shaders::UniformTextureCube texture;
+
+        GLushort myElems[IH_ELEM(N)];
 
         unsigned myCurrentVertex;
 

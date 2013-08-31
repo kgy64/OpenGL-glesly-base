@@ -15,7 +15,7 @@
 
 namespace Glesly
 {
-    template <unsigned P, unsigned E>
+    template <unsigned P, unsigned E, unsigned N=2>
     class GenericSurfaceObject: public Glesly::Object
     {
      protected:
@@ -44,8 +44,8 @@ namespace Glesly
         /// Vertex positions, 3D
         Glesly::Shaders::VBOAttribFloatVector<P, 3> position;
 
-        /// Texture positions, 2D
-        Glesly::Shaders::VBOAttribFloatVector<P, 2> texcoord;
+        /// Texture positions, 2D or 3D
+        Glesly::Shaders::VBOAttribFloatVector<P, N> texcoord;
 
         /// Element indices
         Glesly::Shaders::VBOUShortElementBuffer<E> elements;

@@ -1,14 +1,14 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  * Project:     Glesly: my GLES-based rendering library
- * Purpose:     Texture handling
+ * Purpose:     Texture handling: Cube Mapping
  * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "texture-2d.h"
+#include "texture-cube.h"
 
 #include <glesly/target2d.h>
 
@@ -16,13 +16,11 @@ using namespace Glesly;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  *                                                                                       *
- *       class Texture2DRaw:                                                             *
+ *       class TextureCubeMap:                                                             *
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_now):
-    myWidth(target.GetWidth()),
-    myHeight(target.GetHeight()),
+TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format, bool update_now):
     myFormat(format),
     myTarget(target)
 {
@@ -35,7 +33,7 @@ Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_n
  };
 }
 
-Texture2DRaw::~Texture2DRaw()
+TextureCubeMap::~TextureCubeMap()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -45,28 +43,40 @@ Texture2DRaw::~Texture2DRaw()
  CheckEGLError("glDeleteTextures()");
 }
 
-void Texture2DRaw::Update(void)
+void TextureCubeMap::Update(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Bind();
 
- SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
+ static const GLuint GLTargets[] = {
+    GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+    GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+    GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+ };
 
- glTexImage2D(
-    GL_TEXTURE_2D, 0,           /* target, level */
-    myFormat,                   /* internal format */
-    myWidth, myHeight, 0,       /* width, height, border */
-    myFormat, GL_UNSIGNED_BYTE, /* external format, type */
-    myTarget.GetPixelData()     /* pixels */
- );
- CheckEGLError("glTexImage2D()");
+ for (unsigned i = 0; i < 6; ++i) {
+    SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
 
- glGenerateMipmap(GL_TEXTURE_2D);
+    glTexImage2D(
+        GLTargets[i], 0,            /* target, level */
+        myFormat,                   /* internal format */
+        myTarget[i]->GetWidth(),
+        myTarget[i]->GetHeight(), 0, /* width, height, border */
+        myFormat, GL_UNSIGNED_BYTE, /* external format, type */
+        myTarget[i]->GetPixelData()  /* pixels */
+    );
+    CheckEGLError("glTexImage2D()");
+ }
+
+ glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
  CheckEGLError("glGenerateMipmap()");
 }
 
-void Texture2DRaw::Initialize(void)
+void TextureCubeMap::Initialize(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 

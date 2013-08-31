@@ -24,6 +24,13 @@ namespace Glesly
     {
      public:
         ReadTGA(const char * filename, bool convert_2_rgb = false);
+        ReadTGA(ReadTGA & other):
+            FILES::FileMap(*this)
+        {
+            myData.swap(other.myData);
+            myRawData = other.myRawData;
+            other.myRawData = NULL;
+        }
         virtual ~ReadTGA();
 
         struct pixel_data

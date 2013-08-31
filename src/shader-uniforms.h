@@ -13,6 +13,7 @@
 
 #include <glesly/shader-vars.h>
 #include <glesly/texture-2d.h>
+#include <glesly/texture-cube.h>
 #include <glesly/math/matrix.h>
 #include <glesly/error.h>
 
@@ -108,10 +109,10 @@ namespace Glesly
 
         }; // class UniformFloat
 
-        class UniformTexture: public UniformBase, public Texture2DRaw
+        class UniformTexture2D: public UniformBase, public Texture2DRaw
         {
          public:
-            UniformTexture(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
+            UniformTexture2D(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
                 Texture2DRaw(target, format, false),
                 myIndex(index)
@@ -119,7 +120,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            virtual ~UniformTexture()
+            virtual ~UniformTexture2D()
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -140,9 +141,45 @@ namespace Glesly
             int myIndex;
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTexture");
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTexture2D");
 
-        }; // class UniformTexture
+        }; // class UniformTexture2D
+
+        class UniformTextureCube: public UniformBase, public TextureCubeMap
+        {
+         public:
+            UniformTextureCube(UniformManager & obj, const char * name, const Target2D * target[6], int index = 0, GLenum format = GL_RGB):
+                UniformBase(obj, name),
+                TextureCubeMap(target, format, false),
+                myIndex(index)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+            virtual ~UniformTextureCube()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+            }
+
+            virtual void Activate(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                SYS_DEBUG(DL_INFO3, " - glActiveTexture(GL_TEXTURE" << myIndex << ");");
+                glActiveTexture(GL_TEXTURE0 + myIndex);
+                CheckEGLError("glActiveTexture()");
+                SYS_DEBUG(DL_INFO3, " - glUniform1i(" << GetUniformID() << "," << myIndex << ");");
+                glUniform1i(GetUniformID(), myIndex);
+                CheckEGLError("glUniform1i()");
+                Bind();
+            }
+
+         protected:
+            int myIndex;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTextureCube");
+
+        }; // class UniformTextureCube
 
         template <typename T, unsigned N>
         class UniformMatrix_ref: public UniformBase

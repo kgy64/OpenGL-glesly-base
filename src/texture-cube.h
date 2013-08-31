@@ -1,15 +1,15 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  * Project:     Glesly: my GLES-based rendering library
- * Purpose:     Texture handling: 2D Texture
+ * Purpose:     Texture handling: Cube Mapping
  * Author:      György Kövesdi (kgy@teledigit.eu)
  * Licence:     GPL (see file 'COPYING' in the project root for more details)
  * Comments:    
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifndef __GLESLY_SRC_TEXTURE_H_INCLUDED__
-#define __GLESLY_SRC_TEXTURE_H_INCLUDED__
+#ifndef __GLESLY_NAVI_GLESLY_BASE_SRC_TEXTURE_CUBE_H_INCLUDED__
+#define __GLESLY_NAVI_GLESLY_BASE_SRC_TEXTURE_CUBE_H_INCLUDED__
 
 #include <GLES2/gl2.h>
 
@@ -23,11 +23,11 @@ namespace Glesly
 {
     class Target2D;
 
-    class Texture2DRaw
+    class TextureCubeMap
     {
      protected:
-        Texture2DRaw(const Target2D & target, GLenum format = GL_RGB, bool update_now = true);
-        virtual ~Texture2DRaw();
+        TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB, bool update_now = true);
+        virtual ~TextureCubeMap();
 
         inline GLuint GetBuffer(void)
         {
@@ -37,43 +37,30 @@ namespace Glesly
         inline void Bind(void) const
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << myTexture << ");");
-            glBindTexture(GL_TEXTURE_2D, myTexture);
+            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_CUBE_MAP, " << myTexture << ");");
+            glBindTexture(GL_TEXTURE_CUBE_MAP, myTexture);
             CheckEGLError("glBindTexture()");
         }
 
         GLuint myTexture;
 
-        int myWidth;
-
-        int myHeight;
-
         GLenum myFormat;
 
-        const Target2D & myTarget;
+        /// Array of 6 textures
+        const Target2D ** myTarget;
 
      public:
-        int GetWidth(void) const
-        {
-            return myWidth;
-        }
-
-        int GetHeight(void) const
-        {
-            return myHeight;
-        }
-
         void Update(void);
 
      private:
-        SYS_DEFINE_CLASS_NAME("Glesly::Texture2DRaw");
+        SYS_DEFINE_CLASS_NAME("Glesly::TextureCubeMap");
 
         void Initialize();
 
-    }; // class Texture2DRaw
+    }; // class TextureCubeMap
 
 } // namespace Glesly
 
-#endif /* __GLESLY_SRC_TEXTURE_H_INCLUDED__ */
+#endif /* __GLESLY_NAVI_GLESLY_BASE_SRC_TEXTURE_CUBE_H_INCLUDED__ */
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
