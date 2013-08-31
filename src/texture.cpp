@@ -63,6 +63,9 @@ void Texture2DRaw::Update(void)
     myTarget.GetPixelData()     /* pixels */
  );
  CheckEGLError("glTexImage2D()");
+
+ glGenerateMipmap(GL_TEXTURE_2D);
+ CheckEGLError("glGenerateMipmap()");
 }
 
 void Texture2DRaw::Initialize(void)
@@ -73,7 +76,7 @@ void Texture2DRaw::Initialize(void)
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
  Bind();
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);");
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);");
  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_REPEAT);");
