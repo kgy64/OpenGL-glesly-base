@@ -40,9 +40,9 @@ namespace Glesly
         struct pixel_data
         {
             pixel_data & operator=(const pixel_data_rgb656 & other);
-            uint8_t r;
-            uint8_t g;
             uint8_t b;
+            uint8_t g;
+            uint8_t r;
         };
 
         struct pixel_data_rgb656
@@ -55,9 +55,9 @@ namespace Glesly
                 return *this;
             }
 
-            uint16_t r:5;
-            uint16_t g:6;
             uint16_t b:5;
+            uint16_t g:6;
+            uint16_t r:5;
         };
 
         struct tga_header {
