@@ -112,9 +112,9 @@ namespace Glesly
         class UniformTexture2D: public UniformBase, public Texture2DRaw
         {
          public:
-            UniformTexture2D(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB):
+            UniformTexture2D(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB, GLenum pixelformat = GL_UNSIGNED_SHORT_5_6_5, bool use_mipmap = true):
                 UniformBase(obj, name),
-                Texture2DRaw(target, format, false),
+                Texture2DRaw(target, format, pixelformat, use_mipmap),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -150,7 +150,7 @@ namespace Glesly
          public:
             UniformTextureCube(UniformManager & obj, const char * name, const Target2D * target[6], int index = 0, GLenum format = GL_RGB):
                 UniformBase(obj, name),
-                TextureCubeMap(target, format, false),
+                TextureCubeMap(target, format),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);

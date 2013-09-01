@@ -26,7 +26,7 @@ namespace Glesly
     class TextureCubeMap
     {
      protected:
-        TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB, bool update_now = true);
+        TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB);
         virtual ~TextureCubeMap();
 
         inline GLuint GetBuffer(void)

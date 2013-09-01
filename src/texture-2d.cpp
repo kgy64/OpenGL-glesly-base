@@ -20,19 +20,17 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, bool update_now):
+Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, GLenum pixelformat, bool use_mipmap):
     myWidth(target.GetWidth()),
     myHeight(target.GetHeight()),
     myFormat(format),
+    myPixelFormat(pixelformat),
+    myUseMipmap(use_mipmap),
     myTarget(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Initialize();
-
- if (update_now) {
-    Update();
- };
 }
 
 Texture2DRaw::~Texture2DRaw()
@@ -54,16 +52,18 @@ void Texture2DRaw::Update(void)
  SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
 
  glTexImage2D(
-    GL_TEXTURE_2D, 0,           /* target, level */
-    myFormat,                   /* internal format */
-    myWidth, myHeight, 0,       /* width, height, border */
-    myFormat, GL_UNSIGNED_BYTE, /* external format, type */
-    myTarget.GetPixelData()     /* pixels */
+    GL_TEXTURE_2D, 0,           // target, level
+    myFormat,                   // internal format
+    myWidth, myHeight, 0,       // width, height, border
+    myFormat, myPixelFormat,    // external format, type
+    myTarget.GetPixelData()     // pixels
  );
  CheckEGLError("glTexImage2D()");
 
- glGenerateMipmap(GL_TEXTURE_2D);
- CheckEGLError("glGenerateMipmap()");
+ if (myUseMipmap) {
+    glGenerateMipmap(GL_TEXTURE_2D);
+    CheckEGLError("glGenerateMipmap()");
+ }
 }
 
 void Texture2DRaw::Initialize(void)
@@ -73,8 +73,13 @@ void Texture2DRaw::Initialize(void)
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
  Bind();
- SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);");
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+ if (myUseMipmap) {
+    SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);");
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+ } else {
+    SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);");
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ }
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);");
  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_REPEAT);");

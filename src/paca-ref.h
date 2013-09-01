@@ -43,7 +43,7 @@ namespace Glesly
         inline PaCaRef(Glesly::Render & render, Glesly::Target2D & target):
             Glesly::RectangleObject<2,2>(render),
             myTarget(target),
-            texture(*this, "texture", target, 0, GL_RGBA)
+            texture(*this, "texture", target, 0, GL_RGBA, GL_UNSIGNED_BYTE, false)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             RectangleVerticesInit(position, texcoord, elements);

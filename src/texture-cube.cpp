@@ -20,17 +20,13 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format, bool update_now):
+TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format):
     myFormat(format),
     myTarget(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Initialize();
-
- if (update_now) {
-    Update();
- };
 }
 
 TextureCubeMap::~TextureCubeMap()
@@ -66,7 +62,7 @@ void TextureCubeMap::Update(void)
         myFormat,                           //  internal format
         myTarget[i]->GetWidth(),            //  width
         myTarget[i]->GetHeight(), 0,        //  height, border
-        myFormat, GL_UNSIGNED_BYTE,         //  external format, type
+        myFormat, GL_UNSIGNED_SHORT_5_6_5,  //  external format, type
         myTarget[i]->GetPixelData()         //  pixels
     );
     CheckEGLError("glTexImage2D()");
