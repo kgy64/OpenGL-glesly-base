@@ -62,12 +62,12 @@ void TextureCubeMap::Update(void)
     SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
 
     glTexImage2D(
-        GLTargets[i], 0,            /* target, level */
-        myFormat,                   /* internal format */
-        myTarget[i]->GetWidth(),
-        myTarget[i]->GetHeight(), 0, /* width, height, border */
-        myFormat, GL_UNSIGNED_BYTE, /* external format, type */
-        myTarget[i]->GetPixelData()  /* pixels */
+        GLTargets[i], 0,                    //  target, level
+        myFormat,                           //  internal format
+        myTarget[i]->GetWidth(),            //  width
+        myTarget[i]->GetHeight(), 0,        //  height, border
+        myFormat, GL_UNSIGNED_BYTE,         //  external format, type
+        myTarget[i]->GetPixelData()         //  pixels
     );
     CheckEGLError("glTexImage2D()");
  }
