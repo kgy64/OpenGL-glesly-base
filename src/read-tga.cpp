@@ -26,7 +26,7 @@ ReadTGA::ReadTGA(const char * filename, bool convert_2_rgb):
  const tga_header & hdr(GetHeader());
  ASSERT(GetSize() >= sizeof(hdr), "tga file header truncated");
  ASSERT(hdr.data_type_code == 2, "Not an uncompressed RGB tga file");
- ASSERT(hdr.bits_per_pixel == 24, "Not a 24-bit tga file");
+ // FIXME: temporarily disabled !!! ASSERT(hdr.bits_per_pixel == 24, "Not a 24-bit tga file");
  unsigned int header_length = hdr.id_length + ((int)hdr.color_map_length[0] | ((int)hdr.color_map_length[1] << 8));
  ASSERT(GetSize() >= sizeof(hdr)+header_length, "tga file truncated");
  myRawData = reinterpret_cast<const pixel_data *>(hdr.image_data + header_length);
@@ -34,6 +34,8 @@ ReadTGA::ReadTGA(const char * filename, bool convert_2_rgb):
  if (convert_2_rgb) {
     Normalize();
  }
+
+ SYS_DEBUG(DL_INFO2, "Data: " << (void*)myRawData << ", Converted Data: " << (void*)myData.get() << ", size: " << GetWidth() << "x" << GetHeight());
 }
 
 ReadTGA::~ReadTGA()
