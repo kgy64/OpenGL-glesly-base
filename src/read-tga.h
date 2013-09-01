@@ -12,6 +12,8 @@
 #ifndef __GLESLY_SRC_READ_TGA_H_INCLUDED__
 #define __GLESLY_SRC_READ_TGA_H_INCLUDED__
 
+#include <System/Generic.h>
+
 #include <glesly/target2d.h>
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
@@ -26,14 +28,53 @@ namespace Glesly
         ReadTGA(const char * filename, bool convert_2_rgb = false);
         virtual ~ReadTGA();
 
+        struct pixel_data_rgb656;
+
         struct pixel_data
         {
-            unsigned char r;
-            unsigned char g;
-            unsigned char b;
+            pixel_data & operator=(const pixel_data_rgb656 & other);
+            uint8_t r;
+            uint8_t g;
+            uint8_t b;
+        };
+
+        struct pixel_data_rgb656
+        {
+            inline pixel_data_rgb656 & operator=(const pixel_data & other)
+            {
+                r = other.r >> (8-5);
+                g = other.g >> (8-6);
+                b = other.b >> (8-5);
+                return *this;
+            }
+
+            uint16_t r:5;
+            uint16_t g:6;
+            uint16_t b:5;
         };
 
         struct tga_header {
+            tga_header(int w, int h, int pixel_depth)
+            {
+                memset(this, 0, sizeof(*this));
+                data_type_code = 2;
+                width[0] = w & 0x00ff;
+                width[1] = (w >> 8) & 0x00ff;
+                height[0] = h & 0x00ff;
+                height[1] = (h >> 8) & 0x00ff;
+                bits_per_pixel = pixel_depth;
+            }
+
+            pixel_data * GetPixelData_888(void)
+            {
+                return (pixel_data*)image_data;
+            }
+
+            pixel_data_rgb656 * GetPixelData_565(void)
+            {
+                return (pixel_data_rgb656*)image_data;
+            }
+
             char  id_length;
             char  color_map_type;
             char  data_type_code;
@@ -73,6 +114,14 @@ namespace Glesly
         void Normalize(void);
 
     }; // class ReadTGA
+
+    inline ReadTGA::pixel_data & ReadTGA::pixel_data::operator=(const ReadTGA::pixel_data_rgb656 & other)
+    {
+        r = other.r << (8-5);
+        g = other.g << (8-6);
+        b = other.b << (8-5);
+        return *this;
+    }
 
 } // namespace Glesly
 
