@@ -51,6 +51,7 @@ TargetX11::TargetX11(int width, int height, bool fullscreen_on_ebmedded):
 
  if (fullscreen_request) {
     // Full-screen mode:
+    myWidth = FULLSCREEN_SINGLE;
     SetupFullscreen();
  } else {
     // Window mode:
