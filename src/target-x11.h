@@ -21,7 +21,7 @@ namespace Glesly
     class TargetX11: public Glesly::Target
     {
      public:
-        static TargetPtr Create(int width = 0, int height = 0);
+        static TargetPtr Create(int width = 0, int height = 0, bool fullscreen_on_ebmedded = false);
 
         enum ScreenModes {
             FULLSCREEN_REDIRECT     = 0,
@@ -30,7 +30,7 @@ namespace Glesly
         };
 
      protected:
-        TargetX11(int width, int height);
+        TargetX11(int width, int height, bool fullscreen_on_ebmedded);
         virtual ~TargetX11();
 
         int myWidth;
@@ -67,9 +67,9 @@ namespace Glesly
 
     }; // class TargetX11
 
-    inline TargetPtr TargetX11::Create(int width, int height)
+    inline TargetPtr TargetX11::Create(int width, int height, bool fullscreen_on_ebmedded)
     {
-        return TargetPtr(static_cast<Glesly::Target*>(new TargetX11(width, height)));
+        return TargetPtr(static_cast<Glesly::Target*>(new TargetX11(width, height, fullscreen_on_ebmedded)));
     }
 
 } // namespace Glesly

@@ -21,7 +21,7 @@
 
 using namespace Glesly;
 
-TargetX11::TargetX11(int width, int height):
+TargetX11::TargetX11(int width, int height, bool fullscreen_on_ebmedded):
     myWidth(width),
     myHeight(height),
     x11Window(0),
@@ -42,7 +42,14 @@ TargetX11::TargetX11(int width, int height):
     throw Error("Could not find Visual Info");
  }
 
- if (myWidth < 8) {
+ bool fullscreen_request = myWidth < 8; // magic number :-)
+ if (!fullscreen_request && fullscreen_on_ebmedded) {
+    if (XDisplayWidth(x11Display, x11Screen) == myWidth && XDisplayHeight(x11Display, x11Screen) == myHeight) {
+        fullscreen_request = true;
+    }
+ }
+
+ if (fullscreen_request) {
     // Full-screen mode:
     SetupFullscreen();
  } else {
