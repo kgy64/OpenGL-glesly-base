@@ -11,7 +11,6 @@
 #ifndef __GLESLY_NAVI_GLESLY_BASE_SRC_SURFACED_ICOSAHEDRON_H_INCLUDED__
 #define __GLESLY_NAVI_GLESLY_BASE_SRC_SURFACED_ICOSAHEDRON_H_INCLUDED__
 
-#include <glesly/read-tga.h>
 #include <glesly/config.h>
 #include <glesly/generic-surface-object.h>
 #include <glesly/icosahedron-base.h>
@@ -43,17 +42,10 @@ namespace Glesly
         typedef IcosahedronParent<N> ParentType;
 
      protected:
-        SurfacedIcosahedron(Glesly::Render & render, float size):
+        SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6]):
             IcosahedronParent<N>(render),
             IcosahedronBase(size),
-            textureTargets { &textureFile_0, &textureFile_1, &textureFile_2, &textureFile_3, &textureFile_4, &textureFile_5 },
-            textureFile_0(CONFIG_ICON_DIR "/earth+X.tga", false),
-            textureFile_1(CONFIG_ICON_DIR "/earth-X.tga", false),
-            textureFile_2(CONFIG_ICON_DIR "/earth+Y.tga", false),
-            textureFile_3(CONFIG_ICON_DIR "/earth-Y.tga", false),
-            textureFile_4(CONFIG_ICON_DIR "/earth+Z.tga", false),
-            textureFile_5(CONFIG_ICON_DIR "/earth-Z.tga", false),
-            texture(*this, "texture", textureTargets),
+            texture(*this, "texture", textures),
             myCurrentVertex(0U),
             myCurrentElement(0U)
         {
@@ -114,15 +106,6 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
-
-        const Glesly::Target2D * textureTargets[6];
-
-        Glesly::ReadTGA textureFile_0;
-        Glesly::ReadTGA textureFile_1;
-        Glesly::ReadTGA textureFile_2;
-        Glesly::ReadTGA textureFile_3;
-        Glesly::ReadTGA textureFile_4;
-        Glesly::ReadTGA textureFile_5;
 
         Glesly::Shaders::UniformTextureCube texture;
 
