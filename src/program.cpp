@@ -58,8 +58,13 @@ std::string Program::GetLogInfo(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- int log_length;
+ int log_length = -1;
  glGetProgramiv(GetProgramID(), GL_INFO_LOG_LENGTH, &log_length);
+
+ if (log_length <= 0) {
+    return "(No log info available)";
+ }
+
  char log[log_length];
  int real_length;
  glGetProgramInfoLog(GetProgramID(), log_length, &real_length, log);
