@@ -45,6 +45,7 @@ namespace Glesly
      public:
         virtual ~Target();
 
+        virtual void Initialize(void) =0;
         virtual EGLDisplay GetEGLDisplay(void) =0;
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config) =0;
         virtual int GetWidth(void) const =0;

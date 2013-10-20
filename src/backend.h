@@ -25,11 +25,11 @@ namespace Glesly
     class Backend: private Glesly::TargetHolder
     {
      public:
-        Backend(void);
+        Backend(TargetPtr & target);
         virtual ~Backend();
 
         void SwapBuffers(void);
-        void SetTarget(TargetPtr target = TargetPtr());
+        void Initialize(void);
 
         Glesly::Target * GetTarget(void)
         {

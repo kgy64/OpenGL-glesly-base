@@ -23,7 +23,8 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Main::Main(void)
+Main::Main(TargetPtr & target):
+    myBackend(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 

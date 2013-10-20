@@ -26,7 +26,7 @@ namespace Glesly
     class Main: private TargetHolder
     {
      public:
-        Main(void);
+        Main(TargetPtr & target);
         virtual ~Main();
 
         void Run(void);
