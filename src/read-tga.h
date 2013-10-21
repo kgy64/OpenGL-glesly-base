@@ -18,6 +18,8 @@
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
 
+#include <boost/scoped_ptr.hpp>
+
 SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
