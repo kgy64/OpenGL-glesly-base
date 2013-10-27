@@ -35,7 +35,7 @@ namespace Glesly
             Reader(const char * source);
             Reader(const Glesly::ShaderSource & source);
 
-            virtual ~Reader()
+            VIRTUAL_IF_DEBUG inline ~Reader()
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -65,7 +65,7 @@ namespace Glesly
         }; // class Reader
 
      public:
-        ~Shader();
+        VIRTUAL_IF_DEBUG ~Shader();
 
         inline static ShaderPtr Create(GLenum type, const char * source)
         {
