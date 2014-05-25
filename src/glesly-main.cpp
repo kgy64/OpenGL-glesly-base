@@ -49,6 +49,11 @@ void Main::Run(void)
     (*i)->Initialize();
  }
 
+ static constexpr int FRAME_DELAY_USEC  =   1000000 / 60;
+
+ SYS::TimeDelay frameTime;
+ frameTime.SetNow();
+
  while (!IsFinished()) {
     {
         Threads::Lock _l(GetBackend().GetTarget()->GetGraphicMutex());
@@ -60,6 +65,18 @@ void Main::Run(void)
             goto finished;
         }
         (*i)->NextFrame(myFrameStartTime);
+    }
+
+    SYS::TimeDelay now;
+    now.SetNow();
+
+    int elapsed = FRAME_DELAY_USEC - (now - frameTime).ToMicrosecond();
+
+    if (elapsed > 2000) {
+        frameTime.AddMicrosecond(FRAME_DELAY_USEC);
+        usleep(elapsed);
+    } else {
+        frameTime = now;
     }
 
     GetBackend().SwapBuffers();
