@@ -38,6 +38,11 @@ namespace Glesly
 
         virtual void WindowSizeChanged(int w, int h) { }
 
+        void Retarget(TargetPtr & target)
+        {
+            myBackend.Retarget(target);
+        }
+
         inline void InsertRenderer(RenderPtr rp)
         {
             myRenders.push_front(rp);

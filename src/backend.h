@@ -31,6 +31,11 @@ namespace Glesly
         void SwapBuffers(void);
         void Initialize(void);
 
+        void Retarget(TargetPtr & target)
+        {
+            myTarget = target;
+        }
+
         Glesly::Target * GetTarget(void)
         {
             return myTarget.get();
