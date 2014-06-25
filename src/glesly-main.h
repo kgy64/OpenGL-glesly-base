@@ -63,7 +63,7 @@ namespace Glesly
 
         SYS::TimeDelay myFrameStartTime;
 
-        virtual bool IsFinished(void) const =0;
+        virtual bool ToBeFinished(void) const =0;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");

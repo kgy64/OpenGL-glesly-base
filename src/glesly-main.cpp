@@ -54,14 +54,14 @@ void Main::Run(void)
  SYS::TimeDelay frameTime;
  frameTime.SetNow();
 
- while (!IsFinished()) {
+ while (!ToBeFinished()) {
     {
         Threads::Lock _l(GetBackend().GetTarget()->GetGraphicMutex());
         NextFrame();
     }
 
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
-        if (IsFinished()) {
+        if (ToBeFinished()) {
             goto finished;
         }
         (*i)->NextFrame(myFrameStartTime);
