@@ -26,6 +26,7 @@ namespace Glesly
     class Main: private TargetHolder
     {
      public:
+        Main(void);
         Main(TargetPtr & target);
         virtual ~Main();
 
@@ -38,9 +39,14 @@ namespace Glesly
 
         virtual void WindowSizeChanged(int w, int h) { }
 
+        inline Glesly::Backend & GetBackend(void)
+        {
+            return myBackend;
+        }
+
         void Retarget(TargetPtr & target)
         {
-            myBackend.Retarget(target);
+            GetBackend().Retarget(target);
         }
 
         inline void InsertRenderer(RenderPtr rp)
@@ -51,11 +57,6 @@ namespace Glesly
         inline void AppendRenderer(RenderPtr rp)
         {
             myRenders.push_back(rp);
-        }
-
-        inline Glesly::Backend & GetBackend(void)
-        {
-            return myBackend;
         }
 
      protected:
