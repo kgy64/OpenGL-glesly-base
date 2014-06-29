@@ -23,6 +23,11 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+Main::Main(void)
+{
+ GetBackend().RegisterParent(this);
+}
+
 Main::Main(TargetPtr & target):
     myBackend(target)
 {

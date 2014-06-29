@@ -50,7 +50,7 @@ namespace Glesly
         virtual EGLSurface CreateWindowSurface(EGLDisplay display, EGLConfig config) =0;
         virtual int GetWidth(void) const =0;
         virtual int GetHeight(void) const =0;
-        virtual void EnterEventLoop(Threads::Thread &) { }
+        virtual bool EnterEventLoop(void) =0;
         virtual void Wait4Sync(void) { }
 
         inline void RegisterParent(TargetHolder * parent = NULL)

@@ -25,20 +25,17 @@ namespace Glesly
     class Backend: private Glesly::TargetHolder
     {
      public:
+        Backend(void);
         Backend(TargetPtr & target);
         virtual ~Backend();
 
         void SwapBuffers(void);
         void Initialize(void);
+        void Retarget(TargetPtr & target);
 
-        void Retarget(TargetPtr & target)
+        inline Glesly::TargetPtr GetTarget(void)
         {
-            myTarget = target;
-        }
-
-        Glesly::Target * GetTarget(void)
-        {
-            return myTarget.get();
+            return myTarget;
         }
 
         inline void RegisterParent(TargetHolder * parent = NULL)
