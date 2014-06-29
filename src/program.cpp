@@ -26,6 +26,8 @@ Program::Program(void)
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  myProgram = glCreateProgram();
+
+ SYS_DEBUG(DL_INFO1, "KGY Created program: " << myProgram);
 }
 
 Program::~Program(void)
@@ -44,6 +46,8 @@ void Program::Attach(ShaderPtr shader)
 void Program::Link(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ SYS_DEBUG(DL_INFO3, "KGY: linking program " << GetProgramID());
 
  glLinkProgram(GetProgramID());
 
