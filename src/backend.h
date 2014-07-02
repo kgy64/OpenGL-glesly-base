@@ -31,6 +31,7 @@ namespace Glesly
 
         void SwapBuffers(void);
         void Initialize(void);
+        void Cleanup(void);
         void Retarget(TargetPtr & target);
 
         inline Glesly::TargetPtr GetTarget(void)
@@ -58,8 +59,8 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Backend");
 
-        virtual void CloseRequest(void);
-        virtual void MouseClick(int x, int y, int index, int count);
+        virtual void CloseRequest(void) override;
+        virtual void MouseClick(int x, int y, int index, int count) override;
 
         void InitDisplay(void);
         void InitSurface(void);

@@ -84,6 +84,13 @@ void Backend::Initialize(void)
  InitSurface();
 }
 
+void Backend::Cleanup(void)
+{
+ eglDestroyContext(myDisplay, myContext);
+ eglDestroySurface(myDisplay, mySurface);
+ eglTerminate(myDisplay);
+}
+
 void Backend::CloseRequest(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
