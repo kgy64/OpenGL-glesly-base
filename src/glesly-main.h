@@ -64,6 +64,11 @@ namespace Glesly
             myRenders.clear();
         }
 
+        inline size_t getNoOfRenderers(void) const
+        {
+            return myRenders.size();
+        }
+
      protected:
         Glesly::CameraMatrix myViewMatrix;
 

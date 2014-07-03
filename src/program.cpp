@@ -39,12 +39,18 @@ Program::~Program(void)
  SYS_DEBUG(DL_INFO1, "KGY Deleted program: " << myProgram);
 }
 
-void Program::Attach(ShaderPtr shader)
+void Program::AddShader(ShaderPtr shader)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  myShaders.push_back(shader);
- glAttachShader(GetProgramID(), shader->GetShaderID());
+}
+
+void Program::AttachShaders(void)
+{
+ for (ShaderList::iterator i = myShaders.begin(); i != myShaders.end(); ++i) {
+    glAttachShader(GetProgramID(), (*i)->GetShaderID());
+ }
 }
 
 void Program::Link(void)

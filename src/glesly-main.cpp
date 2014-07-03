@@ -50,6 +50,7 @@ void Main::Run(void)
  Initialize();
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
+    (*i)->AttachShaders();
     (*i)->Link();
     (*i)->Initialize();
  }

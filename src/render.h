@@ -105,8 +105,8 @@ namespace Glesly
 
 }; // namespace Glesly
 
-#define USE_VERTEX_SHADER(name) Attach(Shader::Create(GL_VERTEX_SHADER, Glesly::Shaders::name))
-#define USE_FRAGMENT_SHADER(name) Attach(Shader::Create(GL_FRAGMENT_SHADER, Glesly::Shaders::name))
+#define USE_VERTEX_SHADER(name) AddShader(Shader::Create(GL_VERTEX_SHADER, Glesly::Shaders::name))
+#define USE_FRAGMENT_SHADER(name) AddShader(Shader::Create(GL_FRAGMENT_SHADER, Glesly::Shaders::name))
 
 #endif /* __GLESLY_SRC_RENDER_H_INCLUDED__ */
 

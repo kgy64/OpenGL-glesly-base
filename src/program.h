@@ -35,7 +35,8 @@ namespace Glesly
             return ProgramPtr(new Program());
         }
 
-        void Attach(ShaderPtr shader);
+        void AddShader(ShaderPtr shader);
+        void AttachShaders(void);
         void Link(void);
 
         inline void BindAttribLocation(GLuint index, const char * name)
@@ -90,7 +91,9 @@ namespace Glesly
 
         GLuint myProgram;
 
-        std::vector<ShaderPtr> myShaders;
+        typedef std::vector<ShaderPtr> ShaderList;
+
+        ShaderList myShaders;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Program");
