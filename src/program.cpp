@@ -33,6 +33,10 @@ Program::Program(void)
 Program::~Program(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ glDeleteProgram(myProgram);
+
+ SYS_DEBUG(DL_INFO1, "KGY Deleted program: " << myProgram);
 }
 
 void Program::Attach(ShaderPtr shader)

@@ -59,6 +59,11 @@ namespace Glesly
             myRenders.push_back(rp);
         }
 
+        inline void DeleteRendeers(void)
+        {
+            myRenders.clear();
+        }
+
      protected:
         Glesly::CameraMatrix myViewMatrix;
 

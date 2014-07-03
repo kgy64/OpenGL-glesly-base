@@ -86,6 +86,9 @@ void Backend::Initialize(void)
 
 void Backend::Cleanup(void)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ eglMakeCurrent(myDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
  eglDestroyContext(myDisplay, myContext);
  eglDestroySurface(myDisplay, mySurface);
  eglTerminate(myDisplay);
