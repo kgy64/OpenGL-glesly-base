@@ -24,13 +24,27 @@ using namespace Glesly;
 Program::Program(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+}
+
+Program::~Program(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+}
+
+void Program::ProgramInit(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  myProgram = glCreateProgram();
 
  SYS_DEBUG(DL_INFO1, "KGY Created program: " << myProgram);
+
+ UseShaders();
+ AttachShaders();
+ Link();
 }
 
-Program::~Program(void)
+void Program::ProgramCleanup(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 

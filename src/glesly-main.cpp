@@ -50,8 +50,7 @@ void Main::Run(void)
  Initialize();
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
-    (*i)->AttachShaders();
-    (*i)->Link();
+    (*i)->ProgramInit();
     (*i)->Initialize();
  }
 
@@ -92,6 +91,7 @@ finished:;
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
     (*i)->Cleanup();
+    (*i)->ProgramCleanup();
  }
 
  Cleanup();

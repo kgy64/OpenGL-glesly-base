@@ -29,15 +29,13 @@ namespace Glesly
      public:
         virtual ~Program();
 
-        static inline ProgramPtr Create(void)
-        {
-            SYS_DEBUG_STATIC(DM_GLESLY);
-            return ProgramPtr(new Program());
-        }
+        virtual void UseShaders(void) =0;
 
         void AddShader(ShaderPtr shader);
         void AttachShaders(void);
         void Link(void);
+        void ProgramInit(void);
+        void ProgramCleanup(void);
 
         inline void BindAttribLocation(GLuint index, const char * name)
         {
