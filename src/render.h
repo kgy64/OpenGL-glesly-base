@@ -39,7 +39,12 @@ namespace Glesly
             return NULL;
         }
 
-        float GetScreenAspect(void) const
+        inline void SetScreenAspect(float aspect)
+        {
+            myScreenAspect = aspect;
+        }
+
+        inline float GetScreenAspect(void) const
         {
             return myScreenAspect;
         }
@@ -88,7 +93,7 @@ namespace Glesly
         }
 
      protected:
-        Render3D(RenderInfo & renderInfo, int width, int height);
+        Render3D(RenderInfo & renderInfo);
         virtual ~Render3D();
 
         RenderInfo & myRenderInfo;

@@ -117,7 +117,7 @@ int Render::GetCallbackTimeLimit(void) const
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Render3D::Render3D(RenderInfo & renderInfo, int width, int height):
+Render3D::Render3D(RenderInfo & renderInfo):
     Render(renderInfo.myCamera),
     myRenderInfo(renderInfo),
     myT1Matrix(*this, "t0_matrix", renderInfo.myTransform[0]),
