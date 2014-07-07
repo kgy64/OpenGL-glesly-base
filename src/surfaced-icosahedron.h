@@ -53,6 +53,13 @@ namespace Glesly
             Initialize(N);
         }
 
+     public:
+        virtual ~SurfacedIcosahedron()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+        }
+
+     protected:
         virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex)
         {
             ASSERT(myCurrentVertex < IH_VERT(N), "Vertex index is out of range");
@@ -91,12 +98,6 @@ namespace Glesly
             SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT(N) << " vertices and " << myCurrentElement << " of " << IH_ELEM(N) << " elements");
             IcosahedronParent<N>::elements.Bind(myElems, myCurrentElement);
             texture.Update();
-        }
-
-     public:
-        virtual ~SurfacedIcosahedron()
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
         inline static Glesly::ObjectPtr Create(Glesly::Render & render, float size = 1.0f)

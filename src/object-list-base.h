@@ -28,6 +28,7 @@ namespace Glesly
 
             void Insert(ObjectPtr object);
             void Append(ObjectPtr object);
+            void Cleanup(void);
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::ObjectListBase::ObjectListInternal");
@@ -109,6 +110,7 @@ namespace Glesly
         SYS_DEBUG_MEMBER(DM_GLESLY);
         CopyObjects();
         myModifiedObjects->push_front(object);
+        SYS_DEBUG(DL_INFO1, "ObjectListBase::ObjectListInternal::Insert(): size=" << myModifiedObjects->size());
     }
 
     inline void ObjectListBase::ObjectListInternal::Append(ObjectPtr object)
@@ -116,6 +118,14 @@ namespace Glesly
         SYS_DEBUG_MEMBER(DM_GLESLY);
         CopyObjects();
         myModifiedObjects->push_back(object);
+        SYS_DEBUG(DL_INFO1, "ObjectListBase::ObjectListInternal::Append(): size=" << myModifiedObjects->size());
+    }
+
+    inline void ObjectListBase::ObjectListInternal::Cleanup(void)
+    {
+        SYS_DEBUG_MEMBER(DM_GLESLY);
+        CopyObjects();
+        myModifiedObjects->clear();
     }
 
     typedef ObjectListBase::ObjectListInternal ObjectList;

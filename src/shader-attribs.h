@@ -29,7 +29,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
                 glDeleteBuffers(1, &myVBO);
-                SYS_DEBUG(DL_INFO2, "VBO=" << myVBO << " deleted.");
+                SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
             }
 
             virtual void BufferData(void)

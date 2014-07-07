@@ -48,6 +48,11 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        virtual ~IcosahedronBase()
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+        }
+
         void Initialize(unsigned level);
 
         struct Vec3

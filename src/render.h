@@ -31,7 +31,7 @@ namespace Glesly
         virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
         virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
-        virtual void Cleanup(void) { }
+        virtual void Cleanup(void);
         virtual void KeyboardClick(UTF8::WChar key);
 
         virtual Glesly::Transformation * GetTransform(unsigned index)

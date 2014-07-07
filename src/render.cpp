@@ -34,6 +34,13 @@ Render::~Render()
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
+void Render::Cleanup(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ GetObjectList().Cleanup();
+}
+
 void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);

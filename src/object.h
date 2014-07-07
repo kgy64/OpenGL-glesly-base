@@ -35,7 +35,7 @@ namespace Glesly
         virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
         virtual bool MouseClick(float x, float y, int index, int count);
 
-        virtual GLint GetUniformLocationSafe(const char * name) const
+        virtual GLint GetUniformLocationSafe(const char * name) const override
         {
             return GetRenderer().GetUniformLocationSafe(name);
         }

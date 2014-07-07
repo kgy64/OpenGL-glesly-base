@@ -37,19 +37,19 @@ namespace Glesly
         }
         virtual ~ReadTGA();
 
-        struct pixel_data_rgb656;
+        struct pixel_data_rgb565;
 
         struct pixel_data
         {
-            pixel_data & operator=(const pixel_data_rgb656 & other);
+            pixel_data & operator=(const pixel_data_rgb565 & other);
             uint8_t b;
             uint8_t g;
             uint8_t r;
         };
 
-        struct pixel_data_rgb656
+        struct pixel_data_rgb565
         {
-            inline pixel_data_rgb656 & operator=(const pixel_data & other)
+            inline pixel_data_rgb565 & operator=(const pixel_data & other)
             {
                 r = other.r >> (8-5);
                 g = other.g >> (8-6);
@@ -79,9 +79,9 @@ namespace Glesly
                 return (pixel_data*)image_data;
             }
 
-            pixel_data_rgb656 * GetPixelData_565(void)
+            pixel_data_rgb565 * GetPixelData_565(void)
             {
-                return (pixel_data_rgb656*)image_data;
+                return (pixel_data_rgb565*)image_data;
             }
 
             char  id_length;
@@ -124,7 +124,7 @@ namespace Glesly
 
     }; // class ReadTGA
 
-    inline ReadTGA::pixel_data & ReadTGA::pixel_data::operator=(const ReadTGA::pixel_data_rgb656 & other)
+    inline ReadTGA::pixel_data & ReadTGA::pixel_data::operator=(const ReadTGA::pixel_data_rgb565 & other)
     {
         r = other.r << (8-5);
         g = other.g << (8-6);
