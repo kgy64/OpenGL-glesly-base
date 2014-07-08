@@ -23,12 +23,14 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Main::Main(void)
+Main::Main(void):
+    running(true)
 {
  GetBackend().RegisterParent(this);
 }
 
 Main::Main(TargetPtr & target):
+    running(true),
     myBackend(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -56,12 +58,23 @@ void Main::Run(void)
 
  static constexpr int FRAME_DELAY_USEC  =   1000000 / 60;
 
+ SYS::TimeDelay now;
  SYS::TimeDelay frameTime;
  frameTime.SetNow();
 
  while (!ToBeFinished()) {
     {
-        Threads::Lock _l(GetBackend().GetTarget()->GetGraphicMutex());
+        if (!running) {
+sleep:      DEBUG_OUT("KGY: Sleep...");
+            frameTime.SetNow();
+            usleep(333333);     // cca 3 Hz
+            continue;
+        }
+        Glesly::TargetPtr target = GetBackend().GetTarget();
+        if (!target) {
+            goto sleep;
+        }
+        Threads::Lock _l(target->GetGraphicMutex());
         NextFrame();
     }
 
@@ -72,7 +85,8 @@ void Main::Run(void)
         (*i)->NextFrame(myFrameStartTime);
     }
 
-    SYS::TimeDelay now;
+    DEBUG_OUT("KGY: FRAME!");
+
     now.SetNow();
 
     int elapsed = FRAME_DELAY_USEC - (now - frameTime).ToMicrosecond();
@@ -84,7 +98,12 @@ void Main::Run(void)
         frameTime = now;
     }
 
-    GetBackend().SwapBuffers();
+    try {
+        GetBackend().SwapBuffers();
+    } catch (...) {
+        DEBUG_OUT("KGY: ERROR!");
+        usleep(20000);
+    }
  }
 
 finished:;

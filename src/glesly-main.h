@@ -74,7 +74,14 @@ namespace Glesly
 
         SYS::TimeDelay myFrameStartTime;
 
+        bool running;
+
         virtual bool ToBeFinished(void) const =0;
+
+        void RunState(bool on)
+        {
+            running = on;
+        }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
