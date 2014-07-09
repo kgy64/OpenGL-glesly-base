@@ -74,13 +74,11 @@ namespace Glesly
 
         SYS::TimeDelay myFrameStartTime;
 
-        bool running;
-
         virtual bool ToBeFinished(void) const =0;
 
-        void RunState(bool on)
+        inline bool IsRunning(void) const
         {
-            running = on;
+            return myBackend.IsRunning();
         }
 
      private:

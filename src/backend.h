@@ -39,6 +39,11 @@ namespace Glesly
             return myTarget;
         }
 
+        inline bool IsRunning(void) const
+        {
+            return (bool)myTarget;
+        }
+
         inline void RegisterParent(TargetHolder * parent = NULL)
         {
             myParent = parent;

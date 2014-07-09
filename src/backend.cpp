@@ -161,14 +161,22 @@ void Backend::SwapBuffers(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Threads::Lock _l(GetTarget()->GetGraphicMutex());
+ Glesly::TargetPtr target = GetTarget();
+
+ if (!target) {
+    // There is no target: It means that the main window is being closed.
+    // Note: it does not happen on all platforms (but at least on Android it dores).
+    return;
+ }
+
+ Threads::Lock _l(target->GetGraphicMutex());
 
  eglSwapBuffers(myDisplay, mySurface);
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not eglSwapBuffers()");
  }
  // Note: it should be discussed...
- // GetTarget()->Wait4Sync();
+ // target->Wait4Sync();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
