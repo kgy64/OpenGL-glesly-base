@@ -165,7 +165,7 @@ void Backend::SwapBuffers(void)
 
  if (!target) {
     // There is no target: It means that the main window is being closed.
-    // Note: it does not happen on all platforms (but at least on Android it dores).
+    // Note: it does not happen on all platforms (but at least on Android it does).
     return;
  }
 
