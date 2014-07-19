@@ -47,8 +47,9 @@ void Main::Run(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- while (!IsRunning()) {
+ if (!IsRunning()) {
     usleep(333333);     // cca 3 Hz
+    return;
  }
 
  GetBackend().Initialize(); // Must be called from this thread
