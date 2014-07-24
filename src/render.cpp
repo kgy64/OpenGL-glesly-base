@@ -80,9 +80,11 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
 
     ConvertMouseCoordinates(horiz, vert);
 
+    SYS_DEBUG(DL_INFO2, "Mouse button #" << index << " click #" << count << ", at " << x << "x" << y << " -> " << horiz << "x" << vert);
+
     ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
-    if (p.get()) {
+    if (p) {
         SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
         for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
            if ((*i)->MouseClick(horiz, vert, index, count)) {
@@ -91,7 +93,7 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
         }
     }
  } catch(::EX::Assert & ex) {
-    SYS_DEBUG(DL_WARNING, "Cannot calculate mouse position!");
+    SYS_DEBUG(DL_WARNING, "Cannot calculate mouse position because " << ex.what());
  }
 }
 

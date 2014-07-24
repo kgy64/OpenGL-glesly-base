@@ -35,6 +35,7 @@ namespace Glesly
         friend class Target;
         friend class Backend;
 
+     public:
         virtual void CloseRequest(void) =0;
         virtual void MouseClick(int x, int y, int index, int count) =0;
 

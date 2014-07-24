@@ -88,13 +88,18 @@ void Main::Run(void)
 
     now.SetNow();
 
-    int elapsed = FRAME_DELAY_USEC - (now - frameTime).ToMicrosecond();
-
-    if (elapsed > 2000) {
-        frameTime.AddMicrosecond(FRAME_DELAY_USEC);
-        usleep(elapsed);
+    if (SYS_DEBUG_ON) {
+        // In the debug case, slow down the rendering to prevent log flood:
+        usleep(100000); // cca. 10 Hz
     } else {
-        frameTime = now;
+        int elapsed = FRAME_DELAY_USEC - (now - frameTime).ToMicrosecond();
+
+        if (elapsed > 2000) {
+            frameTime.AddMicrosecond(FRAME_DELAY_USEC);
+            usleep(elapsed);
+        } else {
+            frameTime = now;
+        }
     }
 
     GetBackend().SwapBuffers();

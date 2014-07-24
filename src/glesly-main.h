@@ -38,6 +38,7 @@ namespace Glesly
         virtual void Cleanup(void) =0;
 
         virtual void WindowSizeChanged(int w, int h) { }
+        virtual void MouseClick(int x, int y, int index, int count);
 
         inline Glesly::Backend & GetBackend(void)
         {
@@ -83,8 +84,6 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
-
-        virtual void MouseClick(int x, int y, int index, int count);
 
         Glesly::Backend myBackend;
 
