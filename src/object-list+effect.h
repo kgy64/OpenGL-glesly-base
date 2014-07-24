@@ -40,9 +40,17 @@ namespace Glesly
             myNextLayer = creator; // Don't worry if overwrites the previous one
         }
 
-        inline void PopLayer(void)
+        inline bool PopLayer(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO1, "size: " << myLayers.size());
+            // Make sure that the root effect is not removed:
+            if (myLayers.size() <= 1) {
+                return false;
+            }
+            SYS_DEBUG(DL_INFO1, "size: " << myLayers.size() << " accepted!");
             GetActualEffect()->Drop(myLayers);
+            return true;
         }
 
      protected:
