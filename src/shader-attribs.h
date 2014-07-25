@@ -28,14 +28,17 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                glDeleteBuffers(1, &myVBO);
-                SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
+                if (myVBO != 0xffffffff) {
+                    glDeleteBuffers(1, &myVBO);
+                    SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
+                }
             }
 
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
+                InitGLObject();
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) {
@@ -59,6 +62,8 @@ namespace Glesly
                     glDisableVertexAttribArray(myAttrib);
                 }
             }
+
+            Glesly::Object & myParent;
 
             const char * myName;
 
@@ -90,6 +95,7 @@ namespace Glesly
                     SYS_DEBUG(DL_INFO2, "Overriding data pointer: " << data);
                     myData = data;
                 }
+                InitGLObject();
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
@@ -101,6 +107,8 @@ namespace Glesly
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::VBOAttribBase");
+
+            void InitGLObject(void);
 
         }; // class VBOAttribBase
 

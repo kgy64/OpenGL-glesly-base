@@ -27,8 +27,10 @@ using namespace Shaders;
   */
 VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage, GLenum target):
     AttribList(parent),
+    myParent(parent),
     myName(name),
-    myAttrib(target != GL_ELEMENT_ARRAY_BUFFER ? parent.GetAttribLocationSafe(name) : 0),
+    myVBO(0xffffffff),
+    myAttrib(-1),
     myData(data),
     myVectorSize(vector_size),
     myElementSize(element_size),
@@ -41,9 +43,20 @@ VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * da
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
+}
 
- glGenBuffers(1, &myVBO);
- SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned");
+void VBOAttribBase::InitGLObject(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myAttrib == -1) {
+    myAttrib = myTarget != GL_ELEMENT_ARRAY_BUFFER ? myParent.GetAttribLocationSafe(myName) : 0;
+ }
+
+ if (myVBO == 0xffffffff) {
+    glGenBuffers(1, &myVBO);
+    SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned");
+ }
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
