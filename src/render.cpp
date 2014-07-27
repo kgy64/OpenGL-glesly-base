@@ -74,26 +74,27 @@ void Render::MouseClickRaw(int x, int y, int index, int count)
     return;
  }
 
+ float horiz = x;
+ float vert = y;
+
  try {
-    float horiz = x;
-    float vert = y;
-
     ConvertMouseCoordinates(horiz, vert);
-
-    SYS_DEBUG(DL_INFO2, "Mouse button #" << index << " click #" << count << ", at " << x << "x" << y << " -> " << horiz << "x" << vert);
-
-    ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
-
-    if (p) {
-        SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
-        for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-           if ((*i)->MouseClick(horiz, vert, index, count)) {
-               break;
-           }
-        }
-    }
  } catch(::EX::Assert & ex) {
-    SYS_DEBUG(DL_WARNING, "Cannot calculate mouse position because " << ex.what());
+    DEBUG_OUT("Cannot calculate mouse position because " << ex.what());
+    return;
+ }
+
+ SYS_DEBUG(DL_INFO2, "Mouse button #" << index << " click #" << count << ", at " << x << "x" << y << " -> " << horiz << "x" << vert);
+
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ if (p) {
+    SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+       if ((*i)->MouseClick(horiz, vert, index, count)) {
+           break;
+       }
+    }
  }
 }
 
