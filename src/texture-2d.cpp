@@ -21,6 +21,7 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, GLenum pixelformat, bool use_mipmap):
+    myTexture(0xffffffff),
     myWidth(target.GetWidth()),
     myHeight(target.GetHeight()),
     myFormat(format),
@@ -29,8 +30,6 @@ Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, GLenum pixelf
     myTarget(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- Initialize();
 }
 
 Texture2DRaw::~Texture2DRaw()
@@ -46,6 +45,8 @@ Texture2DRaw::~Texture2DRaw()
 void Texture2DRaw::Update(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Initialize();
 
  Bind();
 
@@ -69,6 +70,10 @@ void Texture2DRaw::Update(void)
 void Texture2DRaw::Initialize(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myTexture != 0xffffffff) {
+    return;
+ }
 
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
