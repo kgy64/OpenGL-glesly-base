@@ -73,18 +73,18 @@ void MouseButton::State(bool pressed, const SYS::TimeDelay & time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (myPressed == pressed) {
+ if (myPressed ^ pressed) {
+    myPressed = pressed;
+    if (myPressed) {
+        Pressed();
+    } else {
+        Released(time - myPreviousTime);
+    }
+    myPreviousTime = time;
+ } else {
     if (myPressCount) {
         Logic(time);
     }
- } else {
-     myPressed = pressed;
-     if (pressed) {
-        Pressed();
-     } else {
-        Released(time - myPreviousTime);
-     }
-     myPreviousTime = time;
  }
 }
 
