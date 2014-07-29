@@ -31,18 +31,20 @@ namespace Glesly
 
         inline GLuint GetBuffer(void)
         {
+            if (myTexture == 0xffffffff) {
+                Initialize();
+            }
             return myTexture;
         }
 
-        inline void Bind(void) const
+        inline void Bind(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << myTexture << ");");
-            glBindTexture(GL_TEXTURE_2D, myTexture);
+            GLuint texture = GetBuffer();
+            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << texture << ");");
+            glBindTexture(GL_TEXTURE_2D, texture);
             CheckEGLError("glBindTexture()");
         }
-
-        GLuint myTexture;
 
         int myWidth;
 
@@ -55,6 +57,9 @@ namespace Glesly
         bool myUseMipmap;
 
         const Target2D & myTarget;
+
+     private:
+        GLuint myTexture;
 
      public:
         int GetWidth(void) const
