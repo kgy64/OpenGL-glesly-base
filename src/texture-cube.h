@@ -31,6 +31,7 @@ namespace Glesly
 
         inline GLuint GetBuffer(void)
         {
+            ASSERT(myTexture != 0xffffffff, "object is not initialized yet");
             return myTexture;
         }
 

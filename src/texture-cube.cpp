@@ -21,6 +21,7 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format):
+    myTexture(0xffffffff),
     myFormat(format),
     myTarget(target)
 {
@@ -31,10 +32,11 @@ TextureCubeMap::~TextureCubeMap()
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
-
- glDeleteTextures(1, &myTexture);
- CheckEGLError("glDeleteTextures()");
+ if (myTexture != 0xffffffff) {
+    SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
+    glDeleteTextures(1, &myTexture);
+    CheckEGLError("glDeleteTextures()");
+ }
 }
 
 void TextureCubeMap::Update(void)

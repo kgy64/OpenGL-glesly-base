@@ -29,7 +29,7 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                ASSERT(myVBO != 0xffffffff, "object is not initialized yet");
+                ASSERT_DBG(myVBO != 0xffffffff, "object is not initialized yet");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) {
@@ -37,7 +37,7 @@ namespace Glesly
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
                 if (myTarget == GL_ARRAY_BUFFER) {
-                    ASSERT(myAttrib != -1, "object is not initialized yet");
+                    ASSERT_DBG(myAttrib != -1, "object is not initialized yet");
                     SYS_DEBUG(DL_INFO3, " - glEnableVertexAttribArray(" << myAttrib << ");");
                     glEnableVertexAttribArray(myAttrib);
                     SYS_DEBUG(DL_INFO3, " - glVertexAttribPointer(" << myAttrib << "," << myVectorSize << "," << myGLType << ",FALSE,0,0);");
@@ -90,9 +90,9 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding data pointer to " << data);
                 myData = data;
                 if (elements) {
-                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding data pointer to " << data);
                     myVectorSize = elements;
                     myByteSize = myVectorSize * myVertices * myElementSize;
+                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding size to " << elements << " elements, " << myByteSize << " bytes");
                 }
             }
 
@@ -102,8 +102,8 @@ namespace Glesly
             inline void Bind(void) const
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                ASSERT(myVBO != 0xffffffff, "object is not initialized yet");
+                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "': at " << myData << ", size=" << myByteSize << " bytes");
+                ASSERT_DBG(myVBO != 0xffffffff, "object is not initialized yet");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");

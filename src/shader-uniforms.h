@@ -40,10 +40,14 @@ namespace Glesly
 
             GLint GetUniformID(void)
             {
-                if (myUniformID < 0) {
-                    myUniformID = GetParent().GetUniformLocationSafe(myName);
-                }
+                ASSERT(myUniformID != -1, "object is not initialized yet");
                 return myUniformID;
+            }
+
+         public:
+            inline void InitGL(void)
+            {
+                myUniformID = GetParent().GetUniformLocationSafe(myName);
             }
 
          private:
@@ -137,6 +141,12 @@ namespace Glesly
                 Bind();
             }
 
+            inline void InitGL(void)
+            {
+                UniformBase::InitGL();
+                Texture2DRaw::InitGL();
+            }
+
          protected:
             int myIndex;
 
@@ -171,6 +181,12 @@ namespace Glesly
                 glUniform1i(GetUniformID(), myIndex);
                 CheckEGLError("glUniform1i()");
                 Bind();
+            }
+
+            inline void InitGL(void)
+            {
+                UniformBase::InitGL();
+                TextureCubeMap::InitGL();
             }
 
          protected:
