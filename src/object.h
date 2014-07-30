@@ -77,7 +77,7 @@ namespace Glesly
          *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
          *  any other drawing operations. All OpenGL-specific initializations must be done here,
          *  instead of the constructor. */
-        virtual void initGL(void) { }
+        virtual void initGL(void) =0;
 
         /// The object's Projection Matrix
         Glesly::Transformation myProjection;

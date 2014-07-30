@@ -58,6 +58,13 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::LineObject");
 
+        virtual void initGL(void) override
+        {
+            position.InitGL();
+            colour.InitGL();
+            elements.InitGL();
+        }
+
     }; // class LineObject
 
 } // namespace Glesly

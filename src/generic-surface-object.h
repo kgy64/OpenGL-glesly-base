@@ -50,6 +50,13 @@ namespace Glesly
         /// Element indices
         Glesly::Shaders::VBOUShortElementBuffer<E> elements;
 
+        inline void InitGL(void)
+        {
+            position.InitGL();
+            texcoord.InitGL();
+            elements.InitGL();
+        }
+
      public:
         inline unsigned GetNoOfVertices(void) const
         {
@@ -63,6 +70,11 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::GenericSurfaceObject");
+
+        virtual void initGL(void) override
+        {
+            InitGL();
+        }
 
     }; // class GenericSurfaceObject
 

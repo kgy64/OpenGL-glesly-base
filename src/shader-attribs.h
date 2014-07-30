@@ -23,22 +23,13 @@ namespace Glesly
         {
          protected:
             VBOAttribBase(Glesly::Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER);
-
-            virtual ~VBOAttribBase()
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                if (myVBO != 0xffffffff) {
-                    glDeleteBuffers(1, &myVBO);
-                    SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
-                }
-            }
+            virtual ~VBOAttribBase();
 
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                InitGLObject();
+                ASSERT(myVBO != 0xffffffff, "object is not initialized yet");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) {
@@ -46,6 +37,7 @@ namespace Glesly
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
                 if (myTarget == GL_ARRAY_BUFFER) {
+                    ASSERT(myAttrib != -1, "object is not initialized yet");
                     SYS_DEBUG(DL_INFO3, " - glEnableVertexAttribArray(" << myAttrib << ");");
                     glEnableVertexAttribArray(myAttrib);
                     SYS_DEBUG(DL_INFO3, " - glVertexAttribPointer(" << myAttrib << "," << myVectorSize << "," << myGLType << ",FALSE,0,0);");
@@ -77,6 +69,8 @@ namespace Glesly
 
             unsigned myElementSize;
 
+            unsigned myVertices;
+
             unsigned myByteSize;
 
             int myGLType;
@@ -88,27 +82,35 @@ namespace Glesly
             VBOAttribBase * next;
 
          public:
-            void Bind(const void * data = NULL, unsigned elements = 0U)
+            void InitGL(void);
+
+            void Bind(const void * data, unsigned elements = 0U)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                if (data) {
-                    SYS_DEBUG(DL_INFO2, "Overriding data pointer: " << data);
-                    myData = data;
-                }
-                InitGLObject();
-                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
-                glBindBuffer(myTarget, myVBO);
-                SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");
-                if (myUsage == GL_STATIC_DRAW) { // else will be called in BufferData()
-                    glBufferData(myTarget, elements ? elements * myElementSize : myByteSize, myData, myUsage);
+                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding data pointer to " << data);
+                myData = data;
+                if (elements) {
+                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding data pointer to " << data);
+                    myVectorSize = elements;
+                    myByteSize = myVectorSize * myVertices * myElementSize;
                 }
             }
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::VBOAttribBase");
 
-            void InitGLObject(void);
+            inline void Bind(void) const
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
+                ASSERT(myVBO != 0xffffffff, "object is not initialized yet");
+                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
+                glBindBuffer(myTarget, myVBO);
+                SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");
+                if (myUsage == GL_STATIC_DRAW) { // else will be called in BufferData()
+                    glBufferData(myTarget, myByteSize, myData, myUsage);
+                }
+            }
 
         }; // class VBOAttribBase
 
@@ -382,7 +384,7 @@ namespace Glesly
         {
          public:
             inline VBOUShortElementBuffer(Glesly::Object & parent):
-                VBOAttribBase(parent, "__No_Name__", NULL, 1, sizeof(GLushort), N, GL_INT /*not used here*/, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER)
+                VBOAttribBase(parent, "__ELEM_ARRAY_BUFFER__", NULL, 1, sizeof(GLushort), N, GL_INT /*not used here*/, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER)
             {
             }
 

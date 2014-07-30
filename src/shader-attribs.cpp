@@ -34,7 +34,8 @@ VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * da
     myData(data),
     myVectorSize(vector_size),
     myElementSize(element_size),
-    myByteSize(vector_size * vertices * element_size),
+    myVertices(vertices),
+    myByteSize(myVectorSize * myVertices * myElementSize),
     myGLType(gl_type),
     myTarget(target),
     myUsage(usage),
@@ -45,18 +46,25 @@ VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * da
  SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
 }
 
-void VBOAttribBase::InitGLObject(void)
+VBOAttribBase::~VBOAttribBase()
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+ SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
+
+ if (myVBO != 0xffffffff) {
+    glDeleteBuffers(1, &myVBO);
+    SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
+ }
+}
+
+void VBOAttribBase::InitGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (myAttrib == -1) {
-    myAttrib = myTarget != GL_ELEMENT_ARRAY_BUFFER ? myParent.GetAttribLocationSafe(myName) : 0;
- }
+ myAttrib = myTarget != GL_ELEMENT_ARRAY_BUFFER ? myParent.GetAttribLocationSafe(myName) : 0;
 
- if (myVBO == 0xffffffff) {
-    glGenBuffers(1, &myVBO);
-    SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned");
- }
+ glGenBuffers(1, &myVBO);
+ SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned");
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

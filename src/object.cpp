@@ -59,12 +59,12 @@ void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- ExecuteCallback(frame_start_time);
-
  if (!gl_inited) {
     gl_inited = true;
     initGL();
  }
+
+ ExecuteCallback(frame_start_time);
 
  ActivateVariables();
  BufferVariables();

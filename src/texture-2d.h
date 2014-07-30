@@ -31,9 +31,7 @@ namespace Glesly
 
         inline GLuint GetBuffer(void)
         {
-            if (myTexture == 0xffffffff) {
-                Initialize();
-            }
+            ASSERT(myTexture != 0xffffffff, "texture is not initialized yet");
             return myTexture;
         }
 
@@ -74,10 +72,12 @@ namespace Glesly
 
         void Update(void);
 
+        void InitGL(void);
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Texture2DRaw");
 
-        void Initialize();
+        void Initialize(void);
 
     }; // class Texture2DRaw
 

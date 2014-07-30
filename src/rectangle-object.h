@@ -30,6 +30,11 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        inline void InitGL(void)
+        {
+            Glesly::GenericSurfaceObject<W*H, 6*(W-1)*(H-1)>::InitGL();
+        }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::RectangleObject");
 

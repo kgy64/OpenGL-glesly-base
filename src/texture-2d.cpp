@@ -49,8 +49,6 @@ void Texture2DRaw::Update(void)
 
  Initialize();
 
- Bind();
-
  SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
 
  glTexImage2D(
@@ -68,13 +66,18 @@ void Texture2DRaw::Update(void)
  }
 }
 
-void Texture2DRaw::Initialize(void)
+void Texture2DRaw::InitGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
- Bind();
+}
+
+void Texture2DRaw::Initialize(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
  if (myUseMipmap) {
     SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);");
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

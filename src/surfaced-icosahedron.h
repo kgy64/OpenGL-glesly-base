@@ -97,7 +97,6 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT(N) << " vertices and " << myCurrentElement << " of " << IH_ELEM(N) << " elements");
             IcosahedronParent<N>::elements.Bind(myElems, myCurrentElement);
-            texture.Update();
         }
 
         inline static Glesly::ObjectPtr Create(Glesly::Render & render, float size = 1.0f)
@@ -107,6 +106,13 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
+
+        virtual void initGL(void) override
+        {
+            IcosahedronParent<N>::InitGL();
+            texture.InitGL();
+            texture.Update();
+        }
 
         Glesly::Shaders::UniformTextureCube texture;
 
