@@ -33,20 +33,20 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            VIRTUAL_IF_DEBUG inline ~UniformBase()
+            virtual ~UniformBase()
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            GLint GetUniformID(void)
+            inline GLint GetUniformID(void)
             {
-                ASSERT(myUniformID != -1, "object is not initialized yet");
+                ASSERT(myUniformID != -1, "object '" << myName << "' is not initialized yet");
                 return myUniformID;
             }
 
-         public:
-            inline void InitGL(void)
+            virtual void initGL(void) override
             {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
                 myUniformID = GetParent().GetUniformLocationSafe(myName);
             }
 
@@ -69,7 +69,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            virtual void Activate(void)
+            virtual void Activate(void) override
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO3, " - glUniform1f(" << GetUniformID() << "," << myRef << ");");
@@ -129,7 +129,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            virtual void Activate(void)
+            virtual void Activate(void) override
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO3, " - glActiveTexture(GL_TEXTURE" << myIndex << ");");
@@ -141,17 +141,19 @@ namespace Glesly
                 Bind();
             }
 
-            inline void InitGL(void)
+         protected:
+            virtual void initGL(void) override
             {
-                UniformBase::InitGL();
+                UniformBase::initGL();
                 Texture2DRaw::InitGL();
             }
 
-         protected:
             int myIndex;
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTexture2D");
+
+            inline void InitGL(void);   // Don't try to call it - it is handled by class UniformBase
 
         }; // class UniformTexture2D
 
@@ -171,7 +173,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            virtual void Activate(void)
+            virtual void Activate(void) override
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 SYS_DEBUG(DL_INFO3, " - glActiveTexture(GL_TEXTURE" << myIndex << ");");
@@ -183,17 +185,20 @@ namespace Glesly
                 Bind();
             }
 
-            inline void InitGL(void)
+         protected:
+            virtual void initGL(void) override
             {
-                UniformBase::InitGL();
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                UniformBase::initGL();
                 TextureCubeMap::InitGL();
             }
 
-         protected:
             int myIndex;
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTextureCube");
+
+            inline void InitGL(void);   // Don't try to call it - it is handled by class UniformBase
 
         }; // class UniformTextureCube
 
@@ -213,7 +218,7 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            virtual void Activate(void)
+            virtual void Activate(void) override
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 switch (N) {
@@ -256,6 +261,8 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformMatrix<T,N>");
 
+            inline void InitGL();   // Don't try to call it - it is handled by class UniformBase
+
         }; // class UniformMatrix_ref<T,N>
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -265,6 +272,16 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
             var.next = myVars;
             myVars = &var;
+        }
+
+        inline void UniformManager::InitGLVariables(void)
+        {
+            for (UniformList * var = myVars; var; var=var->next) {
+                if (!var->glInitialized) {
+                    var->glInitialized = true;
+                    var->initGL();
+                }
+            }
         }
 
         inline void UniformManager::ActivateVariables(void)

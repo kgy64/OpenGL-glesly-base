@@ -49,6 +49,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  UseProgram();
 
+ InitGLVariables();
  ActivateVariables();
 
  Frame(frame_start_time);

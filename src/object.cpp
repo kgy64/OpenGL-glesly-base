@@ -66,6 +66,7 @@ void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  ExecuteCallback(frame_start_time);
 
+ InitGLVariables();
  ActivateVariables();
  BufferVariables();
  Frame();

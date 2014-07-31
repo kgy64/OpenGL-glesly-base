@@ -13,7 +13,7 @@
 
 #include <math.h>
 #include <map>
-#include <GLES2/gl2.h>
+#include <GLES2/gl2.h>  // for basic GL types (e.g. GLuint)
 
 #include <Debug/Debug.h>
 

@@ -29,9 +29,9 @@ namespace Glesly
         TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB);
         virtual ~TextureCubeMap();
 
-        inline GLuint GetBuffer(void)
+        inline GLuint GetBuffer(void) const
         {
-            ASSERT(myTexture != 0xffffffff, "object is not initialized yet");
+            ASSERT(myTexture != 0xffffffff, "object (TextureCubeMap) is not initialized yet");
             return myTexture;
         }
 
@@ -39,7 +39,7 @@ namespace Glesly
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_CUBE_MAP, " << myTexture << ");");
-            glBindTexture(GL_TEXTURE_CUBE_MAP, myTexture);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, GetBuffer());
             CheckEGLError("glBindTexture()");
         }
 

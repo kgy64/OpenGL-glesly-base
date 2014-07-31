@@ -99,6 +99,7 @@ namespace Glesly
 
             void Register(UniformList & var) const;
             void ActivateVariables(void);
+            void InitGLVariables(void);
 
             virtual GLint GetUniformLocationSafe(const char * name) const =0;
 
@@ -136,9 +137,9 @@ namespace Glesly
 
          protected:
             inline UniformList(UniformManager & parent):
-                myParent(parent)
-                // Note: 'next' is uninitialized intentionally. It will be
-                //       initialized in UniformManager::Register()
+                myParent(parent),
+                glInitialized(false),
+                next(nullptr)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 myParent.Register(*this);
@@ -152,9 +153,12 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformList");
 
-            virtual void Activate(void)=0;
+            virtual void Activate(void) =0;
+            virtual void initGL(void) =0;
 
             UniformManager & myParent;
+
+            bool glInitialized;
 
             UniformList * next;
 

@@ -43,7 +43,7 @@ namespace Glesly
 
      protected:
         SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6]):
-            IcosahedronParent<N>(render),
+            ParentType(render),
             IcosahedronBase(size),
             texture(*this, "texture", textures),
             myCurrentVertex(0U),
@@ -63,25 +63,25 @@ namespace Glesly
         virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex)
         {
             ASSERT(myCurrentVertex < IH_VERT(N), "Vertex index is out of range");
-            IcosahedronParent<N>::position[myCurrentVertex][0] = vertex.x;
-            IcosahedronParent<N>::position[myCurrentVertex][1] = vertex.y;
-            IcosahedronParent<N>::position[myCurrentVertex][2] = vertex.z;
-            IcosahedronParent<N>::texcoord[myCurrentVertex][0] = vertex.x;
-            IcosahedronParent<N>::texcoord[myCurrentVertex][1] = vertex.y;
-            IcosahedronParent<N>::texcoord[myCurrentVertex][2] = vertex.z;
+            ParentType::position[myCurrentVertex][0] = vertex.x;
+            ParentType::position[myCurrentVertex][1] = vertex.y;
+            ParentType::position[myCurrentVertex][2] = vertex.z;
+            ParentType::texcoord[myCurrentVertex][0] = vertex.x;
+            ParentType::texcoord[myCurrentVertex][1] = vertex.y;
+            ParentType::texcoord[myCurrentVertex][2] = vertex.z;
             return myCurrentVertex++;
         }
 
         virtual const float * GetVertex(unsigned index) const
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent vertex");
-            return IcosahedronParent<N>::position[index];
+            return ParentType::position[index];
         }
 
         virtual const float * GetTexcoord(unsigned index) const
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent texcoord");
-            return IcosahedronParent<N>::texcoord[index];
+            return ParentType::texcoord[index];
         }
 
         virtual void RegisterTriangle(const IcosahedronBase::Triangle & triangle)
@@ -96,7 +96,7 @@ namespace Glesly
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT(N) << " vertices and " << myCurrentElement << " of " << IH_ELEM(N) << " elements");
-            IcosahedronParent<N>::elements.Bind(myElems, myCurrentElement);
+            ParentType::elements.Bind(myElems, myCurrentElement);
         }
 
         inline static Glesly::ObjectPtr Create(Glesly::Render & render, float size = 1.0f)
@@ -109,8 +109,9 @@ namespace Glesly
 
         virtual void initGL(void) override
         {
-            IcosahedronParent<N>::InitGL();
-            texture.InitGL();
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Glesly::Shaders::UniformManager::InitGLVariables(); // Initialize my own objects too
+            ParentType::InitGL();
             texture.Update();
         }
 

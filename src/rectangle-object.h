@@ -32,6 +32,7 @@ namespace Glesly
 
         inline void InitGL(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             Glesly::GenericSurfaceObject<W*H, 6*(W-1)*(H-1)>::InitGL();
         }
 

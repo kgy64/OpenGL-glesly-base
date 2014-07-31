@@ -60,6 +60,7 @@ namespace Glesly
 
         virtual void initGL(void) override
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             position.InitGL();
             colour.InitGL();
             elements.InitGL();

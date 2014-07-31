@@ -52,6 +52,7 @@ namespace Glesly
 
         inline void InitGL(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             position.InitGL();
             texcoord.InitGL();
             elements.InitGL();
@@ -73,6 +74,7 @@ namespace Glesly
 
         virtual void initGL(void) override
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             InitGL();
         }
 

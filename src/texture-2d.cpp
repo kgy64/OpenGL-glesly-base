@@ -47,10 +47,7 @@ void Texture2DRaw::Update(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Initialize();
-
  SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
-
  glTexImage2D(
     GL_TEXTURE_2D, 0,           // target, level
     myFormat,                   // internal format
@@ -61,6 +58,7 @@ void Texture2DRaw::Update(void)
  CheckEGLError("glTexImage2D()");
 
  if (myUseMipmap) {
+    SYS_DEBUG(DL_INFO3, " - glGenerateMipmap(GL_TEXTURE_2D)");
     glGenerateMipmap(GL_TEXTURE_2D);
     CheckEGLError("glGenerateMipmap()");
  }
@@ -69,6 +67,9 @@ void Texture2DRaw::Update(void)
 void Texture2DRaw::InitGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Initialize();
+ Update();
 
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
