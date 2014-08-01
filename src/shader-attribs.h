@@ -28,12 +28,11 @@ namespace Glesly
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                ASSERT_DBG(myVBO != 0xffffffff, "object is not initialized yet");
-                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
+                ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
+                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << "); name: '" << myName << "'");
                 glBindBuffer(myTarget, myVBO);
-                if (myUsage != GL_STATIC_DRAW) {
-                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << ",data," << std::hex << myUsage << ");");
+                if (myUsage != GL_STATIC_DRAW) { // else will be called in Bind()
+                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << std::hex << myData << "," << myUsage << ");");
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
                 if (myTarget == GL_ARRAY_BUFFER) {
@@ -102,12 +101,11 @@ namespace Glesly
             inline void Bind(void) const
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "': at " << myData << ", size=" << myByteSize << " bytes");
-                ASSERT_DBG(myVBO != 0xffffffff, "object is not initialized yet");
-                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << ");");
+                ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
+                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << "); name: " << myName << "': at " << std::hex << myData << "', size=" << std::dec << myByteSize << " bytes");
                 glBindBuffer(myTarget, myVBO);
-                SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << myData << "," << std::hex << myUsage << ");");
                 if (myUsage == GL_STATIC_DRAW) { // else will be called in BufferData()
+                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << std::hex << myData << "," << myUsage << ");");
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
             }

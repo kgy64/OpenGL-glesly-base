@@ -64,7 +64,7 @@ void VBOAttribBase::InitGL(void)
  myAttrib = myTarget != GL_ELEMENT_ARRAY_BUFFER ? myParent.GetAttribLocationSafe(myName) : 0;
 
  glGenBuffers(1, &myVBO);
- SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned");
+ SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned for name '" << myName << "'");
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

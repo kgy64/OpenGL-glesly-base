@@ -207,12 +207,14 @@ namespace Glesly
         inline void FadeIn(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
+            myEffectFadeIn.InitGLVariables();
             myEffectFadeIn.ActivateVariables();
         }
 
         inline void FadeOut(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
+            myEffectFadeOut.InitGLVariables();
             myEffectFadeOut.ActivateVariables();
         }
 

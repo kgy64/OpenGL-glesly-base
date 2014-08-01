@@ -27,8 +27,8 @@ namespace Glesly
          protected:
             inline UniformBase(UniformManager & obj, const char * name):
                 UniformList(obj),
-                myUniformID(-1),
-                myName(name)
+                myName(name),
+                myUniformID(-1)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
@@ -50,12 +50,12 @@ namespace Glesly
                 myUniformID = GetParent().GetUniformLocationSafe(myName);
             }
 
+            const char * myName;
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformBase");
 
             GLint myUniformID;
-
-            const char * myName;
 
         }; // class UniformBase
 
@@ -223,17 +223,17 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 switch (N) {
                     case 2:
-                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix2fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
+                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix2fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << "); name: '" << myName << "'");
                         glUniformMatrix2fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
                         CheckEGLError("glUniformMatrix2fv()");
                     break;
                     case 3:
-                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix3fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
+                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix3fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << "); name: '" << myName << "'");
                         glUniformMatrix3fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
                         CheckEGLError("glUniformMatrix3fv()");
                     break;
                     case 4:
-                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix4fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << ");");
+                        SYS_DEBUG(DL_INFO3, " - glUniformMatrix4fv(" << UniformBase::GetUniformID() << ",1,GL_FALSE," << myVariable << "); name: '" << myName << "'");
                         glUniformMatrix4fv(UniformBase::GetUniformID(), 1, GL_FALSE, myVariable.get());
                         CheckEGLError("glUniformMatrix4fv()");
                     break;

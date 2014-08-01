@@ -78,6 +78,9 @@ void TextureCubeMap::InitGL(void)
 
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
+
+ Bind();
+
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);");
  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);");
