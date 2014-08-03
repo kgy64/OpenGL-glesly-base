@@ -144,6 +144,7 @@ namespace Glesly
          protected:
             virtual void initGL(void) override
             {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
                 UniformBase::initGL();
                 Texture2DRaw::InitGL();
             }

@@ -112,7 +112,6 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
             Glesly::Shaders::UniformManager::InitGLVariables(); // Initialize my own objects too
             ParentType::InitGL();
-            texture.Update();
         }
 
         Glesly::Shaders::UniformTextureCube texture;

@@ -47,7 +47,7 @@ void Texture2DRaw::Update(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
+ SYS_DEBUG(DL_INFO3, " - glTexImage2D(GL_TEXTURE_2D, 0, " << myFormat << ", " << myWidth << ", " << myHeight << ", 0, " << myFormat << ", " << myPixelFormat << ", " << myTarget.GetPixelData() << ")");
  glTexImage2D(
     GL_TEXTURE_2D, 0,           // target, level
     myFormat,                   // internal format
@@ -68,11 +68,14 @@ void Texture2DRaw::InitGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Initialize();
- Update();
-
  glGenTextures(1, &myTexture);
  SYS_DEBUG(DL_INFO3, " - glGenTextures(1, " << myTexture << "); returned");
+
+ Bind();
+
+ Initialize();
+
+ Update();
 }
 
 void Texture2DRaw::Initialize(void)

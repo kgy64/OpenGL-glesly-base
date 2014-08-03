@@ -43,8 +43,6 @@ void TextureCubeMap::Update(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Bind();
-
  static const GLuint GLTargets[] = {
     GL_TEXTURE_CUBE_MAP_POSITIVE_X,
     GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -55,8 +53,7 @@ void TextureCubeMap::Update(void)
  };
 
  for (unsigned i = 0; i < 6; ++i) {
-    SYS_DEBUG(DL_INFO3, " - glTexImage2D(...)");
-
+    SYS_DEBUG(DL_INFO3, " - glTexImage2D(" << GLTargets[i] << ", 0," << myFormat << ", " << myTarget[i]->GetWidth() << myTarget[i]->GetHeight() << ", 0, " << myFormat << ", GL_UNSIGNED_SHORT_5_6_5, " << myTarget[i]->GetPixelData() << ") [image #" << i << "]");
     glTexImage2D(
         GLTargets[i], 0,                    //  target, level
         myFormat,                           //  internal format
@@ -89,6 +86,8 @@ void TextureCubeMap::InitGL(void)
  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);");
  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
+
+ Update();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

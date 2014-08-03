@@ -29,27 +29,28 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
-                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << "); name: '" << myName << "'");
+                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << ", " << std::dec << myVBO << "); name: '" << myName << "'");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) { // else will be called in Bind()
-                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << std::hex << myData << "," << myUsage << ");");
+                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << ");");
+                    ASSERT(myData, "object '" << myName << "' has no associated data");
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
                 if (myTarget == GL_ARRAY_BUFFER) {
                     ASSERT_DBG(myAttrib != -1, "object is not initialized yet");
-                    SYS_DEBUG(DL_INFO3, " - glEnableVertexAttribArray(" << myAttrib << ");");
+                    SYS_DEBUG(DL_INFO3, " - glEnableVertexAttribArray(" << myAttrib << "); name: '" << myName << "'");
                     glEnableVertexAttribArray(myAttrib);
-                    SYS_DEBUG(DL_INFO3, " - glVertexAttribPointer(" << myAttrib << "," << myVectorSize << "," << myGLType << ",FALSE,0,0);");
+                    SYS_DEBUG(DL_INFO3, " - glVertexAttribPointer(" << myAttrib << ", " << myVectorSize << ", " << myGLType << ", GL_FALSE, 0, 0);");
                     glVertexAttribPointer(myAttrib, myVectorSize, myGLType, GL_FALSE, 0, 0);
                 }
             }
 
             virtual void UnbufferData(void)
             {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
                 if (myTarget == GL_ARRAY_BUFFER) {
-                    SYS_DEBUG_MEMBER(DM_GLESLY);
-                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
-                    SYS_DEBUG(DL_INFO3, " - glDisableVertexAttribArray(" << myAttrib << ");");
+                    ASSERT_DBG(myAttrib != -1, "object is not initialized yet");
+                    SYS_DEBUG(DL_INFO3, " - glDisableVertexAttribArray(" << myAttrib << "); name: '" << myName << "'");
                     glDisableVertexAttribArray(myAttrib);
                 }
             }
@@ -89,9 +90,9 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding data pointer to " << data);
                 myData = data;
                 if (elements) {
-                    myVectorSize = elements;
+                    myVertices = elements;
                     myByteSize = myVectorSize * myVertices * myElementSize;
-                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding size to " << elements << " elements, " << myByteSize << " bytes");
+                    SYS_DEBUG(DL_INFO2, "Shader var '" << myName << ": Overriding size (vector size=" << myVectorSize << ", element size=" << myElementSize << ", vertices=" << myVertices << ", bytes=" << myByteSize << ")");
                 }
             }
 
@@ -102,10 +103,11 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
-                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << "," << std::dec << myVBO << "); name: " << myName << "': at " << std::hex << myData << "', size=" << std::dec << myByteSize << " bytes");
+                SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << ", " << std::dec << myVBO << "); name: '" << myName << "'");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage == GL_STATIC_DRAW) { // else will be called in BufferData()
-                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << "," << std::dec << myByteSize << "," << std::hex << myData << "," << myUsage << ");");
+                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << "); name: '" << myName << "'");
+                    ASSERT(myData, "object '" << myName << "' has no associated data");
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
             }

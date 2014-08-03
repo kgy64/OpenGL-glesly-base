@@ -43,7 +43,7 @@ VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * da
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
+ SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "' (vector size=" << myVectorSize << ", element size=" << myElementSize << ", vertices=" << myVertices << ", bytes=" << myByteSize << ")");
 }
 
 VBOAttribBase::~VBOAttribBase()
@@ -65,6 +65,8 @@ void VBOAttribBase::InitGL(void)
 
  glGenBuffers(1, &myVBO);
  SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned for name '" << myName << "'");
+
+ Bind();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
