@@ -35,15 +35,6 @@ namespace Glesly
             return myTexture;
         }
 
-        inline void Bind(void)
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            GLuint texture = GetBuffer();
-            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << texture << ");");
-            glBindTexture(GL_TEXTURE_2D, texture);
-            CheckEGLError("glBindTexture()");
-        }
-
         int myWidth;
 
         int myHeight;
@@ -60,6 +51,15 @@ namespace Glesly
         GLuint myTexture;
 
      public:
+        inline void Bind(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            GLuint texture = GetBuffer();
+            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_2D, " << texture << ");");
+            glBindTexture(GL_TEXTURE_2D, texture);
+            CheckEGLError("glBindTexture()");
+        }
+
         int GetWidth(void) const
         {
             return myWidth;

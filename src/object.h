@@ -60,6 +60,14 @@ namespace Glesly
             return myProjection;
         }
 
+        /// Generic OpenGL initializer function
+        /*! Note that any object can be created by any thread, but OpenGL function calls can be
+         *  initiated only from one thread (the OpenGL render thread here). This function is
+         *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
+         *  any other drawing operations. All OpenGL-specific initializations must be done here,
+         *  instead of the constructor. */
+        virtual void initGL(void) =0;
+
      protected:
         Object(Render & renderer);
 
@@ -70,14 +78,6 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Object");
 
         virtual void Frame(void) { }
-
-        /// Generic OpenGL initializer function
-        /*! Note that any object can be created by any thread, but OpenGL function calls can be
-         *  initiated only from one thread (the OpenGL render thread here). This function is
-         *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
-         *  any other drawing operations. All OpenGL-specific initializations must be done here,
-         *  instead of the constructor. */
-        virtual void initGL(void) =0;
 
         /// The object's Projection Matrix
         Glesly::Transformation myProjection;

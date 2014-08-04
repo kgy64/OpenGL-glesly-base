@@ -135,6 +135,9 @@ namespace Glesly
         {
             friend class UniformManager;
 
+         public:
+            virtual void initGL(void) =0;
+
          protected:
             inline UniformList(UniformManager & parent):
                 myParent(parent),
@@ -154,7 +157,6 @@ namespace Glesly
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformList");
 
             virtual void Activate(void) =0;
-            virtual void initGL(void) =0;
 
             UniformManager & myParent;
 

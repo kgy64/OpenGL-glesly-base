@@ -141,7 +141,6 @@ namespace Glesly
                 Bind();
             }
 
-         protected:
             virtual void initGL(void) override
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -149,6 +148,7 @@ namespace Glesly
                 Texture2DRaw::InitGL();
             }
 
+         protected:
             int myIndex;
 
          private:
