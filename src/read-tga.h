@@ -99,9 +99,9 @@ namespace Glesly
             char image_data[0];
         };
 
-        virtual const void * GetPixelData(void) const;
-        virtual int GetWidth(void) const;
-        virtual int GetHeight(void) const;
+        virtual const void * GetPixelData(void) const override;
+        virtual int GetWidth(void) const override;
+        virtual int GetHeight(void) const override;
 
         inline const tga_header & GetHeader(void) const
         {
