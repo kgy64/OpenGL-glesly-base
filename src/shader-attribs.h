@@ -32,7 +32,7 @@ namespace Glesly
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << ", " << std::dec << myVBO << "); name: '" << myName << "'");
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) { // else will be called in Bind()
-                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << ");");
+                    SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << "); name: '" << myName << "'");
                     ASSERT(myData, "object '" << myName << "' has no associated data");
                     glBufferData(myTarget, myByteSize, myData, myUsage);
                 }
