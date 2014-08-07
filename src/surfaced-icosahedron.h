@@ -60,7 +60,7 @@ namespace Glesly
         }
 
      protected:
-        virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex)
+        virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex) override
         {
             ASSERT(myCurrentVertex < IH_VERT(N), "Vertex index is out of range");
             ParentType::position[myCurrentVertex][0] = vertex.x;
@@ -72,19 +72,19 @@ namespace Glesly
             return myCurrentVertex++;
         }
 
-        virtual const float * GetVertex(unsigned index) const
+        virtual const float * GetVertex(unsigned index) const override
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent vertex");
             return ParentType::position[index];
         }
 
-        virtual const float * GetTexcoord(unsigned index) const
+        virtual const float * GetTexcoord(unsigned index) const override
         {
             ASSERT(index < myCurrentVertex, "Requesting nonexistent texcoord");
             return ParentType::texcoord[index];
         }
 
-        virtual void RegisterTriangle(const IcosahedronBase::Triangle & triangle)
+        virtual void RegisterTriangle(const IcosahedronBase::Triangle & triangle) override
         {
             ASSERT(myCurrentElement <= IH_ELEM(N)-3, "Too many triangles are registered, element count: " << myCurrentElement);
             myElems[myCurrentElement++] = triangle.a;
@@ -92,7 +92,7 @@ namespace Glesly
             myElems[myCurrentElement++] = triangle.c;
         }
 
-        virtual void RegisterFinished(void)
+        virtual void RegisterFinished(void) override
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO1, "Having " << myCurrentVertex << " of " << IH_VERT(N) << " vertices and " << myCurrentElement << " of " << IH_ELEM(N) << " elements");
@@ -106,13 +106,6 @@ namespace Glesly
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
-
-        virtual void initGL(void) override
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-            Glesly::Shaders::UniformManager::InitGLVariables(); // Initialize my own objects too
-            ParentType::InitGL();
-        }
 
         Glesly::Shaders::UniformTextureCube texture;
 
