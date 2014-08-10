@@ -50,7 +50,7 @@ void LayerChangeEffectBase::Frame(const SYS::TimeDelay & frame_start_time)
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  for (ObjectListIterator i = previousObjects->begin(); i != previousObjects->end(); ++i) {
-    (*i)->NextFrame(frame_start_time);
+    (*i)->DrawFrame(frame_start_time);
  }
 }
 

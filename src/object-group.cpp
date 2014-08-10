@@ -15,23 +15,10 @@ using namespace Glesly;
 void ObjectGroup::initGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
-
- if (!p) {
-    // If a stupid group has no objects at all:
-    SYS_DEBUG(DL_INFO2, "Having no objects");
-    return;
- }
-
- SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
-
- for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    (*i)->initGL();
- }
+ DEBUG_OUT("Called unnecessary function ObjectGroup::initGL()");
 }
 
-void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
+void ObjectGroup::DrawFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -39,7 +26,6 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
     return;
  }
 
- DoInitGL();
  ExecuteCallback(frame_start_time);
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
@@ -53,7 +39,7 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
  SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    (*i)->NextFrame(frame_start_time);
+    (*i)->DrawFrame(frame_start_time);
  }
 }
 

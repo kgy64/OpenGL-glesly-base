@@ -19,6 +19,7 @@
 #include <glesly/render-ptr.h>
 #include <glesly/shader-uniforms.h>
 #include <International/utf8.h>
+#include <Threads/Mutex.h>
 
 namespace Glesly
 {
@@ -55,6 +56,7 @@ namespace Glesly
         }
 
         int GetCallbackTimeLimit(void) const;
+        void InitGLObject(Glesly::ObjectBase * object);
 
      protected:
         Render(Glesly::CameraMatrix & camera, float aspect = 1.0f);
@@ -74,13 +76,29 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
 
+        struct objectIniter
+        {
+            Glesly::Render::objectIniter * next;
+
+            Glesly::ObjectBase * object;
+
+        }; // struct Glesly::Render::objectIniter
+
+        Glesly::ObjectBase * GetObject2Init(void);
+
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
 
-        virtual void ReinitGL(void) override
-        {
-        }
+        Threads::Mutex myObjInitMutex;
 
-    }; // class Render
+        objectIniter * objInitList;
+
+        objectIniter * freeObjIniters;
+
+        static constexpr int initerSize = 2000;
+
+        objectIniter initers[initerSize];
+
+    }; // class Glesly::Render
 
     class Render3D: public Render
     {

@@ -27,6 +27,8 @@ Object::Object(ObjectListBase & base):
     p_matrix(*this, "p_matrix", myProjection)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ ReinitGL();
 }
 
 Object::~Object()
@@ -54,7 +56,7 @@ void Object::DrawElements(GLenum mode, GLsizei count)
  CheckEGLError("glDrawElements()");
 }
 
-void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
+void Object::DrawFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -62,7 +64,6 @@ void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
     return;
  }
 
- DoInitGL();
  ExecuteCallback(frame_start_time);
 
  InitGLVariables();

@@ -16,7 +16,7 @@
 
 namespace Glesly
 {
-    class ObjectGroup: public ObjectBase, public ObjectsWithEffect
+    class ObjectGroup: public ObjectBase, public ObjectListBase
     {
      public:
         ObjectGroup(Glesly::ObjectListBase & base):
@@ -37,18 +37,16 @@ namespace Glesly
         }
 
      protected:
-        virtual void NextFrame(const SYS::TimeDelay & frame_start_time) override;
+        virtual void DrawFrame(const SYS::TimeDelay & frame_start_time) override;
         virtual bool MouseClick(float x, float y, int index, int count) override;
         virtual void KeyboardClick(UTF8::WChar key) override;
         virtual void initGL(void) override;
 
-        virtual void ReinitGL(void) override
-        {
-            ObjectBase::ReinitGL();
-        }
-
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectGroup");
+
+        /// This function must not be called on such a class
+        void ReinitGL(void);
 
         bool isInited;
 

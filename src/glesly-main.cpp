@@ -74,6 +74,8 @@ void Main::Run(void)
         goto finished;
     }
 
+    SYS_DEBUG(DL_INFO2, "Starting Loop...");
+
     {
         Threads::Lock _l(target->GetGraphicMutex());
         NextFrame();
@@ -103,9 +105,13 @@ void Main::Run(void)
     }
 
     GetBackend().SwapBuffers();
+
+    SYS_DEBUG(DL_INFO2, "Loop Finished.");
  }
 
 finished:;
+
+ SYS_DEBUG(DL_INFO2, "Loop Exited.");
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
     (*i)->Cleanup();

@@ -17,25 +17,19 @@ using namespace Glesly;
 ObjectBase::ObjectBase(Glesly::ObjectListBase & base):
     myBase(base),
     myEnabled(true),
-    myCallbackTimeLimit(0),
-    isInited(false)
+    myCallbackTimeLimit(0)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  myCallbackTimeLimit = GetCallbackTimeLimit();
 }
 
-void ObjectBase::DoInitGL(void)
+/// Call this function to (re)initialize the OpenGL functionality
+/*! \note   This function does not initialize it directly, but registers the object in
+ *          the OpenGL Renderer to initialize it by the Render Thread later. */
+void ObjectBase::ReinitGL(void)
 {
- SYS_DEBUG_MEMBER(DM_GLESLY);
-
- if (isInited) {
-    return;
- }
-
- isInited = true;
-
- initGL();
+ GetRenderer().InitGLObject(this);
 }
 
 /// Calls \ref Glesly::ObjectBase::ObjectCallback::Execute() on demand

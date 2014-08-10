@@ -22,11 +22,19 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Render::Render(Glesly::CameraMatrix & camera, float aspect):
+Render::Render(CameraMatrix & camera, float aspect):
     myScreenAspect(aspect),
-    myCameraMatrix(*this, "camera_matrix", camera)
+    myCameraMatrix(*this, "camera_matrix", camera),
+    objInitList(nullptr),
+    freeObjIniters(nullptr)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ for (objectIniter * oi = initers; oi < initers + initerSize; ++oi) {
+    oi->next = freeObjIniters;
+    freeObjIniters = oi;
+    SYS_DEBUG(DL_INFO3, "ObjIniter: " << oi << ", next: " << oi->next);
+ }
 }
 
 Render::~Render()
@@ -39,6 +47,45 @@ void Render::Cleanup(void)
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  GetObjectList().Cleanup();
+}
+
+void Render::InitGLObject(ObjectBase * object)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Threads::Lock _l(myObjInitMutex);
+
+ objectIniter * oi = freeObjIniters;
+
+ ASSERT(oi, "too few Object Initializers allocated");
+ SYS_DEBUG(DL_INFO3, "ObjIniter: " << oi << ", next: " << oi->next);
+
+ freeObjIniters = oi->next; // get it from the free list
+
+ oi->object = object;       // assign the object
+
+ oi->next = objInitList;    // put it in the initializer list
+ objInitList = oi;
+}
+
+ObjectBase * Render::GetObject2Init(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Threads::Lock _l(myObjInitMutex);
+
+ objectIniter * oi = objInitList;
+
+ if (!oi) {
+    return nullptr;
+ }
+
+ objInitList = oi->next;
+
+ oi->next = freeObjIniters;
+ freeObjIniters = oi;
+
+ return oi->object;
 }
 
 void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
@@ -54,11 +101,19 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  Frame(frame_start_time);
 
+ for (;;) {
+    ObjectBase * obj = GetObject2Init();
+    if (!obj) {
+        break;
+    }
+    obj->initGL();
+ }
+
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  if (p.get()) {
     for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-        (*i)->NextFrame(frame_start_time);
+        (*i)->DrawFrame(frame_start_time);
     }
  }
 

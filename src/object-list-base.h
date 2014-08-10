@@ -65,9 +65,6 @@ namespace Glesly
         }
 
         virtual Glesly::Render & GetRenderer(void) =0;
-        virtual void PushLayer(LayerCreatorPtr creator) =0;
-        virtual bool PopLayer(void) =0;
-        virtual void ReinitGL(void) =0;
 
         inline const Glesly::Render & GetRenderer(void) const
         {
@@ -107,9 +104,8 @@ namespace Glesly
     inline ObjectListBase::ObjectListInternal::~ObjectListInternal()
     {
         SYS_DEBUG_MEMBER(DM_GLESLY);
-        SYS_DEBUG(DL_INFO1, "Passing " << (myModifiedObjects.get() ? myModifiedObjects->size() : 0) << " objects");
+        SYS_DEBUG(DL_INFO1, "Passing " << (myModifiedObjects ? myModifiedObjects->size() : 0) << " objects");
         myParent.GetObjectListPtr() = myModifiedObjects;
-        myParent.ReinitGL();
     }
 
     inline void ObjectListBase::ObjectListInternal::CopyObjects(void)

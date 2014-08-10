@@ -35,12 +35,12 @@ namespace Glesly
             }
         }
 
-        virtual void PushLayer(LayerCreatorPtr creator) override
+        void PushLayer(LayerCreatorPtr creator)
         {
             myNextLayer = creator; // Don't worry if overwrites the previous one
         }
 
-        virtual bool PopLayer(void) override
+        bool PopLayer(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO1, "size: " << myLayers.size());

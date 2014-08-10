@@ -27,6 +27,7 @@ namespace Glesly
 
     class ObjectBase
     {
+        friend class Render;
         friend class ObjectPtr;
         friend class ObjectGroup;
 
@@ -36,7 +37,7 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
-        virtual void NextFrame(const SYS::TimeDelay & frame_start_time) =0;
+        virtual void DrawFrame(const SYS::TimeDelay & frame_start_time) =0;
 
         virtual bool MouseClick(float x, float y, int index, int count)
         {
@@ -103,16 +104,10 @@ namespace Glesly
 
         }; // class ObjectCallback
 
-        typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
-
-        void DoInitGL(void);
-
-        inline void ReinitGL(void)
-        {
-            isInited = false;
-        }
-
+        void ReinitGL(void);
         void ExecuteCallback(const SYS::TimeDelay & frame_start_time);
+
+        typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
 
         inline void Execute(ObjectCallbackPtr callback)
         {
@@ -142,8 +137,6 @@ namespace Glesly
         int myCallbackTimeLimit;
 
         std::list<ObjectCallbackPtr> myCallbacks;
-
-        bool isInited;
 
     }; // class ObjectBase
 
