@@ -12,19 +12,13 @@
 
 using namespace Glesly;
 
-void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
+void ObjectGroup::initGL(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!IsEnabled()) {
-    return;
- }
-
- ExecuteCallback(frame_start_time);
-
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- if (!p.get()) {
+ if (!p) {
     // If a stupid group has no objects at all:
     SYS_DEBUG(DL_INFO2, "Having no objects");
     return;
@@ -33,9 +27,32 @@ void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
  SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
 
  for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-    if (!(*i)->IsEnabled()) {
-        continue;
-    }
+    (*i)->initGL();
+ }
+}
+
+void ObjectGroup::NextFrame(const SYS::TimeDelay & frame_start_time)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (!IsEnabled()) {
+    return;
+ }
+
+ DoInitGL();
+ ExecuteCallback(frame_start_time);
+
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ if (!p) {
+    // If a stupid group has no objects at all:
+    SYS_DEBUG(DL_INFO2, "Having no objects");
+    return;
+ }
+
+ SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
+
+ for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
     (*i)->NextFrame(frame_start_time);
  }
 }

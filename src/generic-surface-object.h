@@ -19,7 +19,7 @@ namespace Glesly
     class GenericSurfaceObject: public Glesly::Object
     {
      protected:
-        GenericSurfaceObject(Glesly::Render & render):
+        GenericSurfaceObject(Glesly::ObjectListBase & render):
             Glesly::Object(render),
             position(*this, "position", GL_STREAM_DRAW),
             texcoord(*this, "texcoord", GL_STREAM_DRAW),

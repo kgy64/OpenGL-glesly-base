@@ -19,7 +19,7 @@ namespace Glesly
     class RectangleObject: public Glesly::GenericSurfaceObject<W*H, 6*(W-1)*(H-1)>
     {
      protected:
-        RectangleObject(Glesly::Render & render):
+        RectangleObject(Glesly::ObjectListBase & render):
             Glesly::GenericSurfaceObject<W*H, 6*(W-1)*(H-1)>(render)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);

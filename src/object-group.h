@@ -16,11 +16,12 @@
 
 namespace Glesly
 {
-    class ObjectGroup: public ObjectBase, public ObjectListBase
+    class ObjectGroup: public ObjectBase, public ObjectsWithEffect
     {
      public:
-        ObjectGroup(Render & renderer):
-            ObjectBase(renderer)
+        ObjectGroup(Glesly::ObjectListBase & base):
+            ObjectBase(base),
+            isInited(false)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
@@ -30,13 +31,26 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        virtual Render & GetRenderer(void) override
+        {
+            return ObjectBase::GetRenderer();
+        }
+
      protected:
-        virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
-        virtual bool MouseClick(float x, float y, int index, int count);
-        virtual void KeyboardClick(UTF8::WChar key);
+        virtual void NextFrame(const SYS::TimeDelay & frame_start_time) override;
+        virtual bool MouseClick(float x, float y, int index, int count) override;
+        virtual void KeyboardClick(UTF8::WChar key) override;
+        virtual void initGL(void) override;
+
+        virtual void ReinitGL(void) override
+        {
+            ObjectBase::ReinitGL();
+        }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectGroup");
+
+        bool isInited;
 
     }; // class ObjectGroup
 

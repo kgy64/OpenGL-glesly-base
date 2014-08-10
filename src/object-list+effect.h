@@ -22,7 +22,7 @@ namespace Glesly
     class ObjectsWithEffect: public Glesly::ObjectListBase
     {
      public:
-        inline void CheckNextLayer(Glesly::SheetRender & render)
+        inline void CheckNextLayer(Glesly::Render & render)
         {
             LayerCreatorPtr creator = myNextLayer;
             if (creator.get()) {
@@ -35,12 +35,12 @@ namespace Glesly
             }
         }
 
-        inline void PushLayer(LayerCreatorPtr creator)
+        virtual void PushLayer(LayerCreatorPtr creator) override
         {
             myNextLayer = creator; // Don't worry if overwrites the previous one
         }
 
-        inline bool PopLayer(void)
+        virtual bool PopLayer(void) override
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             SYS_DEBUG(DL_INFO1, "size: " << myLayers.size());

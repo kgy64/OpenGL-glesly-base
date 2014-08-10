@@ -22,10 +22,9 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Object::Object(Render & renderer):
-    ObjectBase(renderer),
-    p_matrix(*this, "p_matrix", myProjection),
-    gl_inited(false)
+Object::Object(ObjectListBase & base):
+    ObjectBase(base),
+    p_matrix(*this, "p_matrix", myProjection)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -59,11 +58,11 @@ void Object::NextFrame(const SYS::TimeDelay & frame_start_time)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (!gl_inited) {
-    gl_inited = true;
-    initGL();
+ if (!IsEnabled()) {
+    return;
  }
 
+ DoInitGL();
  ExecuteCallback(frame_start_time);
 
  InitGLVariables();

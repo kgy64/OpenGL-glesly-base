@@ -13,9 +13,14 @@
 
 #include <glesly/object-ptr.h>
 #include <Threads/Mutex.h>
+#include <International/utf8.h>
+#include <glesly/effect-ptr.h>
+#include <Debug/Debug.h>
 
 namespace Glesly
 {
+    class Render;
+
     class ObjectListBase
     {
      public:
@@ -57,6 +62,19 @@ namespace Glesly
             return myObjectMutex;
         }
 
+        virtual Glesly::Render & GetRenderer(void) =0;
+        virtual void PushLayer(LayerCreatorPtr creator) =0;
+        virtual bool PopLayer(void) =0;
+        virtual void ReinitGL(void) =0;
+
+        inline const Glesly::Render & GetRenderer(void) const
+        {
+            return const_cast<ObjectListBase&>(*this).GetRenderer();
+        }
+
+        float GetScreenAspect(void) const;
+        void KeyboardClick(UTF8::WChar ch);
+
      protected:
         inline ObjectListBase(void)
         {
@@ -89,6 +107,7 @@ namespace Glesly
         SYS_DEBUG_MEMBER(DM_GLESLY);
         SYS_DEBUG(DL_INFO1, "Passing " << (myModifiedObjects.get() ? myModifiedObjects->size() : 0) << " objects");
         myParent.GetObjectListPtr() = myModifiedObjects;
+        myParent.ReinitGL();
     }
 
     inline void ObjectListBase::ObjectListInternal::CopyObjects(void)

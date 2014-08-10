@@ -54,18 +54,23 @@ namespace Glesly
             myEnabled = enable;
         }
 
-        inline Render & GetRenderer(void)
-        {
-            return myRenderer;
-        }
-
         inline bool IsEnabled(void) const
         {
             return myEnabled;
         }
 
+        inline Glesly::Render & GetRenderer(void)
+        {
+            return myBase.GetRenderer();
+        }
+
+        inline const Glesly::Render & GetRenderer(void) const
+        {
+            return myBase.GetRenderer();
+        }
+
      protected:
-        ObjectBase(Glesly::Render & renderer);
+        ObjectBase(Glesly::ObjectListBase & base);
 
         class ObjectCallback
         {
@@ -100,6 +105,13 @@ namespace Glesly
 
         typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
 
+        void DoInitGL(void);
+
+        inline void ReinitGL(void)
+        {
+            isInited = false;
+        }
+
         void ExecuteCallback(const SYS::TimeDelay & frame_start_time);
 
         inline void Execute(ObjectCallbackPtr callback)
@@ -108,23 +120,30 @@ namespace Glesly
             myCallbacks.push_back(callback);
         }
 
-        inline const Render & GetRenderer(void) const
-        {
-            return myRenderer;
-        }
-
         ObjectWeak mySelf;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ObjectBase");
 
-        Render & myRenderer;
+        /// Generic OpenGL initializer function
+        /*! Note that any object can be created by any thread, but OpenGL function calls can be
+         *  initiated only from one thread (the OpenGL render thread here). This function is
+         *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
+         *  any other drawing operations. All OpenGL-specific initializations must be done here,
+         *  instead of the constructor. */
+        virtual void initGL(void) =0;
+
+        int GetCallbackTimeLimit(void) const;
+
+        Glesly::ObjectListBase & myBase;
 
         bool myEnabled;
 
         int myCallbackTimeLimit;
 
         std::list<ObjectCallbackPtr> myCallbacks;
+
+        bool isInited;
 
     }; // class ObjectBase
 

@@ -39,6 +39,11 @@ namespace Glesly
             return NULL;
         }
 
+        virtual Render & GetRenderer(void) override
+        {
+            return *this;
+        }
+
         inline void SetScreenAspect(float aspect)
         {
             myScreenAspect = aspect;
@@ -70,6 +75,10 @@ namespace Glesly
         SYS_DEFINE_CLASS_NAME("Glesly::Render");
 
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
+
+        virtual void ReinitGL(void) override
+        {
+        }
 
     }; // class Render
 

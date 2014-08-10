@@ -60,16 +60,8 @@ namespace Glesly
             return myProjection;
         }
 
-        /// Generic OpenGL initializer function
-        /*! Note that any object can be created by any thread, but OpenGL function calls can be
-         *  initiated only from one thread (the OpenGL render thread here). This function is
-         *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
-         *  any other drawing operations. All OpenGL-specific initializations must be done here,
-         *  instead of the constructor. */
-        virtual void initGL(void) =0;
-
      protected:
-        Object(Render & renderer);
+        Object(ObjectListBase & renderer);
 
         void DrawArrays(GLenum mode, GLint first, GLsizei count);
         void DrawElements(GLenum mode, GLsizei count);
@@ -83,8 +75,6 @@ namespace Glesly
         Glesly::Transformation myProjection;
 
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
-
-        bool gl_inited;
 
     }; // class Object
 

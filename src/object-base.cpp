@@ -14,12 +14,28 @@
 
 using namespace Glesly;
 
-ObjectBase::ObjectBase(Glesly::Render & renderer):
-    myRenderer(renderer),
+ObjectBase::ObjectBase(Glesly::ObjectListBase & base):
+    myBase(base),
     myEnabled(true),
-    myCallbackTimeLimit(myRenderer.GetCallbackTimeLimit()) // TODO: const!
+    myCallbackTimeLimit(0),
+    isInited(false)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ myCallbackTimeLimit = GetCallbackTimeLimit();
+}
+
+void ObjectBase::DoInitGL(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (isInited) {
+    return;
+ }
+
+ isInited = true;
+
+ initGL();
 }
 
 /// Calls \ref Glesly::ObjectBase::ObjectCallback::Execute() on demand
@@ -41,7 +57,7 @@ void ObjectBase::ExecuteCallback(const SYS::TimeDelay & frame_start_time)
         myCallbackTimeLimit += 1 + myCallbackTimeLimit / 8; // Exponential increase
         return;
     }
-    myCallbackTimeLimit = myRenderer.GetCallbackTimeLimit();
+    myCallbackTimeLimit = GetCallbackTimeLimit();
  }
 
  for (std::list<ObjectCallbackPtr>::iterator i = myCallbacks.begin(); i != myCallbacks.end(); ) {
@@ -50,6 +66,11 @@ void ObjectBase::ExecuteCallback(const SYS::TimeDelay & frame_start_time)
         myCallbacks.erase(obj);
     }
  }
+}
+
+int ObjectBase::GetCallbackTimeLimit(void) const
+{
+ return GetRenderer().GetCallbackTimeLimit();
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
