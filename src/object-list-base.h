@@ -17,6 +17,8 @@
 #include <glesly/effect-ptr.h>
 #include <Debug/Debug.h>
 
+SYS_DECLARE_MODULE(DM_GLESLY);
+
 namespace Glesly
 {
     class Render;
