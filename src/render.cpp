@@ -88,7 +88,10 @@ ObjectPtr Render::GetObject2Init(void)
     oi->next = freeObjIniters;
     freeObjIniters = oi;
 
+    // Try to get the referenced object:
     op = oi->object.lock();
+
+    // The object referenced by this entry may have been deleted: try the next one in this case.
 
  } while (!op);
 

@@ -54,6 +54,8 @@ namespace Glesly
 
         virtual void KeyboardClick(UTF8::WChar key)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            SYS_DEBUG(DL_INFO2, "Empty KeyboardClick() function called");
         }
 
         inline void Enable(bool enable = true)

@@ -111,7 +111,7 @@ namespace Glesly
     inline void ObjectListBase::ObjectListInternal::CopyObjects(void)
     {
         SYS_DEBUG_MEMBER(DM_GLESLY);
-        if (!myModifiedObjects.get()) {
+        if (!myModifiedObjects) {
             if (myObjects.get()) {
                 SYS_DEBUG(DL_INFO1, "Copying " << myObjects->size() << " objects");
                 myModifiedObjects.reset(new Objects(*myObjects));
