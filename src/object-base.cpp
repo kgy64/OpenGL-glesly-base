@@ -29,7 +29,7 @@ ObjectBase::ObjectBase(Glesly::ObjectListBase & base):
  *          the OpenGL Renderer to initialize it by the Render Thread later. */
 void ObjectBase::ReinitGL(void)
 {
- GetRenderer().InitGLObject(this);
+ GetRenderer().InitGLObject(mySelf);
 }
 
 /// Calls \ref Glesly::ObjectBase::ObjectCallback::Execute() on demand

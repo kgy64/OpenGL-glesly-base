@@ -49,7 +49,7 @@ void Render::Cleanup(void)
  GetObjectList().Cleanup();
 }
 
-void Render::InitGLObject(ObjectBase * object)
+void Render::InitGLObject(ObjectWeak & object)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -68,24 +68,31 @@ void Render::InitGLObject(ObjectBase * object)
  objInitList = oi;
 }
 
-ObjectBase * Render::GetObject2Init(void)
+ObjectPtr Render::GetObject2Init(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  Threads::Lock _l(myObjInitMutex);
 
- objectIniter * oi = objInitList;
+ ObjectPtr op;
 
- if (!oi) {
-    return nullptr;
- }
+ do {
+    objectIniter * oi = objInitList;
 
- objInitList = oi->next;
+    if (!oi) {
+        return ObjectPtr();
+    }
 
- oi->next = freeObjIniters;
- freeObjIniters = oi;
+    objInitList = oi->next;
 
- return oi->object;
+    oi->next = freeObjIniters;
+    freeObjIniters = oi;
+
+    op = oi->object.lock();
+
+ } while (!op);
+
+ return op;
 }
 
 void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
@@ -102,7 +109,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
  Frame(frame_start_time);
 
  for (;;) {
-    ObjectBase * obj = GetObject2Init();
+    ObjectPtr obj = GetObject2Init();
     if (!obj) {
         break;
     }
@@ -111,7 +118,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- if (p.get()) {
+ if (p) {
     for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
         (*i)->DrawFrame(frame_start_time);
     }
@@ -164,7 +171,7 @@ void Render::KeyboardClick(UTF8::WChar key)
 
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
- if (p.get()) {
+ if (p) {
     SYS_DEBUG(DL_INFO2, "Having " << p->size() << " objects");
     for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
        (*i)->KeyboardClick(key);

@@ -17,6 +17,7 @@
 #include <glesly/program.h>
 #include <glesly/object-list+effect.h>
 #include <glesly/render-ptr.h>
+#include <glesly/object-ptr.h>
 #include <glesly/shader-uniforms.h>
 #include <International/utf8.h>
 #include <Threads/Mutex.h>
@@ -56,7 +57,7 @@ namespace Glesly
         }
 
         int GetCallbackTimeLimit(void) const;
-        void InitGLObject(Glesly::ObjectBase * object);
+        void InitGLObject(Glesly::ObjectWeak & object);
 
      protected:
         Render(Glesly::CameraMatrix & camera, float aspect = 1.0f);
@@ -80,11 +81,11 @@ namespace Glesly
         {
             Glesly::Render::objectIniter * next;
 
-            Glesly::ObjectBase * object;
+            Glesly::ObjectWeak object;
 
         }; // struct Glesly::Render::objectIniter
 
-        Glesly::ObjectBase * GetObject2Init(void);
+        Glesly::ObjectPtr GetObject2Init(void);
 
         Shaders::UniformMatrix_ref<float, 4> myCameraMatrix;
 

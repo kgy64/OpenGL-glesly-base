@@ -19,16 +19,16 @@ namespace Glesly
 {
     class ObjectBase;
 
-    typedef boost::weak_ptr<ObjectBase> ObjectWeak;
+    typedef boost::weak_ptr<Glesly::ObjectBase> ObjectWeak;
 
     class ObjectPtr: public boost::shared_ptr<ObjectBase>
     {
+        friend class ObjectBase;
+
      public:
         inline ObjectPtr(void)
         {
         }
-
-        ObjectPtr(ObjectBase * obj);
 
         inline ObjectPtr(boost::shared_ptr<ObjectBase> obj):
             boost::shared_ptr<ObjectBase>(obj)
@@ -41,6 +41,9 @@ namespace Glesly
             return *this;
         }
 
+     protected:
+        ObjectPtr(ObjectBase * obj);
+
     }; // ObjectPtr
 
     template<class OBJ>
@@ -48,11 +51,6 @@ namespace Glesly
     {
      public:
         inline ObjectWrapper(void)
-        {
-        }
-
-        inline ObjectWrapper(OBJ * obj):
-            ObjectPtr(obj)
         {
         }
 

@@ -37,6 +37,14 @@ namespace Glesly
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
+        inline ObjectPtr GetPtr(void) const
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            ObjectPtr p = mySelf.lock();
+            ASSERT(p, "Glesly::ObjectBase::GetPtr() is called on a deleted object");
+            return p;
+        }
+
         virtual void DrawFrame(const SYS::TimeDelay & frame_start_time) =0;
 
         virtual bool MouseClick(float x, float y, int index, int count)
@@ -72,6 +80,15 @@ namespace Glesly
 
      protected:
         ObjectBase(Glesly::ObjectListBase & base);
+
+        inline ObjectPtr Create(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            ObjectPtr p(this);
+            mySelf = p;
+            ReinitGL();
+            return p;
+        }
 
         class ObjectCallback
         {

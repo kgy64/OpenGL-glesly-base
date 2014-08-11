@@ -27,8 +27,6 @@ Object::Object(ObjectListBase & base):
     p_matrix(*this, "p_matrix", myProjection)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- ReinitGL();
 }
 
 Object::~Object()
