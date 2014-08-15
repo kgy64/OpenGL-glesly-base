@@ -21,43 +21,41 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /// Positions of the basic Icosahedron
-/*! The <b>x,y,z</b> are the real position, and the <b>lat,lon</b> are the corresponding texture positions.
- *  The simple Icosahedron is built from 12 vertices, but we need more because of texture positions.
- *  It is necessary to have different pole coordinates for 5+5 triangles at the poles, and we need 1+1 additional
- *  vertex to close the latitude rings (a longitude with overflow). The full number of vertices is 22 this way.
+/*! The <b>x,y,z</b> are the real 3D positions.
+ *  Such an Icosahedron is built from 12 vertices.
  *  \see \ref basic_triangles   Builds the triangles of the basic Icosahedron.
  *  */
 const IcosahedronBase::Vec3 IcosahedronBase::basic_positions[NO_OF_VERTICES] = {
-    // ----- X: -------- Y: -------- Z: ---------- Lat: -------- Lon: --------
-    {       0.0f,       0.0f,       1.0f,       0.0f,           4.5f*lon_step   },  // Vertex =  0 (South Pole #1)
-    {       0.0f,       0.0f,       1.0f,       0.0f,           3.5f*lon_step   },  // Vertex =  1 (South Pole #2)
-    {       0.0f,       0.0f,       1.0f,       0.0f,           2.5f*lon_step   },  // Vertex =  2 (South Pole #3)
-    {       0.0f,       0.0f,       1.0f,       0.0f,           1.5f*lon_step   },  // Vertex =  3 (South Pole #4)
-    {       0.0f,       0.0f,       1.0f,       0.0f,           0.5f*lon_step   },  // Vertex =  4 (South Pole #5)
+    // ----- X: -------- Y: -------- Z: ----
+    {       0.0f,       0.0f,       1.0f    },  // Vertex  0 (South Pole #1)
+    {       0.0f,       0.0f,       1.0f    },  // Vertex  1 (South Pole #2)
+    {       0.0f,       0.0f,       1.0f    },  // Vertex  2 (South Pole #3)
+    {       0.0f,       0.0f,       1.0f    },  // Vertex  3 (South Pole #4)
+    {       0.0f,       0.0f,       1.0f    },  // Vertex  4 (South Pole #5)
 
-    {       0.0f,       p_1,        p_6,        lat_step,       5.0f*lon_step   },  // Vertex =  5
-    {       p_3,        p_2,        p_6,        lat_step,       4.0f*lon_step   },  // Vertex =  6
-    {       p_5,       -p_4,        p_6,        lat_step,       3.0f*lon_step   },  // Vertex =  7
-    {      -p_5,       -p_4,        p_6,        lat_step,       2.0f*lon_step   },  // Vertex =  8
-    {      -p_3,        p_2,        p_6,        lat_step,       1.0f*lon_step   },  // Vertex =  9
-    {       0.0f,       p_1,        p_6,        lat_step,       0.0f            },  // Vertex = 10 (Mirror of 5)
+    {       0.0f,       p_1,        p_6     },  // Vertex  5
+    {       p_3,        p_2,        p_6     },  // Vertex  6
+    {       p_5,       -p_4,        p_6     },  // Vertex  7
+    {      -p_5,       -p_4,        p_6     },  // Vertex  8
+    {      -p_3,        p_2,        p_6     },  // Vertex  9
+    {       0.0f,       p_1,        p_6     },  // Vertex 10 (Mirror of 5)
 
-    {       p_5,        p_4,       -p_6,        1.0f-lat_step,  4.5f*lon_step   },  // Vertex = 11
-    {       p_3,       -p_2,       -p_6,        1.0f-lat_step,  3.5f*lon_step   },  // Vertex = 12
-    {       0.0f,      -p_1,       -p_6,        1.0f-lat_step,  2.5f*lon_step   },  // Vertex = 13
-    {      -p_3,       -p_2,       -p_6,        1.0f-lat_step,  1.5f*lon_step   },  // Vertex = 14
-    {      -p_5,        p_4,       -p_6,        1.0f-lat_step,  0.5f*lon_step   },  // Vertex = 15
-    {       p_5,        p_4,       -p_6,        1.0f-lat_step, -0.5f*lon_step   },  // Vertex = 16 (Mirror of 11)
+    {       p_5,        p_4,       -p_6     },  // Vertex 11
+    {       p_3,       -p_2,       -p_6     },  // Vertex 12
+    {       0.0f,      -p_1,       -p_6     },  // Vertex 13
+    {      -p_3,       -p_2,       -p_6     },  // Vertex 14
+    {      -p_5,        p_4,       -p_6     },  // Vertex 15
+    {       p_5,        p_4,       -p_6     },  // Vertex 16 (Mirror of 11)
 
-    {       0.0f,       0.0f,      -1.0f,       1.0f,           4.0f*lon_step   },  // Vertex = 17 (North Pole #1)
-    {       0.0f,       0.0f,      -1.0f,       1.0f,           3.0f*lon_step   },  // Vertex = 18 (North Pole #2)
-    {       0.0f,       0.0f,      -1.0f,       1.0f,           2.0f*lon_step   },  // Vertex = 19 (North Pole #3)
-    {       0.0f,       0.0f,      -1.0f,       1.0f,           1.0f*lon_step   },  // Vertex = 20 (North Pole #4)
-    {       0.0f,       0.0f,      -1.0f,       1.0f,           0.0f*lon_step   }   // Vertex = 21 (North Pole #5)
+    {       0.0f,       0.0f,      -1.0f    },  // Vertex 17 (North Pole #1)
+    {       0.0f,       0.0f,      -1.0f    },  // Vertex 18 (North Pole #2)
+    {       0.0f,       0.0f,      -1.0f    },  // Vertex 19 (North Pole #3)
+    {       0.0f,       0.0f,      -1.0f    },  // Vertex 20 (North Pole #4)
+    {       0.0f,       0.0f,      -1.0f    }   // Vertex 21 (North Pole #5)
 
 };
 
-/// The vertices of triangles to build an Icosahedron
+/// The triangles to build an Icosahedron
 /*! There are \ref NO_OF_TRIANGLES triangles.
  *  \note   These are indices to the array \ref basic_positions */
 const IcosahedronBase::Triangle IcosahedronBase::basic_triangles[NO_OF_TRIANGLES] = {
@@ -90,13 +88,11 @@ void IcosahedronBase::Initialize(unsigned level)
  TriangleDivider triangles(*this);
 
  for (int i = 0; i < NO_OF_VERTICES; ++i) {
-    SYS_DEBUG(DL_INFO1, "Vertex " << i << ": lon=" << basic_positions[i].lon << ", lat=" << basic_positions[i].lat);
+    SYS_DEBUG(DL_INFO1, "Vertex " << i);
     Vec3 pos = {
         basic_positions[i].x * mySize,
         basic_positions[i].y * mySize,
-        basic_positions[i].z * mySize,
-        basic_positions[i].lat,
-        basic_positions[i].lon
+        basic_positions[i].z * mySize
     };
     triangles.RegisterVertex(pos);
  }
@@ -146,9 +142,9 @@ void IcosahedronBase::TriangleDivider::RegisterTriangle(unsigned level, const Tr
  // Go down one level:
  --level;
 
- unsigned vertex_ab = VertexInterpolate(triangle.a, triangle.b);
- unsigned vertex_bc = VertexInterpolate(triangle.b, triangle.c);
- unsigned vertex_ac = VertexInterpolate(triangle.a, triangle.c);
+ GLushort vertex_ab = VertexInterpolate(triangle.a, triangle.b);
+ GLushort vertex_bc = VertexInterpolate(triangle.b, triangle.c);
+ GLushort vertex_ac = VertexInterpolate(triangle.a, triangle.c);
 
  RegisterTriangle(level, triangle.a, vertex_ab, vertex_ac);
  RegisterTriangle(level, triangle.b, vertex_bc, vertex_ab);
@@ -156,13 +152,11 @@ void IcosahedronBase::TriangleDivider::RegisterTriangle(unsigned level, const Tr
  RegisterTriangle(level, vertex_ab, vertex_bc, vertex_ac);
 }
 
-unsigned IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsigned v2)
+GLushort IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsigned v2)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- SYS_DEBUG(DL_INFO2, "Interpolating between " << v1 << " and " << v2);
-
- unsigned & cached = myVerticeCache[v1][v2];
+ GLushort & cached = myVerticeCache[v1][v2];
 
  if (cached) {
     SYS_DEBUG(DL_INFO1, "Using cached vertex entry " << cached << " between " << v1 << " and " << v2);
@@ -174,9 +168,6 @@ unsigned IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsign
  const float * v1_pos = GetVertex(v1);
  const float * v2_pos = GetVertex(v2);
 
- const float * v1_tex = GetTexcoord(v1);
- const float * v2_tex = GetTexcoord(v2);
-
  interpolated.x = (v1_pos[0] + v2_pos[0]) / 2.0f;
  interpolated.y = (v1_pos[1] + v2_pos[1]) / 2.0f;
  interpolated.z = (v1_pos[2] + v2_pos[2]) / 2.0f;
@@ -187,10 +178,7 @@ unsigned IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsign
  interpolated.y /= size;
  interpolated.z /= size;
 
- interpolated.lon = (v1_tex[0] + v2_tex[0]) / 2.0f;
- interpolated.lat = (v1_tex[1] + v2_tex[1]) / 2.0f;
-
- unsigned result = RegisterVertex(interpolated);
+ GLushort result = RegisterVertex(interpolated);
 
  SYS_DEBUG(DL_INFO1, "Registered vertex " << result << ", interpolated between " << v1 << " and " << v2);
 

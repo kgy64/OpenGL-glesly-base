@@ -27,6 +27,7 @@ namespace Glesly
      */
     unsigned constexpr IH_VERT(unsigned N) { return 20+(int)floor(12.5*pow(3.85,N)); }
 
+    /// Simplified parent of the class SurfacedIcosahedron
     template <unsigned N>
     using IcosahedronParent = Glesly::GenericSurfaceObject<IH_VERT(N), IH_ELEM(N), 3>;
 

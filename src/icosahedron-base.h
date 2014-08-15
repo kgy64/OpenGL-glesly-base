@@ -27,7 +27,7 @@ namespace Glesly
      *      <tr>
      *          <td>
      *              This is the basic Icosahedron built from three orthogonal golden rectangles.<br>
-     *              See \ref basic_positions for the algirythmic details.
+     *              See \ref basic_positions for the algorythmic details.
      *          </td>
      *          <td>
      *              \image html "geometry/Icosahedron-001.png"
@@ -60,8 +60,6 @@ namespace Glesly
             float x;
             float y;
             float z;
-            float lat;
-            float lon;
 
         }; // struct Vec3
 
@@ -142,35 +140,29 @@ namespace Glesly
 
             unsigned RegisterVertex(const Vec3 & vertex);
             void RegisterTriangle(unsigned level, const Triangle & triangle);
-            unsigned VertexInterpolate(unsigned v1, unsigned v2);
+            GLushort VertexInterpolate(unsigned v1, unsigned v2);
 
             inline const float * GetVertex(unsigned index) const
             {
                 return myParent.GetVertex(index);
             }
 
-            inline const float * GetTexcoord(unsigned index) const
+            inline void RegisterTriangle(unsigned level, GLushort a, GLushort b, GLushort c)
             {
-                return myParent.GetTexcoord(index);
-            }
-
-            inline void RegisterTriangle(unsigned level, unsigned a, unsigned b, unsigned c)
-            {
-                Triangle t = { (GLushort)a, (GLushort)b, (GLushort)c };
-                RegisterTriangle(level, t);
+                RegisterTriangle(level, { a, b, c });
             }
 
             SYS_DEFINE_CLASS_NAME("Glesly::IcosahedronBase::TriangleDivider");
 
             Glesly::IcosahedronBase & myParent;
 
-            typedef std::map<unsigned, std::map<unsigned, unsigned> > VertexMap;
+            typedef std::map<GLushort, std::map<GLushort, GLushort> > VertexMap;
 
             VertexMap myVerticeCache;
 
         }; // class Glesly::IcosahedronBase::TriangleDivider
 
-    }; // class IcosahedronBase
+    }; // class Glesly::IcosahedronBase
 
 } // namespace Glesly
 
