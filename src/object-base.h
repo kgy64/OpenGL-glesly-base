@@ -80,6 +80,26 @@ namespace Glesly
             return myBase.GetRenderer();
         }
 
+        /// Make the Render Thread drop this function
+        /*! If this function is called, the Render Thread will drop (unreference) this object at
+         *  the next frame (and also call the function \ref ObjectBase::uninitGL()), therefore it
+         *  will not be displayed any more. If there is no more references to this object, the
+         *  object also will be deleted.
+         *  \note   If other thread(s) keep references (\see ObjectPtr) than the object will not be
+         *          deleted by the Render Thread, and can be used later again. To do this, call the
+         *          function \ref ObjectBase::ReinitGL(). */
+        inline void UnuseGL(void)
+        {
+            toBeDeleted = true;
+        }
+
+        /// Can be called periodically to update the object state
+        /*! 
+         */
+        virtual void Timer(void)
+        {
+        }
+
      protected:
         ObjectBase(Glesly::ObjectListBase & base);
 
@@ -144,8 +164,22 @@ namespace Glesly
          *  initiated only from one thread (the OpenGL render thread here). This function is
          *  called from the OpenGL render thread, once in a life of such OpenGL objects, before
          *  any other drawing operations. All OpenGL-specific initializations must be done here,
-         *  instead of the constructor. */
+         *  instead of the constructor.
+         *  \see ObjectBase::uninitGL()
+         *  */
         virtual void initGL(void) =0;
+
+        /// Generic OpenGL de-initializer function
+        /*! This function is responsible for all kind of OpenGL-related de-initializations before
+         *  deleting such an object. Note that these objects can be deleted from any thread, but
+         *  the OpenGL functions must be called from one thread (the OpenGL render thread here).<br>
+         *  The function \ref ObjectBase::UnuseGL() must be called to inform the Render Thread to
+         *  call this function.
+         *  \see ObjectBase::UnuseGL()
+         *  */
+        virtual void uninitGL(void)
+        {
+        }
 
         int GetCallbackTimeLimit(void) const;
 
@@ -156,6 +190,8 @@ namespace Glesly
         int myCallbackTimeLimit;
 
         std::list<ObjectCallbackPtr> myCallbacks;
+
+        bool toBeDeleted;
 
     }; // class ObjectBase
 

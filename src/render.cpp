@@ -122,8 +122,15 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
  ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
 
  if (p) {
-    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
-        (*i)->DrawFrame(frame_start_time);
+    for (ObjectListIterator i = p->begin(); i != p->end(); ) {
+        ObjectListIterator j = i++;
+        ObjectPtr obj = *j;
+        if (obj->toBeDeleted) {
+            p->erase(j);
+            obj->uninitGL();
+        } else {
+            obj->DrawFrame(frame_start_time);
+        }
     }
  }
 

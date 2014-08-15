@@ -19,8 +19,8 @@ namespace Glesly
     class GenericSurfaceObject: public Glesly::Object
     {
      protected:
-        GenericSurfaceObject(Glesly::ObjectListBase & render):
-            Glesly::Object(render),
+        GenericSurfaceObject(Glesly::ObjectListBase & base):
+            Glesly::Object(base),
             position(*this, "position", GL_STREAM_DRAW),
             texcoord(*this, "texcoord", GL_STREAM_DRAW),
             elements(*this)
@@ -64,7 +64,9 @@ namespace Glesly
             return P;
         }
 
-        inline unsigned GetNoOfElements(void) const
+        /*! Returns the number of elements to be displayed in the Element Buffer (see \ref GenericSurfaceObject::elements).<br>
+         *  It can be overriden if not all the elements is used. */
+        virtual unsigned GetNoOfElements(void) const
         {
             return E;
         }
