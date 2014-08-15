@@ -140,7 +140,7 @@ namespace Glesly
 
             unsigned RegisterVertex(const Vec3 & vertex);
             void RegisterTriangle(unsigned level, const Triangle & triangle);
-            GLushort VertexInterpolate(unsigned v1, unsigned v2);
+            GLushort VertexInterpolate(GLushort v1, GLushort v2);
 
             inline const float * GetVertex(unsigned index) const
             {

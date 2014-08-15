@@ -152,7 +152,7 @@ void IcosahedronBase::TriangleDivider::RegisterTriangle(unsigned level, const Tr
  RegisterTriangle(level, vertex_ab, vertex_bc, vertex_ac);
 }
 
-GLushort IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsigned v2)
+GLushort IcosahedronBase::TriangleDivider::VertexInterpolate(GLushort v1, GLushort v2)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -173,10 +173,10 @@ GLushort IcosahedronBase::TriangleDivider::VertexInterpolate(unsigned v1, unsign
  interpolated.z = (v1_pos[2] + v2_pos[2]) / 2.0f;
 
  // Adjust a unity vector:
- float size = sqrtf(interpolated.x * interpolated.x + interpolated.y * interpolated.y + interpolated.z * interpolated.z) / myParent.mySize;
- interpolated.x /= size;
- interpolated.y /= size;
- interpolated.z /= size;
+ float size = myParent.mySize / sqrtf(interpolated.x * interpolated.x + interpolated.y * interpolated.y + interpolated.z * interpolated.z);
+ interpolated.x *= size;
+ interpolated.y *= size;
+ interpolated.z *= size;
 
  GLushort result = RegisterVertex(interpolated);
 
