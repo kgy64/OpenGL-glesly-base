@@ -23,12 +23,14 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Main::Main(void)
+Main::Main(void):
+    myTimer(*this)
 {
  GetBackend().RegisterParent(this);
 }
 
 Main::Main(TargetPtr & target):
+    myTimer(*this),
     myBackend(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -88,6 +90,8 @@ void Main::Run(void)
         (*i)->NextFrame(myFrameStartTime);
     }
 
+    timerSemaphore.Post();
+
     now.SetNow();
 
     if (SYS_DEBUG_ON) {
@@ -112,6 +116,8 @@ void Main::Run(void)
 finished:;
 
  SYS_DEBUG(DL_INFO2, "Loop Exited.");
+
+ myTimer.Kill();
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
     (*i)->Cleanup();
@@ -140,6 +146,49 @@ void Main::Clear(void)
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not glClear()");
  }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     class Main::TimerThread:                                                          *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Main::TimerThread::TimerThread(Main & parent):
+    myParent(parent)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Start(2*65536);
+}
+
+Main::TimerThread::~TimerThread(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+}
+
+int Main::TimerThread::main(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ Main::RenderList & renders = myParent.getRenderers();
+ Threads::Semaphore & semaphore = myParent.getTimerSemaphore();
+
+ while (!ToBeFinished()) {
+    // Wait for trigger from render thread first:
+    semaphore.Wait();
+
+    // Call timer functions:
+    for (RenderList::iterator i = renders.begin(); i != renders.end(); ++i) {
+        if (ToBeFinished()) {
+            return 0;
+        }
+        (*i)->Timer();
+    }
+ }
+
+ return 0;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

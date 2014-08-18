@@ -31,6 +31,7 @@ namespace Glesly
         virtual ~Render();
 
         virtual void NextFrame(const SYS::TimeDelay & frame_start_time);
+        virtual void Timer(void);
         virtual void MouseClickRaw(int x, int y, int index, int count);
         virtual void Initialize(void) { }
         virtual void Cleanup(void);

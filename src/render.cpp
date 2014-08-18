@@ -139,6 +139,22 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
  AfterFrame();
 }
 
+void Render::Timer(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+
+ if (p) {
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+        ObjectPtr obj = *i;
+        if (!obj->toBeDeleted) {
+            obj->Timer();
+        }
+    }
+ }
+}
+
 void Render::MouseClickRaw(int x, int y, int index, int count)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);

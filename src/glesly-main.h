@@ -15,6 +15,7 @@
 #include <GLES2/gl2.h>
 
 #include <Threads/Threads.h>
+#include <Threads/Semaphore.h>
 #include <glesly/backend.h>
 #include <glesly/render.h>
 #include <glesly/camera.h>
@@ -50,6 +51,13 @@ namespace Glesly
             GetBackend().Retarget(target);
         }
 
+        typedef std::list<RenderPtr> RenderList;
+
+        inline RenderList & getRenderers(void)
+        {
+            return myRenders;
+        }
+
         inline void InsertRenderer(RenderPtr rp)
         {
             myRenders.push_front(rp);
@@ -70,6 +78,11 @@ namespace Glesly
             return myRenders.size();
         }
 
+        inline Threads::Semaphore & getTimerSemaphore(void)
+        {
+            return timerSemaphore;
+        }
+
      protected:
         Glesly::CameraMatrix myViewMatrix;
 
@@ -82,12 +95,31 @@ namespace Glesly
             return myBackend.IsRunning();
         }
 
+        class TimerThread: public Threads::Thread
+        {
+         public:
+            TimerThread(Main & parent);
+            virtual ~TimerThread();
+
+         protected:
+            virtual int main(void) override;
+
+            Main & myParent;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::Main::TimerThread");
+
+        }; // class Glesly::Main::TimerThread
+
+        Threads::Semaphore timerSemaphore;
+
+        TimerThread myTimer;
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
 
         Glesly::Backend myBackend;
 
-        typedef std::list<RenderPtr> RenderList;
         RenderList myRenders;
 
     }; // class Main
