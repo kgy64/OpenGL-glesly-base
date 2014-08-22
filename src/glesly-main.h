@@ -35,7 +35,6 @@ namespace Glesly
         void Clear(void);
 
         virtual void Initialize(void) =0;
-        virtual void NextFrame(void) =0;
         virtual void Cleanup(void) =0;
 
         virtual void WindowSizeChanged(int w, int h) { }

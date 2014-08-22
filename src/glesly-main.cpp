@@ -78,11 +78,6 @@ void Main::Run(void)
 
     SYS_DEBUG(DL_INFO2, "Starting Loop...");
 
-    {
-        Threads::Lock _l(target->GetGraphicMutex());
-        NextFrame();
-    }
-
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
         if (ToBeFinished()) {
             goto finished;
