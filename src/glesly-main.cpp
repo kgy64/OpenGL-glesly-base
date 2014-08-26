@@ -72,6 +72,10 @@ void Main::Run(void)
 
     SYS_DEBUG(DL_INFO3, "Starting Frame...");
 
+    glClearColor(0.3, 0.5, 0.7, 1.0);
+
+    Clear();
+
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
         if (ToBeFinished()) {
             goto finished;
