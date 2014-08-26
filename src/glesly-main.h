@@ -35,7 +35,6 @@ namespace Glesly
         void Clear(void);
 
         virtual void Initialize(void) =0;
-        virtual void NextFrame(void) =0;
         virtual void Cleanup(void) =0;
 
         virtual void WindowSizeChanged(int w, int h) { }
@@ -89,6 +88,13 @@ namespace Glesly
         SYS::TimeDelay myFrameStartTime;
 
         virtual bool ToBeFinished(void) const =0;
+
+        /// Called from the Timer Thread, after each frame
+        /*! It is synchronized to the frame cycle of the OpenGL Render Thread.<br>
+         *  All \ref ObjectBase::Timer() functions of the corresponding objects are also called.
+         *  \note   If the timer functions are too slow, it is possible to lose the synchronization.
+         *  */
+        virtual void RenderTimer(void) { }
 
         inline bool IsRunning(void) const
         {

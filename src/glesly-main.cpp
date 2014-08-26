@@ -63,12 +63,6 @@ void Main::Run(void)
     (*i)->Initialize();
  }
 
- static constexpr int FRAME_DELAY_USEC  =   1000000 / 60;
-
- SYS::TimeDelay now;
- SYS::TimeDelay frameTime;
- frameTime.SetNow();
-
  while (!ToBeFinished()) {
     Glesly::TargetPtr target = GetBackend().GetTarget();
 
@@ -76,12 +70,13 @@ void Main::Run(void)
         goto finished;
     }
 
-    SYS_DEBUG(DL_INFO2, "Starting Loop...");
+    SYS_DEBUG(DL_INFO3, "Starting Frame...");
 
-    {
-        Threads::Lock _l(target->GetGraphicMutex());
-        NextFrame();
-    }
+    glClearColor(0.3, 0.4, 0.5, 1.0);
+
+    Clear();
+
+    myFrameStartTime.SetNow();
 
     for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
         if (ToBeFinished()) {
@@ -92,19 +87,24 @@ void Main::Run(void)
 
     timerSemaphore.Post();
 
+    SYS::TimeDelay now;
     now.SetNow();
+
+    int elapsed = (now - myFrameStartTime).ToMicrosecond();
+
+    static constexpr int FRAME_DELAY_USEC = 1000000 / 60;
 
     if (SYS_DEBUG_ON) {
         // In the debug case, slow down the rendering to prevent log flood:
         usleep(100000); // cca. 10 Hz
     } else {
-        int elapsed = FRAME_DELAY_USEC - (now - frameTime).ToMicrosecond();
+        int time_diff = FRAME_DELAY_USEC - elapsed;
 
-        if (elapsed > 2000) {
-            frameTime.AddMicrosecond(FRAME_DELAY_USEC);
-            usleep(elapsed);
+        if (time_diff > 2000) {
+            myFrameStartTime.AddMicrosecond(FRAME_DELAY_USEC);
+            usleep(time_diff);
         } else {
-            frameTime = now;
+            myFrameStartTime = now;
         }
     }
 
@@ -159,7 +159,7 @@ Main::TimerThread::TimerThread(Main & parent):
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- Start(2*65536);
+ Start(4*65536);
 }
 
 Main::TimerThread::~TimerThread(void)
@@ -178,6 +178,9 @@ int Main::TimerThread::main(void)
  while (!ToBeFinished()) {
     // Wait for trigger from render thread first:
     semaphore.Wait();
+
+    //
+    myParent.RenderTimer();
 
     // Call timer functions:
     for (RenderList::iterator i = renders.begin(); i != renders.end(); ++i) {

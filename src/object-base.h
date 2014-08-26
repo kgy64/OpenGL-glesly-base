@@ -93,9 +93,10 @@ namespace Glesly
             toBeDeleted = true;
         }
 
-        /// Can be called periodically to update the object state
-        /*! 
-         */
+        /// Called from the Timer Thread, after each frame
+        /*! This function can be used to update the object's state.
+         *  \warning    All of the objects are notified after each frame this way, so keep in mind to make
+         *              these functions fast enough. */
         virtual void Timer(void)
         {
         }
