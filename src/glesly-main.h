@@ -96,11 +96,6 @@ namespace Glesly
          *  */
         virtual void RenderTimer(void) { }
 
-        inline bool IsRunning(void) const
-        {
-            return myBackend.IsRunning();
-        }
-
         class TimerThread: public Threads::Thread
         {
          public:
