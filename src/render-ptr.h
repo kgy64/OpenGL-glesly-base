@@ -15,9 +15,15 @@
 
 namespace Glesly
 {
+    class MenuRender;
     class Render;
+    class CubeRender;
+    class SurfaceRender;
 
+    typedef boost::shared_ptr<MenuRender> MenuRenderPtr;
     typedef boost::shared_ptr<Render> RenderPtr;
+    typedef boost::shared_ptr<CubeRender> CubeRenderPtr;
+    typedef boost::shared_ptr<SurfaceRender> SurfaceRenderPtr;
 
 } // namespace Glesly
 
