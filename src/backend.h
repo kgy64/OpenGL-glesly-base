@@ -33,6 +33,7 @@ namespace Glesly
         void Initialize(void);
         void Cleanup(void);
         void Retarget(TargetPtr & target);
+        Threads::LockPtr GetGraphicalLock(void);
 
         inline Glesly::TargetPtr GetTarget(void)
         {

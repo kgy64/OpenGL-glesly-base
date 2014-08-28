@@ -137,6 +137,8 @@ void Main::Clear(void)
 
  SYS_DEBUG(DL_INFO3, " - glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);");
 
+ Threads::LockPtr _l = GetGraphicalLock();
+
  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not glClear()");

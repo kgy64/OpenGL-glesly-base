@@ -175,8 +175,17 @@ void Backend::SwapBuffers(void)
  if (eglGetError() != EGL_SUCCESS) {
     throw Error("Could not eglSwapBuffers()");
  }
- // Note: it should be discussed...
- // target->Wait4Sync();
+}
+
+Threads::LockPtr Backend::GetGraphicalLock(void)
+{
+ Glesly::TargetPtr target = GetTarget();
+
+ if (!target) {
+    return Threads::LockPtr();
+ }
+
+ return Threads::LockPtr(new Threads::Lock(target->GetGraphicMutex()));
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

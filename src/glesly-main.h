@@ -82,6 +82,11 @@ namespace Glesly
             return timerSemaphore;
         }
 
+        inline Threads::LockPtr GetGraphicalLock(void)
+        {
+            return GetBackend().GetGraphicalLock();
+        }
+
      protected:
         Glesly::CameraMatrix myViewMatrix;
 
