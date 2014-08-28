@@ -58,6 +58,8 @@ void Main::Run(void)
     (*i)->Initialize();
  }
 
+ myFrameStartTime.SetNow();
+
  while (!ToBeFinished()) {
     Glesly::TargetPtr target = GetBackend().GetTarget();
 
