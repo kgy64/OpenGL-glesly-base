@@ -33,7 +33,6 @@ Render::Render(CameraMatrix & camera, float aspect):
  for (objectIniter * oi = initers; oi < initers + initerSize; ++oi) {
     oi->next = freeObjIniters;
     freeObjIniters = oi;
-    SYS_DEBUG(DL_INFO3, "ObjIniter: " << oi << ", next: " << oi->next);
  }
 }
 

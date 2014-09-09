@@ -49,16 +49,26 @@ void Main::Run(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
- GetBackend().Initialize(); // Must be called from this thread
+ {
+    Glesly::TargetPtr target = GetBackend().GetTarget();
 
- Initialize();
+    // First: wait for the target initialization:
+    // Note: it is necessary for e.g. Android where the screen can be assigned later.
+    if (!target) {
+        return;
+    }
 
- for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
-    (*i)->ProgramInit();
-    (*i)->Initialize();
+    GetBackend().Initialize(); // Must be called from this thread
+
+    Initialize();
+
+    for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
+        (*i)->ProgramInit();
+        (*i)->Initialize();
+    }
+
+    myFrameStartTime.SetNow();
  }
-
- myFrameStartTime.SetNow();
 
  while (!ToBeFinished()) {
     Glesly::TargetPtr target = GetBackend().GetTarget();
@@ -80,39 +90,42 @@ void Main::Run(void)
         (*i)->NextFrame(myFrameStartTime);
     }
 
-    timerSemaphore.Post();
+    {
+        timerSemaphore.Post();
 
-    SYS::TimeDelay now;
-    now.SetNow();
+        SYS::TimeDelay now;
+        now.SetNow();
 
-    int elapsed = (now - myFrameStartTime).ToMicrosecond();
+        int elapsed = (now - myFrameStartTime).ToMicrosecond();
 
-    static constexpr int FRAME_DELAY_USEC = 1000000 / 60;
+        static constexpr int FRAME_DELAY_USEC = 1000000 / 60;
 
-    if (SYS_DEBUG_ON) {
-        // In the debug case, slow down the rendering to prevent log flood:
-        usleep(100000); // cca. 10 Hz
-    } else {
-        int time_diff = FRAME_DELAY_USEC - elapsed;
-
-        if (time_diff > 2000) {
-            myFrameStartTime.AddMicrosecond(FRAME_DELAY_USEC);
-            usleep(time_diff);
+        if (SYS_DEBUG_ON) {
+            // In the debug case, slow down the rendering to prevent log flood:
+            usleep(100000); // cca. 10 Hz
         } else {
-            myFrameStartTime = now;
+            int time_diff = FRAME_DELAY_USEC - elapsed;
+
+            if (time_diff > 2000) {
+                myFrameStartTime.AddMicrosecond(FRAME_DELAY_USEC);
+                usleep(time_diff);
+            } else {
+                myFrameStartTime = now;
+            }
         }
+
+        GetBackend().SwapBuffers();
+
+        SYS_DEBUG(DL_INFO2, "Loop Finished.");
     }
-
-    GetBackend().SwapBuffers();
-
-    SYS_DEBUG(DL_INFO2, "Loop Finished.");
- }
+    continue;
 
 finished:;
+    usleep(333333);
+ }
+
 
  SYS_DEBUG(DL_INFO2, "Loop Exited.");
-
- myTimer.Kill();
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
     (*i)->Cleanup();
