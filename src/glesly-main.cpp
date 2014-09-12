@@ -100,18 +100,16 @@ void Main::Run(void)
 
         static constexpr int FRAME_DELAY_USEC = 1000000 / 60;
 
-        if (SYS_DEBUG_ON) {
-            // In the debug case, slow down the rendering to prevent log flood:
-            usleep(100000); // cca. 10 Hz
-        } else {
-            int time_diff = FRAME_DELAY_USEC - elapsed;
+        // Calculate the time to wait to fill the actual frame time to the expected value:
+        int time_diff = FRAME_DELAY_USEC - elapsed;
 
-            if (time_diff > 2000) {
-                myFrameStartTime.AddMicrosecond(FRAME_DELAY_USEC);
-                usleep(time_diff);
-            } else {
-                myFrameStartTime = now;
-            }
+        if (time_diff > 2000) {
+            // We must wait more than 2 ms:
+            myFrameStartTime.AddMicrosecond(FRAME_DELAY_USEC);
+            usleep(time_diff);
+        } else {
+            // Not necessary to wait:
+            myFrameStartTime = now;
         }
 
         GetBackend().SwapBuffers();
