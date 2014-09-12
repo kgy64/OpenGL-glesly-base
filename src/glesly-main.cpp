@@ -57,18 +57,18 @@ void Main::Run(void)
     if (!target) {
         return;
     }
-
-    GetBackend().Initialize(); // Must be called from this thread
-
-    Initialize();
-
-    for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
-        (*i)->ProgramInit();
-        (*i)->Initialize();
-    }
-
-    myFrameStartTime.SetNow();
  }
+
+ GetBackend().Initialize(); // Must be called from this thread
+
+ Initialize();
+
+ for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
+    (*i)->ProgramInit();
+    (*i)->Initialize();
+ }
+
+ myFrameStartTime.SetNow();
 
  while (!ToBeFinished()) {
     Glesly::TargetPtr target = GetBackend().GetTarget();
@@ -117,11 +117,9 @@ void Main::Run(void)
         SYS_DEBUG(DL_INFO2, "Loop Finished.");
     }
     continue;
-
-finished:;
-    usleep(333333);
  }
 
+finished:;
 
  SYS_DEBUG(DL_INFO2, "Loop Exited.");
 
