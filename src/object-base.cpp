@@ -8,9 +8,11 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "object-base.h"
+
 #include <glesly/render.h>
 
-#include "object-base.h"
+#include <Memory/Dump.h>
 
 using namespace Glesly;
 
@@ -23,6 +25,11 @@ ObjectBase::ObjectBase(Glesly::ObjectListBase & base):
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  myCallbackTimeLimit = GetCallbackTimeLimit();
+}
+
+ObjectBase::~ObjectBase()
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
 /// Call this function to (re)initialize the OpenGL functionality

@@ -13,6 +13,7 @@
 
 #include <list>
 
+#include <glesly/object-list-base.h>
 #include <System/TimeElapsed.h>
 #include <glesly/object-ptr.h>
 #include <International/utf8.h>
@@ -32,10 +33,7 @@ namespace Glesly
         friend class ObjectGroup;
 
      public:
-        virtual ~ObjectBase()
-        {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
-        }
+        virtual ~ObjectBase();
 
         inline ObjectPtr GetPtr(void) const
         {
@@ -80,7 +78,7 @@ namespace Glesly
             return myBase.GetRenderer();
         }
 
-        /// Make the Render Thread drop this function
+        /// Make the Render Thread drop this object
         /*! If this function is called, the Render Thread will drop (unreference) this object at
          *  the next frame (and also call the function \ref ObjectBase::uninitGL()), therefore it
          *  will not be displayed any more. If there is no more references to this object, the

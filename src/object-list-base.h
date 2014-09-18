@@ -112,7 +112,7 @@ namespace Glesly
     {
         SYS_DEBUG_MEMBER(DM_GLESLY);
         if (!myModifiedObjects) {
-            if (myObjects.get()) {
+            if (myObjects) {
                 SYS_DEBUG(DL_INFO1, "Copying " << myObjects->size() << " objects");
                 myModifiedObjects.reset(new Objects(*myObjects));
             } else {

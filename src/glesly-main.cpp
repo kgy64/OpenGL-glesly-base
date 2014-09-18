@@ -90,9 +90,11 @@ void Main::Run(void)
         (*i)->NextFrame(myFrameStartTime);
     }
 
-    {
-        timerSemaphore.Post();
+    timerSemaphore.Post();
 
+    GetBackend().SwapBuffers();
+
+    {
         SYS::TimeDelay now;
         now.SetNow();
 
@@ -111,17 +113,12 @@ void Main::Run(void)
             // Not necessary to wait:
             myFrameStartTime = now;
         }
-
-        GetBackend().SwapBuffers();
-
-        SYS_DEBUG(DL_INFO2, "Loop Finished.");
     }
-    continue;
  }
 
 finished:;
 
- SYS_DEBUG(DL_INFO2, "Loop Exited.");
+ SYS_DEBUG(DL_INFO1, "Frame Loop Exited");
 
  for (RenderList::iterator i = myRenders.begin(); i != myRenders.end(); ++i) {
     (*i)->Cleanup();
@@ -161,6 +158,7 @@ void Main::Clear(void)
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Main::TimerThread::TimerThread(Main & parent):
+    Threads::Thread("TimerThread"),
     myParent(parent)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);

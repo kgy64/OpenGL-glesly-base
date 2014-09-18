@@ -8,11 +8,13 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <GLES2/gl2.h>
+#include "render.h"
 
 #include <glesly/object.h>
 
-#include "render.h"
+#include <GLES2/gl2.h>
+
+#include <Memory/Dump.h>
 
 using namespace Glesly;
 
@@ -124,6 +126,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
     for (ObjectListIterator i = p->begin(); i != p->end(); ) {
         ObjectListIterator j = i++;
         ObjectPtr obj = *j;
+
         if (obj->toBeDeleted) {
             p->erase(j);
             obj->uninitGL();
@@ -147,6 +150,7 @@ void Render::Timer(void)
  if (p) {
     for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
         ObjectPtr obj = *i;
+
         if (!obj->toBeDeleted) {
             obj->Timer();
         }
