@@ -31,7 +31,7 @@ namespace Glesly
         ReadTGA(ReadTGA & other):
             FILES::FileMap(*this)
         {
-            myData.swap(other.myData);
+            myData = other.myData;
             myRawData = other.myRawData;
             other.myRawData = NULL;
         }
@@ -116,7 +116,7 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
-        MEM::scoped_ptr<const pixel_data> myData;
+        MEM::shared_ptr<const pixel_data> myData;
 
         const pixel_data * myRawData;
 
