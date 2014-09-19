@@ -8,12 +8,14 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <GLES2/gl2.h>
+#include "glesly-main.h"
 
 #include <glesly/program.h>
 #include <glesly/error.h>
 
-#include "glesly-main.h"
+#include <GLES2/gl2.h>
+
+#include <unistd.h>
 
 using namespace Glesly;
 

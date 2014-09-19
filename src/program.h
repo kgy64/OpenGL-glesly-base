@@ -19,6 +19,8 @@
 
 #include <Debug/Debug.h>
 
+#include <vector>
+
 SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
