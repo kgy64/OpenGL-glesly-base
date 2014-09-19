@@ -12,16 +12,15 @@
 #define __GLESLY_SRC_OBJECT_PTR_H_INCLUDED__
 
 #include <list>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <Memory/Memory.h>
 
 namespace Glesly
 {
     class ObjectBase;
 
-    typedef boost::weak_ptr<Glesly::ObjectBase> ObjectWeak;
+    typedef MEM::weak_ptr<Glesly::ObjectBase> ObjectWeak;
 
-    class ObjectPtr: public boost::shared_ptr<ObjectBase>
+    class ObjectPtr: public MEM::shared_ptr<ObjectBase>
     {
         friend class ObjectBase;
 
@@ -30,14 +29,14 @@ namespace Glesly
         {
         }
 
-        inline ObjectPtr(boost::shared_ptr<ObjectBase> obj):
-            boost::shared_ptr<ObjectBase>(obj)
+        inline ObjectPtr(MEM::shared_ptr<ObjectBase> obj):
+            MEM::shared_ptr<ObjectBase>(obj)
         {
         }
 
-        inline ObjectPtr & operator=(boost::shared_ptr<ObjectBase> & obj)
+        inline ObjectPtr & operator=(MEM::shared_ptr<ObjectBase> & obj)
         {
-            static_cast<boost::shared_ptr<ObjectBase>&>(*this) = obj;
+            static_cast<MEM::shared_ptr<ObjectBase>&>(*this) = obj;
             return *this;
         }
 
@@ -81,7 +80,7 @@ namespace Glesly
 
     typedef Objects::iterator ObjectListIterator;
 
-    typedef boost::shared_ptr<Objects> ObjectListPtr;
+    typedef MEM::shared_ptr<Objects> ObjectListPtr;
 
 } // namespace Glesly
 

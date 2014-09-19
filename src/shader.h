@@ -13,7 +13,7 @@
 
 #include <string>
 #include <vector>
-#include <boost/scoped_ptr.hpp>
+#include <Memory/Memory.h>
 
 #include <GLES2/gl2.h>
 
@@ -51,7 +51,7 @@ namespace Glesly
             }
 
          protected:
-            boost::scoped_ptr<FILES::FileMap> myFile;
+            MEM::scoped_ptr<FILES::FileMap> myFile;
 
             const char * mySource;
 

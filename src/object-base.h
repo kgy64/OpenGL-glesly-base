@@ -145,7 +145,7 @@ namespace Glesly
         void ReinitGL(void);
         void ExecuteCallback(const SYS::TimeDelay & frame_start_time);
 
-        typedef boost::shared_ptr<ObjectCallback> ObjectCallbackPtr;
+        typedef MEM::shared_ptr<ObjectCallback> ObjectCallbackPtr;
 
         inline void Execute(ObjectCallbackPtr callback)
         {

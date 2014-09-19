@@ -11,13 +11,13 @@
 #ifndef __GLESLY_SRC_SHADER_PTR_H_INCLUDED__
 #define __GLESLY_SRC_SHADER_PTR_H_INCLUDED__
 
-#include <boost/shared_ptr.hpp>
+#include <Memory/Memory.h>
 
 namespace Glesly
 {
     class Shader;
 
-    typedef boost::shared_ptr<Shader> ShaderPtr;
+    typedef MEM::shared_ptr<Shader> ShaderPtr;
 
 } // namespace Glesly
 

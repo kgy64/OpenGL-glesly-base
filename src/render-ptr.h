@@ -11,7 +11,7 @@
 #ifndef __GLESLY_SRC_READ_PTR_H_INCLUDED__
 #define __GLESLY_SRC_READ_PTR_H_INCLUDED__
 
-#include <boost/shared_ptr.hpp>
+#include <Memory/Memory.h>
 
 namespace Glesly
 {
@@ -20,10 +20,10 @@ namespace Glesly
     class CubeRender;
     class SurfaceRender;
 
-    typedef boost::shared_ptr<MenuRender> MenuRenderPtr;
-    typedef boost::shared_ptr<Render> RenderPtr;
-    typedef boost::shared_ptr<CubeRender> CubeRenderPtr;
-    typedef boost::shared_ptr<SurfaceRender> SurfaceRenderPtr;
+    typedef MEM::shared_ptr<MenuRender> MenuRenderPtr;
+    typedef MEM::shared_ptr<Render> RenderPtr;
+    typedef MEM::shared_ptr<CubeRender> CubeRenderPtr;
+    typedef MEM::shared_ptr<SurfaceRender> SurfaceRenderPtr;
 
 } // namespace Glesly
 

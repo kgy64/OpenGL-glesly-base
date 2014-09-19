@@ -11,13 +11,13 @@
 #ifndef __GLESLY_SRC_PROGRAM_PTR_H_INCLUDED__
 #define __GLESLY_SRC_PROGRAM_PTR_H_INCLUDED__
 
-#include <boost/shared_ptr.hpp>
+#include <Memory/Memory.h>
 
 namespace Glesly
 {
     class Program;
 
-    typedef boost::shared_ptr<Program> ProgramPtr;
+    typedef MEM::shared_ptr<Program> ProgramPtr;
 
 } // namespace Glesly
 

@@ -11,7 +11,7 @@
 #ifndef __GLESLY_SRC_GLESLY_H_INCLUDED__
 #define __GLESLY_SRC_GLESLY_H_INCLUDED__
 
-#include <boost/shared_ptr.hpp>
+#include <Memory/Memory.h>
 #include <EGL/egl.h>
 
 #include <glesly/mouse-handler.h>
@@ -105,7 +105,7 @@ namespace Glesly
 
     }; // class Target
 
-    typedef boost::shared_ptr<Glesly::Target> TargetPtr;
+    typedef MEM::shared_ptr<Glesly::Target> TargetPtr;
 
 } // namespace Glesly
 

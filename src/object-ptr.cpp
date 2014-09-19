@@ -14,7 +14,7 @@
 using namespace Glesly;
 
 ObjectPtr::ObjectPtr(ObjectBase * obj):
-    boost::shared_ptr<ObjectBase>(obj)
+    MEM::shared_ptr<ObjectBase>(obj)
 {
  obj->mySelf = *this;
 };

@@ -11,20 +11,20 @@
 #ifndef __GLESLY_INCLUDE_PUBLIC_GLESLY_EFFECT_PTR_H_INCLUDED__
 #define __GLESLY_INCLUDE_PUBLIC_GLESLY_EFFECT_PTR_H_INCLUDED__
 
-#include <boost/shared_ptr.hpp>
+#include <Memory/Memory.h>
 #include <stack>
 
 namespace Glesly
 {
     class LayerChangeEffectBase;
 
-    typedef boost::shared_ptr<LayerChangeEffectBase> LayerEffectPtr;
+    typedef MEM::shared_ptr<LayerChangeEffectBase> LayerEffectPtr;
 
     typedef std::stack<LayerEffectPtr> ObjectLayerStack;
 
     class LayerEffectCreatorBase;
 
-    typedef boost::shared_ptr<LayerEffectCreatorBase> LayerCreatorPtr;
+    typedef MEM::shared_ptr<LayerEffectCreatorBase> LayerCreatorPtr;
 
 }; // namespace Glesly
 

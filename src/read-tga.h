@@ -18,7 +18,7 @@
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
 
-#include <boost/scoped_ptr.hpp>
+#include <Memory/Memory.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
 
@@ -116,7 +116,7 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
-        boost::scoped_ptr<const pixel_data> myData;
+        MEM::scoped_ptr<const pixel_data> myData;
 
         const pixel_data * myRawData;
 
