@@ -55,7 +55,7 @@ void CameraMatrix::Update(void)
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Transformation::Transformation(void):
-    Glesly::Matrix<float, 4, 4>(1.0),
+    Glesly::Matrix<float, 4, 4>(1.0f),
     xAngle(0.0f),
     yAngle(0.0f),
     zAngle(0.0f)
@@ -71,12 +71,12 @@ void Transformation::RotateX(float angle, float scale)
  float c = cosf(angle) * scale;
 
  (*this)[0][0] = scale;
- (*this)[0][1] = 0.0;
- (*this)[0][2] = 0.0;
- (*this)[1][0] = 0.0;
+ (*this)[0][1] = 0.0f;
+ (*this)[0][2] = 0.0f;
+ (*this)[1][0] = 0.0f;
  (*this)[1][1] = c;
  (*this)[1][2] = s;
- (*this)[2][0] = 0.0;
+ (*this)[2][0] = 0.0f;
  (*this)[2][1] = -s;
  (*this)[2][2] = c;
 }
@@ -89,13 +89,13 @@ void Transformation::RotateY(float angle, float scale)
  float c = cosf(angle) * scale;
 
  (*this)[0][0] = c;
- (*this)[0][1] = 0.0;
+ (*this)[0][1] = 0.0f;
  (*this)[0][2] = s;
- (*this)[1][0] = 0.0;
+ (*this)[1][0] = 0.0f;
  (*this)[1][1] = scale;
- (*this)[1][2] = 0.0;
+ (*this)[1][2] = 0.0f;
  (*this)[2][0] = -s;
- (*this)[2][1] = 0.0;
+ (*this)[2][1] = 0.0f;
  (*this)[2][2] = c;
 }
 
@@ -108,12 +108,12 @@ void Transformation::RotateZ(float angle, float scale)
 
  (*this)[0][0] = c;
  (*this)[0][1] = s;
- (*this)[0][2] = 0.0;
+ (*this)[0][2] = 0.0f;
  (*this)[1][0] = -s;
  (*this)[1][1] = c;
- (*this)[1][2] = 0.0;
- (*this)[2][0] = 0.0;
- (*this)[2][1] = 0.0;
+ (*this)[1][2] = 0.0f;
+ (*this)[2][0] = 0.0f;
+ (*this)[2][1] = 0.0f;
  (*this)[2][2] = scale;
 }
 
@@ -126,12 +126,12 @@ void Transformation::RotateZ(float angle, float scale, float aspect)
 
  (*this)[0][0] = c * aspect;
  (*this)[0][1] = s * aspect;
- (*this)[0][2] = 0.0;
+ (*this)[0][2] = 0.0f;
  (*this)[1][0] = -s;
  (*this)[1][1] = c;
- (*this)[1][2] = 0.0;
- (*this)[2][0] = 0.0;
- (*this)[2][1] = 0.0;
+ (*this)[1][2] = 0.0f;
+ (*this)[2][0] = 0.0f;
+ (*this)[2][1] = 0.0f;
  (*this)[2][2] = scale;
 }
 

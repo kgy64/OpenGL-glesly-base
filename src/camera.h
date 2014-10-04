@@ -83,11 +83,11 @@ namespace Glesly
 
         bool ConvertMouseCoordinates(float & x, float & y) const;
 
-        void RotateX(float angle, float scale = 1.0);
-        void RotateY(float angle, float scale = 1.0);
-        void RotateZ(float angle, float scale = 1.0);
+        void RotateX(float angle, float scale = 1.0f);
+        void RotateY(float angle, float scale = 1.0f);
+        void RotateZ(float angle, float scale = 1.0f);
         void RotateZ(float angle, float scale, float aspect);
-        void Move(float x, float y, float z);
+        void Move(float x, float y, float z = 1.0f);
 
         inline float GetAngleX(void) const
         {
