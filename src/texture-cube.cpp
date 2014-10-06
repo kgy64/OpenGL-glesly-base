@@ -20,9 +20,11 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format):
+TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format, GLenum pixelformat, bool use_mipmap):
     myTexture(0xffffffff),
     myFormat(format),
+    myPixelFormat(pixelformat),
+    myUseMipmap(use_mipmap),
     myTarget(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -59,14 +61,17 @@ void TextureCubeMap::Update(void)
         myFormat,                           //  internal format
         myTarget[i]->GetWidth(),            //  width
         myTarget[i]->GetHeight(), 0,        //  height, border
-        myFormat, GL_UNSIGNED_SHORT_5_6_5,  //  external format, type
+        myFormat, myPixelFormat,            //  external format, type
         myTarget[i]->GetPixelData()         //  pixels
     );
     CheckEGLError("glTexImage2D()");
  }
 
- glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
- CheckEGLError("glGenerateMipmap()");
+ if (myUseMipmap) {
+    SYS_DEBUG(DL_INFO3, " - glGenerateMipmap(GL_TEXTURE_CUBE_MAP)");
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    CheckEGLError("glGenerateMipmap()");
+ }
 }
 
 void TextureCubeMap::InitGL(void)
@@ -78,8 +83,13 @@ void TextureCubeMap::InitGL(void)
 
  Bind();
 
- SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);");
- glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+ if (myUseMipmap) {
+    SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);");
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+ } else {
+    SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);");
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ }
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);");
  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
  SYS_DEBUG(DL_INFO3, " - glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);");

@@ -26,7 +26,7 @@ namespace Glesly
     class TextureCubeMap
     {
      protected:
-        TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB);
+        TextureCubeMap(const Target2D * target[6], GLenum format = GL_RGB, GLenum pixelformat = GL_UNSIGNED_SHORT_5_6_5, bool use_mipmap = true);
         virtual ~TextureCubeMap();
 
         inline GLuint GetBuffer(void) const
@@ -38,14 +38,19 @@ namespace Glesly
         inline void Bind(void) const
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_CUBE_MAP, " << myTexture << ");");
-            glBindTexture(GL_TEXTURE_CUBE_MAP, GetBuffer());
+            GLuint texture = GetBuffer();
+            SYS_DEBUG(DL_INFO3, " - glBindTexture(GL_TEXTURE_CUBE_MAP, " << texture << ");");
+            glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
             CheckEGLError("glBindTexture()");
         }
 
         GLuint myTexture;
 
         GLenum myFormat;
+
+        GLenum myPixelFormat;
+
+        bool myUseMipmap;
 
         /// Array of 6 textures
         const Target2D ** myTarget;
