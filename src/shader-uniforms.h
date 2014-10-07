@@ -116,9 +116,9 @@ namespace Glesly
         class UniformTexture2D: public UniformBase, public Texture2DRaw
         {
          public:
-            UniformTexture2D(UniformManager & obj, const char * name, const Target2D & target, int index = 0, GLenum format = GL_RGB, GLenum pixelformat = GL_UNSIGNED_SHORT_5_6_5, bool use_mipmap = true):
+            UniformTexture2D(UniformManager & obj, const char * name, const Target2D & target, int index = 0, Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true):
                 UniformBase(obj, name),
-                Texture2DRaw(target, format, pixelformat, use_mipmap),
+                Texture2DRaw(target, format, use_mipmap),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -154,16 +154,16 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTexture2D");
 
-            inline void InitGL(void);   // Don't try to call it - it is handled by class UniformBase
+            void InitGL(void);
 
         }; // class UniformTexture2D
 
         class UniformTextureCube: public UniformBase, public TextureCubeMap
         {
          public:
-            UniformTextureCube(UniformManager & obj, const char * name, const Target2D * target[6], int index = 0, GLenum format = GL_RGB):
+            UniformTextureCube(UniformManager & obj, const char * name, const Target2D * target[6], int index = 0, Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true):
                 UniformBase(obj, name),
-                TextureCubeMap(target, format),
+                TextureCubeMap(target, format, use_mipmap),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
@@ -199,7 +199,7 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTextureCube");
 
-            inline void InitGL(void);   // Don't try to call it - it is handled by class UniformBase
+            void InitGL(void);
 
         }; // class UniformTextureCube
 
@@ -262,7 +262,7 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformMatrix<T,N>");
 
-            inline void InitGL();   // Don't try to call it - it is handled by class UniformBase
+            void InitGL();
 
         }; // class UniformMatrix_ref<T,N>
 

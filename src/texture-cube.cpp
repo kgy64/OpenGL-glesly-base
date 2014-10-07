@@ -20,10 +20,10 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-TextureCubeMap::TextureCubeMap(const Target2D * target[6], GLenum format, GLenum pixelformat, bool use_mipmap):
+TextureCubeMap::TextureCubeMap(const Target2D * target[6], Glesly::PixelFormat format, bool use_mipmap):
     myTexture(0xffffffff),
-    myFormat(format),
-    myPixelFormat(pixelformat),
+    myFormat(Glesly::Format2DataFormat(format)),
+    myPixelFormat(Glesly::Format2PixelFormat(format)),
     myUseMipmap(use_mipmap),
     myTarget(target)
 {
@@ -55,13 +55,14 @@ void TextureCubeMap::Update(void)
  };
 
  for (unsigned i = 0; i < 6; ++i) {
-    SYS_DEBUG(DL_INFO3, " - glTexImage2D(" << GLTargets[i] << ", 0," << myFormat << ", " << myTarget[i]->GetWidth() << myTarget[i]->GetHeight() << ", 0, " << myFormat << ", GL_UNSIGNED_SHORT_5_6_5, " << myTarget[i]->GetPixelData() << ") [image #" << i << "]");
+    SYS_DEBUG(DL_INFO3, " - glTexImage2D(" << GLTargets[i] << ", 0," << myFormat << ", " << myTarget[i]->GetWidth() << myTarget[i]->GetHeight() << ", 0, " << myFormat << ", " << myPixelFormat << ", " << myTarget[i]->GetPixelData() << ") [image #" << i << "]");
     glTexImage2D(
-        GLTargets[i], 0,                    //  target, level
+        GLTargets[i],                       //  target
+        0,                                  //  level
         myFormat,                           //  internal format
         myTarget[i]->GetWidth(),            //  width
-        myTarget[i]->GetHeight(), 0,        //  height, border
-        myFormat, myPixelFormat,            //  external format, type
+        myTarget[i]->GetHeight(),           //  height
+        0, myFormat, myPixelFormat,         //  border, external format, type
         myTarget[i]->GetPixelData()         //  pixels
     );
     CheckEGLError("glTexImage2D()");

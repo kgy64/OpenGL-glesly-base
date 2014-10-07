@@ -20,16 +20,29 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Texture2DRaw::Texture2DRaw(const Target2D & target, GLenum format, GLenum pixelformat, bool use_mipmap):
+Texture2DRaw::Texture2DRaw(const Target2D & target, Glesly::PixelFormat format, bool use_mipmap):
     myWidth(target.GetWidth()),
     myHeight(target.GetHeight()),
-    myFormat(format),
-    myPixelFormat(pixelformat),
+    myFormat(Glesly::Format2DataFormat(format)),
+    myPixelFormat(Glesly::Format2PixelFormat(format)),
     myUseMipmap(use_mipmap),
     myTarget(target),
     myTexture(0xffffffff)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myPixelFormat == 0) {
+    switch (myFormat) {
+        case GL_RGB:
+            myPixelFormat = GL_UNSIGNED_SHORT_5_6_5;
+        break;
+        case GL_RGBA:
+            myPixelFormat = GL_UNSIGNED_BYTE;
+        break;
+    }
+ }
+
+ ASSERT(myPixelFormat, "pixel format is not defined for format " << myFormat);
 }
 
 Texture2DRaw::~Texture2DRaw()

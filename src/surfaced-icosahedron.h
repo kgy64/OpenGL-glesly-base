@@ -46,7 +46,7 @@ namespace Glesly
         SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6]):
             ParentType(render),
             IcosahedronBase(size),
-            texture(*this, "texture", textures),
+            texture(*this, "texture", textures, 0, Glesly::FORMAT_RGB_565, true),
             myCurrentVertex(0U),
             myCurrentElement(0U)
         {

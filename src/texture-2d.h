@@ -16,6 +16,7 @@
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
 #include <glesly/error.h>
+#include <glesly/format.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
 
@@ -26,7 +27,7 @@ namespace Glesly
     class Texture2DRaw
     {
      protected:
-        Texture2DRaw(const Target2D & target, GLenum format = GL_RGB, GLenum pixelformat = GL_UNSIGNED_SHORT_5_6_5, bool use_mipmap = true);
+        Texture2DRaw(const Target2D & target, Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true);
         virtual ~Texture2DRaw();
 
         inline GLuint GetBuffer(void)
