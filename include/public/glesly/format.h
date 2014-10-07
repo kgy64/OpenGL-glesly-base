@@ -14,6 +14,8 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
+#include <Exceptions/Exceptions.h>
+
 namespace Glesly
 {
     enum PixelFormat
