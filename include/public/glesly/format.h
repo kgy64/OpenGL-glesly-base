@@ -11,6 +11,9 @@
 #ifndef __INCLUDE_PUBLIC_GLESLY_FORMAT_H_INCLUDED__
 #define __INCLUDE_PUBLIC_GLESLY_FORMAT_H_INCLUDED__
 
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
 namespace Glesly
 {
     enum PixelFormat

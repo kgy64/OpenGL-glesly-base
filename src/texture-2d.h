@@ -11,8 +11,6 @@
 #ifndef __GLESLY_SRC_TEXTURE_H_INCLUDED__
 #define __GLESLY_SRC_TEXTURE_H_INCLUDED__
 
-#include <GLES2/gl2.h>
-
 #include <File/FileMap.h>
 #include <Debug/Debug.h>
 #include <glesly/error.h>
