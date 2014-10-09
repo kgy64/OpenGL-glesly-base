@@ -38,7 +38,7 @@ namespace Glesly
                 result = GL_RGB;
             break;
             case FORMAT_RGBA_8888:
-                result = GL_RGBA;
+                result = GL_BGRA_EXT;
             break;
             default:
             break;
