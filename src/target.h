@@ -39,7 +39,7 @@ namespace Glesly
         virtual void CloseRequest(void) =0;
         virtual void MouseClick(int x, int y, int index, int count) =0;
 
-    }; // class TargetHolder
+    }; // class Glesly::TargetHolder
 
     class Target
     {
@@ -103,7 +103,7 @@ namespace Glesly
 
         Threads::Mutex myMutex;
 
-    }; // class Target
+    }; // class Glesly::Target
 
     typedef MEM::shared_ptr<Glesly::Target> TargetPtr;
 

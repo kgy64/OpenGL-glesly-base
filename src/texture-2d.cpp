@@ -20,11 +20,11 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-Texture2DRaw::Texture2DRaw(const Target2D & target, Glesly::PixelFormat format, bool use_mipmap):
+Texture2DRaw::Texture2DRaw(const Target2D & target, bool use_mipmap):
     myWidth(target.GetWidth()),
     myHeight(target.GetHeight()),
-    myFormat(Glesly::Format2DataFormat(format)),
-    myPixelFormat(Glesly::Format2PixelFormat(format)),
+    myFormat(Glesly::Format2DataFormat(target.GetPixelFormat())),
+    myPixelFormat(Glesly::Format2PixelFormat(target.GetPixelFormat())),
     myUseMipmap(use_mipmap),
     myTarget(target),
     myTexture(0xffffffff)

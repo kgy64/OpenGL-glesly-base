@@ -43,10 +43,10 @@ namespace Glesly
         typedef IcosahedronParent<N> ParentType;
 
      protected:
-        SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6], Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true):
+        SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6], bool use_mipmap = true):
             ParentType(render),
             IcosahedronBase(size),
-            texture(*this, "texture", textures, 0, format, use_mipmap),
+            texture(*this, "texture", textures, 0, use_mipmap),
             myCurrentVertex(0U),
             myCurrentElement(0U)
         {

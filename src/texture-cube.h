@@ -25,7 +25,7 @@ namespace Glesly
     class TextureCubeMap
     {
      protected:
-        TextureCubeMap(const Target2D * target[6], Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true);
+        TextureCubeMap(const Target2D * target[6], bool use_mipmap = true);
         virtual ~TextureCubeMap();
 
         inline GLuint GetBuffer(void) const

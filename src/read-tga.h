@@ -27,7 +27,7 @@ namespace Glesly
     class ReadTGA: public FILES::FileMap, public Target2D
     {
      public:
-        ReadTGA(const char * filename, bool convert_2_rgb = false);
+        ReadTGA(const char * filename, bool swap_rgb_bgr = false);
         ReadTGA(ReadTGA & other):
             FILES::FileMap(*this)
         {
@@ -45,6 +45,7 @@ namespace Glesly
             uint8_t b;
             uint8_t g;
             uint8_t r;
+            uint8_t a;
         };
 
         struct pixel_data_rgb565
@@ -84,22 +85,23 @@ namespace Glesly
                 return (pixel_data_rgb565*)image_data;
             }
 
-            char  id_length;
-            char  color_map_type;
-            char  data_type_code;
-            unsigned char  color_map_origin[2];
-            unsigned char  color_map_length[2];
-            char  color_map_depth;
-            unsigned char  x_origin[2];
-            unsigned char  y_origin[2];
-            unsigned char  width[2];
-            unsigned char  height[2];
-            char bits_per_pixel;
-            char image_descriptor;
-            char image_data[0];
+            int8_t  id_length;
+            int8_t  color_map_type;
+            int8_t  data_type_code;
+            uint8_t color_map_origin[2];
+            uint8_t color_map_length[2];
+            int8_t  color_map_depth;
+            uint8_t x_origin[2];
+            uint8_t y_origin[2];
+            uint8_t width[2];
+            uint8_t height[2];
+            int8_t  bits_per_pixel;
+            int8_t  image_descriptor;
+            int8_t  image_data[0];
         };
 
         virtual const void * GetPixelData(void) const override;
+        virtual Glesly::PixelFormat GetPixelFormat(void) const override;
         virtual int GetWidth(void) const override;
         virtual int GetHeight(void) const override;
 
@@ -118,9 +120,11 @@ namespace Glesly
 
         MEM::shared_ptr<const pixel_data> myData;
 
+        int8_t myPixelSize;
+
         const pixel_data * myRawData;
 
-        void Normalize(void);
+        void Swap_RGB_BGR(void);
 
     }; // class ReadTGA
 
@@ -129,6 +133,7 @@ namespace Glesly
         r = other.r << (8-5);
         g = other.g << (8-6);
         b = other.b << (8-5);
+        a = 255;
         return *this;
     }
 

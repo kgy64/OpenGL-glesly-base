@@ -25,7 +25,7 @@ namespace Glesly
     class Texture2DRaw
     {
      protected:
-        Texture2DRaw(const Target2D & target, Glesly::PixelFormat format = Glesly::FORMAT_RGB_565, bool use_mipmap = true);
+        Texture2DRaw(const Target2D & target, bool use_mipmap = true);
         virtual ~Texture2DRaw();
 
         inline GLuint GetBuffer(void)

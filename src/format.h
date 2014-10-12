@@ -22,6 +22,7 @@ namespace Glesly
     {
         FORMAT_UNKNOWN      = 0,
         FORMAT_RGB_565,
+        FORMAT_RGB_888,
         FORMAT_RGBA_8888
 
     }; // enum Glesly::PixelFormat

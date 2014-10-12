@@ -11,6 +11,7 @@
 #ifndef __GLESLY_SRC_TARGET_BASE_H_INCLUDED__
 #define __GLESLY_SRC_TARGET_BASE_H_INCLUDED__
 
+#include <glesly/format.h>
 #include <Debug/Debug.h>
 
 namespace Glesly
@@ -27,14 +28,17 @@ namespace Glesly
         {
         }
 
+        virtual Target2D & operator=(const Target2D & other);
+
         virtual int GetWidth(void) const =0;
         virtual int GetHeight(void) const =0;
         virtual const void * GetPixelData(void) const =0;
+        virtual Glesly::PixelFormat GetPixelFormat(void) const =0;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Target2D");
 
-    }; // class Target2D
+    }; // class Glesly::Target2D
 
 } // namespace Glesly
 

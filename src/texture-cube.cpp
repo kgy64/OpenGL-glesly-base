@@ -20,10 +20,10 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-TextureCubeMap::TextureCubeMap(const Target2D * target[6], Glesly::PixelFormat format, bool use_mipmap):
+TextureCubeMap::TextureCubeMap(const Target2D * target[6], bool use_mipmap):
     myTexture(0xffffffff),
-    myFormat(Glesly::Format2DataFormat(format)),
-    myPixelFormat(Glesly::Format2PixelFormat(format)),
+    myFormat(Glesly::Format2DataFormat(target[0]->GetPixelFormat())),
+    myPixelFormat(Glesly::Format2PixelFormat(target[0]->GetPixelFormat())),
     myUseMipmap(use_mipmap),
     myTarget(target)
 {
