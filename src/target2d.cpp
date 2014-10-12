@@ -19,7 +19,7 @@ using namespace Glesly;
 Target2D & Target2D::operator=(const Target2D & other)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
- ASSERT(GetWidth() == other.GetWidth() && GetHeight() == other.GetHeight(), "trying to copy different bitmap size");
+ ASSERT(GetWidth() == other.GetWidth() && GetHeight() == other.GetHeight(), "trying to copy different bitmap size (" << GetWidth() << "x" << GetHeight() << " <- " << other.GetWidth() << "x" << other.GetHeight() << ")");
  ASSERT(GetPixelFormat() == other.GetPixelFormat(), "trying to copy different bitmap format");
  int size = 0;
  switch (GetPixelFormat()) {
