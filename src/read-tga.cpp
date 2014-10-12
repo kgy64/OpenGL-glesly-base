@@ -35,6 +35,8 @@ ReadTGA::ReadTGA(const char * filename, bool swap_rgb_bgr):
  switch (myPixelSize) {
     case 32:
     break;
+    case 24:
+    break;
     case 16:
     break;
     default:
