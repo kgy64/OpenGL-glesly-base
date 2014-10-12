@@ -14,6 +14,8 @@
 #include <glesly/format.h>
 #include <Debug/Debug.h>
 
+SYS_DECLARE_MODULE(DM_GLESLY);
+
 namespace Glesly
 {
     class Target2D
@@ -21,11 +23,13 @@ namespace Glesly
      protected:
         inline Target2D(void)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
      public:
         virtual ~Target2D()
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
         virtual Target2D & operator=(const Target2D & other);

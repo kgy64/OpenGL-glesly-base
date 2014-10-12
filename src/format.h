@@ -38,7 +38,8 @@ namespace Glesly
         FORMAT_RGB_888,
         FORMAT_BGR_888,
         FORMAT_RGBA_8888,
-        FORMAT_BGRA_8888
+        FORMAT_BGRA_8888,
+        FORMAT_DEFAULT
 
     }; // enum Glesly::PixelFormat
 
@@ -61,6 +62,9 @@ static inline std::ostream & operator<<(std::ostream & os, Glesly::PixelFormat p
     break;
     case Glesly::FORMAT_BGRA_8888:
         os << "FORMAT_BGRA_8888";
+    break;
+    case Glesly::FORMAT_DEFAULT:
+        os << "FORMAT_DEFAULT (pseudo-format)";
     break;
     default:
         os << "unknown (" << (int)p << ")";
