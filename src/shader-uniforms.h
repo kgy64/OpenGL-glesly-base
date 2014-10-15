@@ -46,8 +46,7 @@ namespace Glesly
 
             virtual void initGL(void) override
             {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                myUniformID = GetParent().GetUniformLocationSafe(myName);
+                InitGL();
             }
 
             const char * myName;
@@ -56,6 +55,12 @@ namespace Glesly
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformBase");
 
             GLint myUniformID;
+
+            inline void InitGL(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                myUniformID = GetParent().GetUniformLocationSafe(myName);
+            }
 
         }; // class UniformBase
 
@@ -143,9 +148,7 @@ namespace Glesly
 
             virtual void initGL(void) override
             {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                UniformBase::initGL();
-                Texture2DRaw::InitGL();
+                InitGL();
             }
 
          protected:
@@ -154,7 +157,12 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTexture2D");
 
-            void InitGL(void);
+            inline void InitGL(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                UniformBase::initGL();
+                Texture2DRaw::InitGL();
+            }
 
         }; // class UniformTexture2D
 
@@ -186,20 +194,23 @@ namespace Glesly
                 Bind();
             }
 
-         protected:
             virtual void initGL(void) override
             {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                UniformBase::initGL();
-                TextureCubeMap::InitGL();
+                InitGL();
             }
 
+         protected:
             int myIndex;
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTextureCube");
 
-            void InitGL(void);
+            inline void InitGL(void)
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                UniformBase::initGL();
+                TextureCubeMap::InitGL();
+            }
 
         }; // class UniformTextureCube
 
@@ -261,8 +272,6 @@ namespace Glesly
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformMatrix<T,N>");
-
-            void InitGL();
 
         }; // class UniformMatrix_ref<T,N>
 

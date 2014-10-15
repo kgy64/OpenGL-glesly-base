@@ -40,10 +40,16 @@ namespace Glesly
             return *this;
         }
 
+        template <class C>
+        inline C & getObj(void)
+        {
+            return static_cast<C &>(**this);
+        }
+
      protected:
         ObjectPtr(ObjectBase * obj);
 
-    }; // ObjectPtr
+    }; // Glesly::ObjectPtr
 
     template<class OBJ>
     class ObjectWrapper: public ObjectPtr
@@ -74,7 +80,7 @@ namespace Glesly
             return static_cast<OBJ*>(get());
         }
 
-    }; // class ObjectWrapper
+    }; // class Glesly::ObjectWrapper
 
     typedef std::list<ObjectPtr> Objects;
 

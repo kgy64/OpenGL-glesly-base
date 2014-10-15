@@ -105,8 +105,21 @@ namespace Glesly
             return Glesly::ObjectPtr(new SurfacedIcosahedron(render, size));
         }
 
+        virtual void initGL(void) override
+        {
+            InitGL();
+        }
+
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
+
+        inline void InitGL(void)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            DEBUG_OUT("SurfacedIcosahedron::InitGL()...");
+            ParentType::InitGL();
+            texture.initGL();
+        }
 
         Glesly::Shaders::UniformTextureCube texture;
 

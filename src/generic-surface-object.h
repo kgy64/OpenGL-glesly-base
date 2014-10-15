@@ -71,14 +71,13 @@ namespace Glesly
             return E;
         }
 
-     private:
-        SYS_DEFINE_CLASS_NAME("Glesly::GenericSurfaceObject");
-
         virtual void initGL(void) override
         {
-            SYS_DEBUG_MEMBER(DM_GLESLY);
             InitGL();
         }
+
+     private:
+        SYS_DEFINE_CLASS_NAME("Glesly::GenericSurfaceObject");
 
     }; // class GenericSurfaceObject
 
