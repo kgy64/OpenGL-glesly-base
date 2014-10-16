@@ -113,4 +113,107 @@ void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & 
  *target = tga;
 }
 
+PaCaLib::DrawPtr SphereBitmaps::Draw(void)
+{
+ return PaCaLib::DrawPtr(new SphereBitmaps::Draw(*this));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     class Glesly::SphereBitmaps::Draw:                                                *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+SphereBitmaps::Draw::Draw(SphereBitmaps & parent):
+    parent(parent)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+}
+
+void SphereBitmaps::Draw::Scale(float w, float h)
+{
+}
+
+void SphereBitmaps::Draw::SetColour(float r, float g, float b, float a)
+{
+}
+
+void SphereBitmaps::Draw::SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT)
+{
+}
+
+void SphereBitmaps::Draw::SetTextOutlineColour(float r, float g, float b, float a = 1.0)
+{
+}
+
+void SphereBitmaps::Draw::SetTextOutline(float outline)
+{
+}
+
+void SphereBitmaps::Draw::SetLineWidth(float width)
+{
+}
+
+void SphereBitmaps::Draw::SetLineCap(PaCaLib::LineCap mode)
+{
+}
+
+void SphereBitmaps::Draw::Paint(void)
+{
+}
+
+PaCaLib::PathPtr SphereBitmaps::Draw::NewPath(void)
+{
+}
+
+float SphereBitmaps::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0)
+{
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                                       *
+ *     class Glesly::SphereBitmaps::Path:                                                *
+ *                                                                                       *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+SphereBitmaps::Path::Path(SphereBitmaps::Draw & parent):
+    parent(parent)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+}
+
+void SphereBitmaps::Path::Move(float x, float y)
+{
+}
+
+void SphereBitmaps::Path::Line(float x, float y)
+{
+}
+
+void SphereBitmaps::Path::Arc(float xc, float yc, float r, float a1, float a2)
+{
+}
+
+void SphereBitmaps::Path::Bezier(float x, float y, float dx, float dy)
+{
+}
+
+void SphereBitmaps::Path::Close(void)
+{
+}
+
+void SphereBitmaps::Path::Clear(void)
+{
+}
+
+void SphereBitmaps::Path::Stroke(void)
+{
+}
+
+void SphereBitmaps::Path::Fill(void)
+{
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
