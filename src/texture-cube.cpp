@@ -20,12 +20,9 @@ using namespace Glesly;
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-TextureCubeMap::TextureCubeMap(const Target2D * target[6], bool use_mipmap):
+TextureCubeMap::TextureCubeMap(bool use_mipmap):
     myTexture(0xffffffff),
-    myFormat(Glesly::Format2DataFormat(target[0]->GetPixelFormat())),
-    myPixelFormat(Glesly::Format2PixelFormat(target[0]->GetPixelFormat())),
-    myUseMipmap(use_mipmap),
-    myTarget(target)
+    myUseMipmap(use_mipmap)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
@@ -54,16 +51,25 @@ void TextureCubeMap::Update(void)
     GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
  };
 
+ const Target2D * const * targets = getTargets();
+
+ if (!targets[0]) {
+    return; // not initialized yet
+ }
+
+ GLenum format = Glesly::Format2DataFormat(targets[0]->GetPixelFormat());
+ GLenum pixelformat = Glesly::Format2PixelFormat(targets[0]->GetPixelFormat());
+
  for (unsigned i = 0; i < 6; ++i) {
-    SYS_DEBUG(DL_INFO3, " - glTexImage2D(" << GLTargets[i] << ", 0," << myFormat << ", " << myTarget[i]->GetWidth() << myTarget[i]->GetHeight() << ", 0, " << myFormat << ", " << myPixelFormat << ", " << myTarget[i]->GetPixelData() << ") [image #" << i << "]");
+    SYS_DEBUG(DL_INFO3, " - glTexImage2D(" << GLTargets[i] << ", 0," << format << ", " << targets[i]->GetWidth() << targets[i]->GetHeight() << ", 0, " << format << ", " << pixelformat << ", " << targets[i]->GetPixelData() << ") [image #" << i << "]");
     glTexImage2D(
         GLTargets[i],                       //  target
         0,                                  //  level
-        myFormat,                           //  internal format
-        myTarget[i]->GetWidth(),            //  width
-        myTarget[i]->GetHeight(),           //  height
-        0, myFormat, myPixelFormat,         //  border, external format, type
-        myTarget[i]->GetPixelData()         //  pixels
+        format,                             //  internal format
+        targets[i]->GetWidth(),             //  width
+        targets[i]->GetHeight(),            //  height
+        0, format, pixelformat,             //  border, external format, type
+        targets[i]->GetPixelData()          //  pixels
     );
     CheckEGLError("glTexImage2D()");
  }

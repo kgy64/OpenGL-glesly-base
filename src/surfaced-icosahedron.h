@@ -43,10 +43,10 @@ namespace Glesly
         typedef IcosahedronParent<N> ParentType;
 
      protected:
-        SurfacedIcosahedron(Glesly::Render & render, float size, const Glesly::Target2D * textures[6], bool use_mipmap = true):
+        SurfacedIcosahedron(Glesly::Render & render, float size, bool use_mipmap = true):
             ParentType(render),
             IcosahedronBase(size),
-            texture(*this, "texture", textures, 0, use_mipmap),
+            texture(*this, "texture", 0, use_mipmap),
             myCurrentVertex(0U),
             myCurrentElement(0U)
         {
@@ -59,6 +59,8 @@ namespace Glesly
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
         }
+
+        virtual const Target2D * const * getTargets(void) const =0;
 
      protected:
         virtual unsigned RegisterVertex(const IcosahedronBase::Vec3 & vertex) override
@@ -121,7 +123,32 @@ namespace Glesly
             texture.initGL();
         }
 
-        Glesly::Shaders::UniformTextureCube texture;
+        class MyTextureCube: public Glesly::Shaders::UniformTextureCube
+        {
+         public:
+            inline MyTextureCube(SurfacedIcosahedron & parent, const char * name, int index , bool use_mipmap):
+                Glesly::Shaders::UniformTextureCube(parent, name, index, use_mipmap),
+                parent(parent)
+            {
+            }
+
+            virtual ~MyTextureCube()
+            {
+            }
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron::MyTextureCube");
+
+            SurfacedIcosahedron & parent;
+
+            virtual const Target2D * const * getTargets(void) const override
+            {
+                return parent.getTargets();
+            }
+
+        }; // class Glesly::SurfacedIcosahedron::MyTextureCube
+
+        MyTextureCube texture;
 
         GLushort myElems[IH_ELEM(N)];
 

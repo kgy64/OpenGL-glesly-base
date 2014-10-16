@@ -25,7 +25,7 @@ namespace Glesly
     class TextureCubeMap
     {
      protected:
-        TextureCubeMap(const Target2D * target[6], bool use_mipmap = true);
+        TextureCubeMap(bool use_mipmap = true);
         virtual ~TextureCubeMap();
 
         inline GLuint GetBuffer(void) const
@@ -45,14 +45,7 @@ namespace Glesly
 
         GLuint myTexture;
 
-        GLenum myFormat;
-
-        GLenum myPixelFormat;
-
         bool myUseMipmap;
-
-        /// Array of 6 textures
-        const Target2D ** myTarget;
 
      public:
         void Update(void);
@@ -61,7 +54,10 @@ namespace Glesly
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::TextureCubeMap");
 
-    }; // class TextureCubeMap
+        /// Array of 6 textures
+        virtual const Target2D * const * getTargets(void) const =0;
+
+    }; // class Glesly::TextureCubeMap
 
 } // namespace Glesly
 

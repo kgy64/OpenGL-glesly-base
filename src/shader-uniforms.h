@@ -169,9 +169,9 @@ namespace Glesly
         class UniformTextureCube: public UniformBase, public TextureCubeMap
         {
          public:
-            UniformTextureCube(UniformManager & obj, const char * name, const Target2D * target[6], int index = 0, bool use_mipmap = true):
+            UniformTextureCube(UniformManager & obj, const char * name, int index = 0, bool use_mipmap = true):
                 UniformBase(obj, name),
-                TextureCubeMap(target, use_mipmap),
+                TextureCubeMap(use_mipmap),
                 myIndex(index)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
