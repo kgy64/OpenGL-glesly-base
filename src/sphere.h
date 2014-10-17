@@ -23,9 +23,6 @@ namespace Glesly
 
     namespace SphereData
     {
-        typedef PaCaLib::PathPtr PathPtr;
-        typedef PaCaLib::DrawPtr DrawPtr;
-
         class Draw: public PaCaLib::Draw
         {
             friend class SphereBitmaps;
@@ -44,8 +41,10 @@ namespace Glesly
             virtual void SetLineWidth(float width) override;
             virtual void SetLineCap(PaCaLib::LineCap mode) override;
             virtual void Paint(void) override;
-            virtual PathPtr NewPath(void) override;
+            virtual PaCaLib::PathPtr NewPath(void) override;
             virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0) override;
+
+            PaCaLib::DrawPtr draws[6];
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Draw");
@@ -55,6 +54,8 @@ namespace Glesly
         class Path: public PaCaLib::Path
         {
             friend class SphereData::Draw;
+
+            static constexpr int MAX_OPERS = 100;
 
          public:
             Path(SphereData::Draw & parent);
@@ -71,8 +72,32 @@ namespace Glesly
             virtual void Stroke(void) override;
             virtual void Fill(void) override;
 
+            enum Opcode
+            {
+                NO_OP       = 0,
+                OP_MOVE,
+                OP_LINE,
+                OP_ARC,
+                OP_BEZIER,
+                OP_CLOSE
+            };
+
+            struct Oper
+            {
+                uint32_t    op;
+
+                float       data[5];
+
+            }; // struct Glesly::SphereData::Path::Oper
+
+            Oper    opcodes[MAX_OPERS];
+
+            int     opCount;
+
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Path");
+
+            void push(Opcode op, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f, float d4 = 0.0f, float d5 = 0.0f);
 
         }; // class Glesly::SphereData::Path
 
@@ -83,6 +108,7 @@ namespace Glesly
      protected:
         inline SphereBitmaps(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT):
             textureTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
+            pacaTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
             myFormat(format)
         {
             if (size) {
@@ -98,18 +124,27 @@ namespace Glesly
         PaCaLib::TargetPtr texture_5;
 
         Glesly::Target2D * textureTargets[6];
+        PaCaLib::Target * pacaTargets[6];
 
         Glesly::PixelFormat myFormat;
 
      public:
         void reset(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT);
         void reset(const char * const * filenames);
-        SphereData::DrawPtr Draw(void);
+        PaCaLib::DrawPtr Draw(void);
+
+        inline PaCaLib::DrawPtr GetDraw(int index)
+        {
+            ASSERT(index >= 0 && index < 6, "target index overflow: " << index);
+            ASSERT(pacaTargets[index], "no target for index " << index);
+            return pacaTargets[index]->Draw();
+        }
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps");
 
         void reset(PaCaLib::TargetPtr & target, const char * name, int & size);
+        void updatePointers(void);
 
     }; // class Glesly::SphereBitmaps
 

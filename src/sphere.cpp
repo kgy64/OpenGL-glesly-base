@@ -51,12 +51,7 @@ void SphereBitmaps::reset(int size, Glesly::PixelFormat format)
     texture_5 = PaCaLib::Target::Create(size, size, myFormat);
  }
 
- textureTargets[0] = &*texture_0;
- textureTargets[1] = &*texture_1;
- textureTargets[2] = &*texture_2;
- textureTargets[3] = &*texture_3;
- textureTargets[4] = &*texture_4;
- textureTargets[5] = &*texture_5;
+ updatePointers();
 }
 
 void SphereBitmaps::reset(const char * const * filenames)
@@ -76,12 +71,23 @@ void SphereBitmaps::reset(const char * const * filenames)
  reset(texture_4, filenames[4], size);
  reset(texture_5, filenames[5], size);
 
+ updatePointers();
+}
+
+void SphereBitmaps::updatePointers(void)
+{
  textureTargets[0] = &*texture_0;
  textureTargets[1] = &*texture_1;
  textureTargets[2] = &*texture_2;
  textureTargets[3] = &*texture_3;
  textureTargets[4] = &*texture_4;
  textureTargets[5] = &*texture_5;
+ pacaTargets[0] = &*texture_0;
+ pacaTargets[1] = &*texture_1;
+ pacaTargets[2] = &*texture_2;
+ pacaTargets[3] = &*texture_3;
+ pacaTargets[4] = &*texture_4;
+ pacaTargets[5] = &*texture_5;
 }
 
 void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & size)
@@ -113,9 +119,9 @@ void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & 
  *target = tga;
 }
 
-SphereData::DrawPtr SphereBitmaps::Draw(void)
+PaCaLib::DrawPtr SphereBitmaps::Draw(void)
 {
- return SphereData::DrawPtr(new SphereData::Draw(*this));
+ return PaCaLib::DrawPtr(new SphereData::Draw(*this));
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -129,42 +135,70 @@ SphereData::Draw::Draw(SphereBitmaps & parent):
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ for (int i = 0; i < 6; ++i) {
+    draws[i] = parent.GetDraw(i);
+ }
 }
 
 void SphereData::Draw::Scale(float w, float h)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->Scale(w, h);
+ }
 }
 
 void SphereData::Draw::SetColour(float r, float g, float b, float a)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetColour(r, g, b, a);
+ }
 }
 
 void SphereData::Draw::SetColourCompose(PaCaLib::ColourCompose mode)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetColourCompose(mode);
+ }
 }
 
 void SphereData::Draw::SetTextOutlineColour(float r, float g, float b, float a)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetTextOutlineColour(r, g, b, a);
+ }
 }
 
 void SphereData::Draw::SetTextOutline(float outline)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetTextOutline(outline);
+ }
 }
 
 void SphereData::Draw::SetLineWidth(float width)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetLineWidth(width);
+ }
 }
 
 void SphereData::Draw::SetLineCap(PaCaLib::LineCap mode)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->SetLineCap(mode);
+ }
 }
 
 void SphereData::Draw::Paint(void)
 {
+ for (int i = 0; i < 6; ++i) {
+    draws[i]->Paint();
+ }
 }
 
-SphereData::PathPtr SphereData::Draw::NewPath(void)
+PaCaLib::PathPtr SphereData::Draw::NewPath(void)
 {
+ return PaCaLib::PathPtr(new SphereData::Path(*this));
 }
 
 float SphereData::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect)
@@ -178,34 +212,40 @@ float SphereData::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mod
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 SphereData::Path::Path(SphereData::Draw & parent):
-    parent(parent)
+    parent(parent),
+    opCount(0)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
 }
 
 void SphereData::Path::Move(float x, float y)
 {
+ push(OP_MOVE, x, y);
 }
 
 void SphereData::Path::Line(float x, float y)
 {
+ push(OP_LINE, x, y);
 }
 
 void SphereData::Path::Arc(float xc, float yc, float r, float a1, float a2)
 {
+ push(OP_ARC, xc, yc, r, a1, a2);
 }
 
 void SphereData::Path::Bezier(float x, float y, float dx, float dy)
 {
+ push(OP_BEZIER, x, y, dx, dy);
 }
 
 void SphereData::Path::Close(void)
 {
+ push(OP_CLOSE);
 }
 
 void SphereData::Path::Clear(void)
 {
+ opCount = 0;
 }
 
 void SphereData::Path::Stroke(void)
@@ -214,6 +254,19 @@ void SphereData::Path::Stroke(void)
 
 void SphereData::Path::Fill(void)
 {
+}
+
+void SphereData::Path::push(Opcode op, float d1, float d2, float d3, float d4, float d5)
+{
+ ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
+
+ Oper & o = opcodes[opCount++];
+ o.op = op;
+ o.data[0] = d1;
+ o.data[1] = d2;
+ o.data[2] = d3;
+ o.data[3] = d4;
+ o.data[4] = d5;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
