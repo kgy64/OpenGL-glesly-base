@@ -113,106 +113,106 @@ void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & 
  *target = tga;
 }
 
-PaCaLib::DrawPtr SphereBitmaps::Draw(void)
+SphereData::DrawPtr SphereBitmaps::Draw(void)
 {
- return PaCaLib::DrawPtr(new SphereBitmaps::Draw(*this));
+ return SphereData::DrawPtr(new SphereData::Draw(*this));
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  *                                                                                       *
- *     class Glesly::SphereBitmaps::Draw:                                                *
+ *     class Glesly::SphereData::Draw:                                                   *
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-SphereBitmaps::Draw::Draw(SphereBitmaps & parent):
+SphereData::Draw::Draw(SphereBitmaps & parent):
     parent(parent)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
 }
 
-void SphereBitmaps::Draw::Scale(float w, float h)
+void SphereData::Draw::Scale(float w, float h)
 {
 }
 
-void SphereBitmaps::Draw::SetColour(float r, float g, float b, float a)
+void SphereData::Draw::SetColour(float r, float g, float b, float a)
 {
 }
 
-void SphereBitmaps::Draw::SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT)
+void SphereData::Draw::SetColourCompose(PaCaLib::ColourCompose mode)
 {
 }
 
-void SphereBitmaps::Draw::SetTextOutlineColour(float r, float g, float b, float a = 1.0)
+void SphereData::Draw::SetTextOutlineColour(float r, float g, float b, float a)
 {
 }
 
-void SphereBitmaps::Draw::SetTextOutline(float outline)
+void SphereData::Draw::SetTextOutline(float outline)
 {
 }
 
-void SphereBitmaps::Draw::SetLineWidth(float width)
+void SphereData::Draw::SetLineWidth(float width)
 {
 }
 
-void SphereBitmaps::Draw::SetLineCap(PaCaLib::LineCap mode)
+void SphereData::Draw::SetLineCap(PaCaLib::LineCap mode)
 {
 }
 
-void SphereBitmaps::Draw::Paint(void)
+void SphereData::Draw::Paint(void)
 {
 }
 
-PaCaLib::PathPtr SphereBitmaps::Draw::NewPath(void)
+SphereData::PathPtr SphereData::Draw::NewPath(void)
 {
 }
 
-float SphereBitmaps::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0)
+float SphereData::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect)
 {
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  *                                                                                       *
- *     class Glesly::SphereBitmaps::Path:                                                *
+ *     class Glesly::SphereData::Path:                                                   *
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-SphereBitmaps::Path::Path(SphereBitmaps::Draw & parent):
+SphereData::Path::Path(SphereData::Draw & parent):
     parent(parent)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
 }
 
-void SphereBitmaps::Path::Move(float x, float y)
+void SphereData::Path::Move(float x, float y)
 {
 }
 
-void SphereBitmaps::Path::Line(float x, float y)
+void SphereData::Path::Line(float x, float y)
 {
 }
 
-void SphereBitmaps::Path::Arc(float xc, float yc, float r, float a1, float a2)
+void SphereData::Path::Arc(float xc, float yc, float r, float a1, float a2)
 {
 }
 
-void SphereBitmaps::Path::Bezier(float x, float y, float dx, float dy)
+void SphereData::Path::Bezier(float x, float y, float dx, float dy)
 {
 }
 
-void SphereBitmaps::Path::Close(void)
+void SphereData::Path::Close(void)
 {
 }
 
-void SphereBitmaps::Path::Clear(void)
+void SphereData::Path::Clear(void)
 {
 }
 
-void SphereBitmaps::Path::Stroke(void)
+void SphereData::Path::Stroke(void)
 {
 }
 
-void SphereBitmaps::Path::Fill(void)
+void SphereData::Path::Fill(void)
 {
 }
 

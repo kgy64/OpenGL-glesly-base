@@ -19,6 +19,65 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
+    class SphereBitmaps;
+
+    namespace SphereData
+    {
+        typedef PaCaLib::PathPtr PathPtr;
+        typedef PaCaLib::DrawPtr DrawPtr;
+
+        class Draw: public PaCaLib::Draw
+        {
+            friend class SphereBitmaps;
+
+         public:
+            Draw(SphereBitmaps & parent);
+
+         protected:
+            SphereBitmaps & parent;
+
+            virtual void Scale(float w, float h) override;
+            virtual void SetColour(float r, float g, float b, float a) override;
+            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
+            virtual void SetTextOutlineColour(float r, float g, float b, float a = 1.0) override;
+            virtual void SetTextOutline(float outline) override;
+            virtual void SetLineWidth(float width) override;
+            virtual void SetLineCap(PaCaLib::LineCap mode) override;
+            virtual void Paint(void) override;
+            virtual PathPtr NewPath(void) override;
+            virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0) override;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Draw");
+
+        }; // class Glesly::SphereData::Draw
+
+        class Path: public PaCaLib::Path
+        {
+            friend class SphereData::Draw;
+
+         public:
+            Path(SphereData::Draw & parent);
+
+         protected:
+            SphereData::Draw & parent;
+
+            virtual void Move(float x, float y) override;
+            virtual void Line(float x, float y) override;
+            virtual void Arc(float xc, float yc, float r, float a1, float a2) override;
+            virtual void Bezier(float x, float y, float dx, float dy) override;
+            virtual void Close(void) override;
+            virtual void Clear(void) override;
+            virtual void Stroke(void) override;
+            virtual void Fill(void) override;
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Path");
+
+        }; // class Glesly::SphereData::Path
+
+    } // namespace Glesly::SphereData
+
     class SphereBitmaps
     {
      protected:
@@ -42,60 +101,10 @@ namespace Glesly
 
         Glesly::PixelFormat myFormat;
 
-        class Draw: public PaCaLib::Draw
-        {
-            friend class SphereBitmaps;
-
-         public:
-            Draw(SphereBitmaps & parent);
-
-         protected:
-            SphereBitmaps & parent;
-
-            virtual void Scale(float w, float h) override;
-            virtual void SetColour(float r, float g, float b, float a) override;
-            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
-            virtual void SetTextOutlineColour(float r, float g, float b, float a = 1.0) override;
-            virtual void SetTextOutline(float outline) override;
-            virtual void SetLineWidth(float width) override;
-            virtual void SetLineCap(PaCaLib::LineCap mode) override;
-            virtual void Paint(void) override;
-            virtual PaCaLib::PathPtr NewPath(void) override;
-            virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0) override;
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Draw");
-
-        }; // class Glesly::SphereBitmaps::Draw
-
-        class Path: public PaCaLib::Path
-        {
-            friend class SphereBitmaps::Draw;
-
-         public:
-            Path(SphereBitmaps::Draw & parent);
-
-         protected:
-            SphereBitmaps::Draw & parent;
-
-            virtual void Move(float x, float y) override;
-            virtual void Line(float x, float y) override;
-            virtual void Arc(float xc, float yc, float r, float a1, float a2) override;
-            virtual void Bezier(float x, float y, float dx, float dy) override;
-            virtual void Close(void) override;
-            virtual void Clear(void) override;
-            virtual void Stroke(void) override;
-            virtual void Fill(void) override;
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Path");
-
-        }; // class Glesly::SphereBitmaps::Path
-
      public:
         void reset(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT);
         void reset(const char * const * filenames);
-        PaCaLib::DrawPtr Draw(void);
+        SphereData::DrawPtr Draw(void);
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps");
