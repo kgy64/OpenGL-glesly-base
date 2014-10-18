@@ -19,19 +19,19 @@ SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
-    class SphereBitmaps;
+    class SphereSurface;
 
     namespace SphereData
     {
         class Draw: public PaCaLib::Draw
         {
-            friend class SphereBitmaps;
+            friend class SphereSurface;
 
          public:
-            Draw(SphereBitmaps & parent);
+            Draw(SphereSurface & parent);
 
          protected:
-            SphereBitmaps & parent;
+            SphereSurface & parent;
 
             virtual void Scale(float w, float h) override;
             virtual void SetColour(float r, float g, float b, float a) override;
@@ -47,7 +47,7 @@ namespace Glesly
             PaCaLib::DrawPtr draws[6];
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Draw");
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Draw");
 
         }; // class Glesly::SphereData::Draw
 
@@ -95,7 +95,7 @@ namespace Glesly
             int     opCount;
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps::Path");
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Path");
 
             void push(Opcode op, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f, float d4 = 0.0f, float d5 = 0.0f);
 
@@ -103,10 +103,14 @@ namespace Glesly
 
     } // namespace Glesly::SphereData
 
-    class SphereBitmaps
+    /// Cubemap surfaces for an OpenGL Sphere
+    /*! This class represents a cube-mapped sphere object.<br>
+     *  Note that the textures are not created by default, one of the \ref SphereSurface::reset(int, Glesly::PixelFormat)
+     *  or \ref SphereSurface::reset(const char * const *) functions must be called to do it. */
+    class SphereSurface
     {
      protected:
-        inline SphereBitmaps(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT):
+        inline SphereSurface(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT):
             textureTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
             pacaTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
             myFormat(format)
@@ -131,6 +135,10 @@ namespace Glesly
      public:
         void reset(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT);
         void reset(const char * const * filenames);
+
+        /// Return a \ref PaCaLib::Draw instance
+        /*! The surface of the sphere can be drawn using this interface. The x and y parameters of the
+         *  drawing functions are angles (longitude and latitude) in radian. */
         PaCaLib::DrawPtr Draw(void);
 
         inline PaCaLib::DrawPtr GetDraw(int index)
@@ -141,21 +149,22 @@ namespace Glesly
         }
 
      private:
-        SYS_DEFINE_CLASS_NAME("Glesly::SphereBitmaps");
+        SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface");
 
         void reset(PaCaLib::TargetPtr & target, const char * name, int & size);
         void updatePointers(void);
 
-    }; // class Glesly::SphereBitmaps
+    }; // class Glesly::SphereSurface
 
+    /// OpenGL Sphere object, with drawing capabilities
     template <int resolution = 0>
-    class Sphere: public SphereBitmaps, public Glesly::SurfacedIcosahedron<resolution>
+    class Sphere: public SphereSurface, public Glesly::SurfacedIcosahedron<resolution>
     {
         typedef Glesly::SurfacedIcosahedron<resolution> super;
 
      protected:
         Sphere(Glesly::Render & render, float radius, int size):
-            SphereBitmaps(size),
+            SphereSurface(size),
             super(render, radius)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);

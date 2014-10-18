@@ -16,11 +16,34 @@ using namespace Glesly;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  *                                                                                       *
- *     class Glesly::SphereBitmaps:                                                      *
+ *     class Glesly::SphereSurface:                                                      *
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void SphereBitmaps::reset(int size, Glesly::PixelFormat format)
+void SphereSurface::updatePointers(void)
+{
+ textureTargets[0] = &*texture_0;
+ textureTargets[1] = &*texture_1;
+ textureTargets[2] = &*texture_2;
+ textureTargets[3] = &*texture_3;
+ textureTargets[4] = &*texture_4;
+ textureTargets[5] = &*texture_5;
+ pacaTargets[0] = &*texture_0;
+ pacaTargets[1] = &*texture_1;
+ pacaTargets[2] = &*texture_2;
+ pacaTargets[3] = &*texture_3;
+ pacaTargets[4] = &*texture_4;
+ pacaTargets[5] = &*texture_5;
+}
+
+/// Creates an empty (black or transparent) texture for the whole sphere
+/*! \param      size        The width and the height of the six underlying textures, in pixels.
+ *                          Note that they must be squares by design of OpenGL. Must be power
+ *                          of two. Because it must be compatible with GLES, the limits are 32
+ *                          and 2048.
+ *  \param      format      The pixel format of the textures.
+ */
+void SphereSurface::reset(int size, Glesly::PixelFormat format)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -54,7 +77,9 @@ void SphereBitmaps::reset(int size, Glesly::PixelFormat format)
  updatePointers();
 }
 
-void SphereBitmaps::reset(const char * const * filenames)
+/// Create texture from six bitmap files
+/*! Note that they must have the same pixel format, and the same size. */
+void SphereSurface::reset(const char * const * filenames)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -74,23 +99,9 @@ void SphereBitmaps::reset(const char * const * filenames)
  updatePointers();
 }
 
-void SphereBitmaps::updatePointers(void)
-{
- textureTargets[0] = &*texture_0;
- textureTargets[1] = &*texture_1;
- textureTargets[2] = &*texture_2;
- textureTargets[3] = &*texture_3;
- textureTargets[4] = &*texture_4;
- textureTargets[5] = &*texture_5;
- pacaTargets[0] = &*texture_0;
- pacaTargets[1] = &*texture_1;
- pacaTargets[2] = &*texture_2;
- pacaTargets[3] = &*texture_3;
- pacaTargets[4] = &*texture_4;
- pacaTargets[5] = &*texture_5;
-}
-
-void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & size)
+/*! Helper function for function \ref SphereSurface::reset(const char * const *) to
+ *  initialize one texture. */
+void SphereSurface::reset(PaCaLib::TargetPtr & target, const char * name, int & size)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -112,14 +123,14 @@ void SphereBitmaps::reset(PaCaLib::TargetPtr & target, const char * name, int & 
     ASSERT(tga.GetPixelFormat() == myFormat, "got a texture ('" << name << "') with wrong format " << tga.GetPixelFormat() << ", instead of " << myFormat);
  }
 
- if (!target || target->GetPixelFormat() != myFormat) {
+ if (!target) {
     target = PaCaLib::Target::Create(size, size, myFormat);
  }
 
  *target = tga;
 }
 
-PaCaLib::DrawPtr SphereBitmaps::Draw(void)
+PaCaLib::DrawPtr SphereSurface::Draw(void)
 {
  return PaCaLib::DrawPtr(new SphereData::Draw(*this));
 }
@@ -130,7 +141,7 @@ PaCaLib::DrawPtr SphereBitmaps::Draw(void)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-SphereData::Draw::Draw(SphereBitmaps & parent):
+SphereData::Draw::Draw(SphereSurface & parent):
     parent(parent)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
