@@ -57,21 +57,6 @@ namespace Glesly
 
             static constexpr int MAX_OPERS = 100;
 
-         public:
-            Path(SphereData::Draw & parent);
-
-         protected:
-            SphereData::Draw & parent;
-
-            virtual void Move(float x, float y) override;
-            virtual void Line(float x, float y) override;
-            virtual void Arc(float xc, float yc, float r, float a1, float a2) override;
-            virtual void Bezier(float x, float y, float dx, float dy) override;
-            virtual void Close(void) override;
-            virtual void Clear(void) override;
-            virtual void Stroke(void) override;
-            virtual void Fill(void) override;
-
             enum Opcode
             {
                 NO_OP       = 0,
@@ -90,14 +75,64 @@ namespace Glesly
 
             }; // struct Glesly::SphereData::Path::Oper
 
+            inline void push(Opcode op, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f, float d4 = 0.0f, float d5 = 0.0f)
+            {
+                ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
+
+                Oper & o = opcodes[opCount++];
+                o.op = op;
+                o.data[0] = d1;
+                o.data[1] = d2;
+                o.data[2] = d3;
+                o.data[3] = d4;
+                o.data[4] = d5;
+            }
+
+         public:
+            Path(SphereData::Draw & parent);
+
+         protected:
+            SphereData::Draw & parent;
+
+            virtual void Stroke(void) override;
+            virtual void Fill(void) override;
+
+            virtual void Move(float x, float y) override
+            {
+                push(OP_MOVE, x, y);
+            }
+
+            virtual void Line(float x, float y) override
+            {
+                push(OP_LINE, x, y);
+            }
+
+            virtual void Arc(float xc, float yc, float r, float a1, float a2) override
+            {
+                push(OP_ARC, xc, yc, r, a1, a2);
+            }
+
+            virtual void Bezier(float x, float y, float dx, float dy) override
+            {
+                push(OP_BEZIER, x, y, dx, dy);
+            }
+
+            virtual void Close(void) override
+            {
+                push(OP_CLOSE);
+            }
+
+            virtual void Clear(void) override
+            {
+                opCount = 0;
+            }
+
             Oper    opcodes[MAX_OPERS];
 
             int     opCount;
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Path");
-
-            void push(Opcode op, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f, float d4 = 0.0f, float d5 = 0.0f);
 
         }; // class Glesly::SphereData::Path
 

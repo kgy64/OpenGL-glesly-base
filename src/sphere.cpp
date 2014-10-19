@@ -207,55 +207,16 @@ SphereData::Path::Path(SphereData::Draw & parent):
  SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
-void SphereData::Path::Move(float x, float y)
-{
- push(OP_MOVE, x, y);
-}
-
-void SphereData::Path::Line(float x, float y)
-{
- push(OP_LINE, x, y);
-}
-
-void SphereData::Path::Arc(float xc, float yc, float r, float a1, float a2)
-{
- push(OP_ARC, xc, yc, r, a1, a2);
-}
-
-void SphereData::Path::Bezier(float x, float y, float dx, float dy)
-{
- push(OP_BEZIER, x, y, dx, dy);
-}
-
-void SphereData::Path::Close(void)
-{
- push(OP_CLOSE);
-}
-
-void SphereData::Path::Clear(void)
-{
- opCount = 0;
-}
-
 void SphereData::Path::Stroke(void)
 {
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
 }
 
 void SphereData::Path::Fill(void)
 {
-}
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
-void SphereData::Path::push(Opcode op, float d1, float d2, float d3, float d4, float d5)
-{
- ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
-
- Oper & o = opcodes[opCount++];
- o.op = op;
- o.data[0] = d1;
- o.data[1] = d2;
- o.data[2] = d3;
- o.data[3] = d4;
- o.data[4] = d5;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */
