@@ -42,7 +42,7 @@ namespace Glesly
             virtual void SetLineCap(PaCaLib::LineCap mode) override;
             virtual void Paint(void) override;
             virtual PaCaLib::PathPtr NewPath(void) override;
-            virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect = 1.0) override;
+            virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation) override;
 
             PaCaLib::DrawPtr draws[6];
 
@@ -112,7 +112,6 @@ namespace Glesly
      protected:
         inline SphereSurface(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT):
             textureTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
-            pacaTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
             myFormat(format)
         {
             if (size) {
@@ -120,15 +119,9 @@ namespace Glesly
             }
         }
 
-        PaCaLib::TargetPtr texture_0;
-        PaCaLib::TargetPtr texture_1;
-        PaCaLib::TargetPtr texture_2;
-        PaCaLib::TargetPtr texture_3;
-        PaCaLib::TargetPtr texture_4;
-        PaCaLib::TargetPtr texture_5;
+        PaCaLib::TargetPtr pacaTargets[6];
 
         Glesly::Target2D * textureTargets[6];
-        PaCaLib::Target * pacaTargets[6];
 
         Glesly::PixelFormat myFormat;
 

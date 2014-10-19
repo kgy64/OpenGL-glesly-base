@@ -22,18 +22,12 @@ using namespace Glesly;
 
 void SphereSurface::updatePointers(void)
 {
- textureTargets[0] = &*texture_0;
- textureTargets[1] = &*texture_1;
- textureTargets[2] = &*texture_2;
- textureTargets[3] = &*texture_3;
- textureTargets[4] = &*texture_4;
- textureTargets[5] = &*texture_5;
- pacaTargets[0] = &*texture_0;
- pacaTargets[1] = &*texture_1;
- pacaTargets[2] = &*texture_2;
- pacaTargets[3] = &*texture_3;
- pacaTargets[4] = &*texture_4;
- pacaTargets[5] = &*texture_5;
+ textureTargets[0] = &*pacaTargets[0];
+ textureTargets[1] = &*pacaTargets[1];
+ textureTargets[2] = &*pacaTargets[2];
+ textureTargets[3] = &*pacaTargets[3];
+ textureTargets[4] = &*pacaTargets[4];
+ textureTargets[5] = &*pacaTargets[5];
 }
 
 /// Creates an empty (black or transparent) texture for the whole sphere
@@ -55,23 +49,10 @@ void SphereSurface::reset(int size, Glesly::PixelFormat format)
     myFormat = Glesly::FORMAT_RGB_565;
  }
 
- if (!texture_0 || texture_0->GetPixelFormat() != myFormat || texture_0->GetWidth() != size || texture_0->GetHeight() != size) {
-    texture_0 = PaCaLib::Target::Create(size, size, myFormat);
- }
- if (!texture_1 || texture_1->GetPixelFormat() != myFormat || texture_1->GetWidth() != size || texture_1->GetHeight() != size) {
-    texture_1 = PaCaLib::Target::Create(size, size, myFormat);
- }
- if (!texture_2 || texture_2->GetPixelFormat() != myFormat || texture_2->GetWidth() != size || texture_2->GetHeight() != size) {
-    texture_2 = PaCaLib::Target::Create(size, size, myFormat);
- }
- if (!texture_3 || texture_3->GetPixelFormat() != myFormat || texture_3->GetWidth() != size || texture_3->GetHeight() != size) {
-    texture_3 = PaCaLib::Target::Create(size, size, myFormat);
- }
- if (!texture_4 || texture_4->GetPixelFormat() != myFormat || texture_4->GetWidth() != size || texture_4->GetHeight() != size) {
-    texture_4 = PaCaLib::Target::Create(size, size, myFormat);
- }
- if (!texture_5 || texture_5->GetPixelFormat() != myFormat || texture_5->GetWidth() != size || texture_5->GetHeight() != size) {
-    texture_5 = PaCaLib::Target::Create(size, size, myFormat);
+ for (int i = 0; i < 6; ++i) {
+    if (!pacaTargets[i] || pacaTargets[i]->GetPixelFormat() != myFormat || pacaTargets[i]->GetWidth() != size || pacaTargets[i]->GetHeight() != size) {
+        pacaTargets[i] = PaCaLib::Target::Create(size, size, myFormat);
+    }
  }
 
  updatePointers();
@@ -89,12 +70,9 @@ void SphereSurface::reset(const char * const * filenames)
 
  int size = 0;
 
- reset(texture_0, filenames[0], size);
- reset(texture_1, filenames[1], size);
- reset(texture_2, filenames[2], size);
- reset(texture_3, filenames[3], size);
- reset(texture_4, filenames[4], size);
- reset(texture_5, filenames[5], size);
+ for (int i = 0; i < 6; ++i) {
+    reset(pacaTargets[i], filenames[i], size);
+ }
 
  updatePointers();
 }
@@ -212,7 +190,7 @@ PaCaLib::PathPtr SphereData::Draw::NewPath(void)
  return PaCaLib::PathPtr(new SphereData::Path(*this));
 }
 
-float SphereData::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect)
+float SphereData::Draw::DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation)
 {
 }
 
