@@ -23,38 +23,9 @@ namespace Glesly
 
     namespace SphereData
     {
-        class Draw: public PaCaLib::Draw
+        class Convert3D
         {
-            friend class SphereSurface;
-
-         public:
-            Draw(SphereSurface & parent);
-
          protected:
-            SphereSurface & parent;
-
-            virtual void Scale(float w, float h) override;
-            virtual void SetColour(float r, float g, float b, float a) override;
-            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
-            virtual void SetTextOutlineColour(float r, float g, float b, float a = 1.0) override;
-            virtual void SetTextOutline(float outline) override;
-            virtual void SetLineWidth(float width) override;
-            virtual void SetLineCap(PaCaLib::LineCap mode) override;
-            virtual void Paint(void) override;
-            virtual PaCaLib::PathPtr NewPath(void) override;
-            virtual float DrawTextInternal(float x, float y, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation) override;
-
-            PaCaLib::DrawPtr draws[6];
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Draw");
-
-        }; // class Glesly::SphereData::Draw
-
-        class Path: public PaCaLib::Path
-        {
-            friend class SphereData::Draw;
-
             static constexpr int MAX_OPERS = 100;
 
             enum Opcode
@@ -69,23 +40,84 @@ namespace Glesly
 
             struct Oper
             {
-                uint32_t    op;
+                uint16_t    op;
 
-                float       data[5];
+                uint16_t    flag;
+
+                float       data[6];
 
             }; // struct Glesly::SphereData::Path::Oper
 
-            inline void push(Opcode op, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f, float d4 = 0.0f, float d5 = 0.0f)
+            void Convert(float longitude, float latitude, float position[3]);
+            void Convert(const Oper * source, Oper * destination, int count);
+
+        }; // class Glesly::SphereData::Convert3D
+
+        class Draw: public PaCaLib::Draw, public Convert3D
+        {
+            friend class SphereSurface;
+
+         public:
+            Draw(SphereSurface & parent);
+
+            void Stroke(const Oper * ops, int count);
+            void Fill(const Oper * ops, int count);
+
+         protected:
+            SphereSurface & parent;
+
+            virtual void Scale(float w, float h) override;
+            virtual void SetColour(float r, float g, float b, float a) override;
+            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
+            virtual void SetTextOutlineColour(float r, float g, float b, float a = 1.0) override;
+            virtual void SetTextOutline(float outline) override;
+            virtual void SetLineWidth(float width) override;
+            virtual void SetLineCap(PaCaLib::LineCap mode) override;
+            virtual void Paint(void) override;
+            virtual PaCaLib::PathPtr NewPath(void) override;
+            virtual float DrawTextInternal(float lon, float lat, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y) override;
+
+            PaCaLib::DrawPtr draws[6];
+
+         private:
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Draw");
+
+            void Stroke(int index, const Oper * ops, int count);
+            void Fill(int index, const Oper * ops, int count);
+            float DrawTextInternal(float x, float y, float z, int index, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y);
+
+        }; // class Glesly::SphereData::Draw
+
+        class Path: public PaCaLib::Path, public Convert3D
+        {
+            friend class SphereData::Draw;
+
+            inline void push(Opcode op)
             {
                 ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
 
                 Oper & o = opcodes[opCount++];
                 o.op = op;
-                o.data[0] = d1;
-                o.data[1] = d2;
-                o.data[2] = d3;
-                o.data[3] = d4;
-                o.data[4] = d5;
+                o.data[0] = 0.0f;
+                o.data[1] = 0.0f;
+                o.data[2] = 0.0f;
+                o.data[3] = 0.0f;
+                o.data[4] = 0.0f;
+                o.data[5] = 0.0f;
+            }
+
+            inline void push(Opcode op, float * c, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f)
+            {
+                ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
+
+                Oper & o = opcodes[opCount++];
+                o.op = op;
+                o.data[0] = c[0];
+                o.data[1] = c[1];
+                o.data[2] = c[2];
+                o.data[3] = d1;
+                o.data[4] = d2;
+                o.data[5] = d3;
             }
 
          public:
@@ -94,38 +126,14 @@ namespace Glesly
          protected:
             SphereData::Draw & parent;
 
+            virtual void Move(float x, float y) override;
+            virtual void Line(float x, float y) override;
+            virtual void Arc(float xc, float yc, float r, float a1, float a2) override;
+            virtual void Bezier(float x, float y, float dx, float dy) override;
+            virtual void Close(void) override;
+            virtual void Clear(void) override;
             virtual void Stroke(void) override;
             virtual void Fill(void) override;
-
-            virtual void Move(float x, float y) override
-            {
-                push(OP_MOVE, x, y);
-            }
-
-            virtual void Line(float x, float y) override
-            {
-                push(OP_LINE, x, y);
-            }
-
-            virtual void Arc(float xc, float yc, float r, float a1, float a2) override
-            {
-                push(OP_ARC, xc, yc, r, a1, a2);
-            }
-
-            virtual void Bezier(float x, float y, float dx, float dy) override
-            {
-                push(OP_BEZIER, x, y, dx, dy);
-            }
-
-            virtual void Close(void) override
-            {
-                push(OP_CLOSE);
-            }
-
-            virtual void Clear(void) override
-            {
-                opCount = 0;
-            }
 
             Oper    opcodes[MAX_OPERS];
 
@@ -164,11 +172,9 @@ namespace Glesly
         void reset(int size, Glesly::PixelFormat format = Glesly::FORMAT_DEFAULT);
         void reset(const char * const * filenames);
 
-        /// Return a \ref PaCaLib::Draw instance
-        /*! The surface of the sphere can be drawn using this interface. The x and y parameters of the
-         *  drawing functions are angles (longitude and latitude) in radian. */
         PaCaLib::DrawPtr Draw(void);
 
+        /// Return a \ref PaCaLib::DrawPtr for the specified surface of the sphere
         inline PaCaLib::DrawPtr GetDraw(int index)
         {
             ASSERT(index >= 0 && index < 6, "target index overflow: " << index);
