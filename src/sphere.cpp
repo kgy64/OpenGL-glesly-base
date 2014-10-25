@@ -235,19 +235,29 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
  // pos[1]:     y -> North
  // pos[2]:     z -> 0:0 (Africa)
 
+ static constexpr float s1 = 1.10;
  float c = sinf(lat);
-
- DrawTextInternal(-pos[2], -pos[1], +pos[0], 0, mode, text, size, offset, aspect, rotation - c*(lon-M_PI/2.0f), shear_x-1.30f*c*cosf(lon), shear_y); // -> E
- DrawTextInternal(+pos[2], -pos[1], -pos[0], 1, mode, text, size, offset, aspect, rotation - c*(lon+M_PI/2.0f), shear_x+1.30f*c*cosf(lon), shear_y); // -> W
+ float cl = cosf(lon);
+ float cl2 = cl * cl;
+ float sl = sinf(lon);
+ float sl2 = sl * sl;
 
  DrawTextInternal(+pos[0], -pos[2], -pos[1], 2, mode, text, size, offset, aspect, rotation + lon, shear_x, shear_y); // -> S
  DrawTextInternal(+pos[0], +pos[2], +pos[1], 3, mode, text, size, offset, aspect, rotation - lon, shear_x, shear_y); // -> N
 
- DrawTextInternal(+pos[0], -pos[1], +pos[2], 4, mode, text, size, offset, aspect, rotation - c*lon, shear_x+c*sinf(lon), shear_y); // -> 0:0 (Africa)
+ if (sl2 > 0.2f) {
+    float shy = s1 * c * cl;
+    DrawTextInternal(-pos[2], -pos[1], +pos[0], 0, mode, text, size*sl, offset, aspect/sl2, rotation, shear_x, shear_y-shy); // -> E
+    DrawTextInternal(+pos[2], -pos[1], -pos[0], 1, mode, text, -size*sl, offset, aspect/sl2, rotation, shear_x, shear_y+shy); // -> W
+ }
 
- float l2 = (lon < 0.0f) ? lon + M_PI : lon - M_PI;
-
- DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, size, offset, aspect, rotation - c*l2, shear_x + c*sinf(l2), shear_y); //
+ if (cl2 > 0.2f) {
+    static constexpr float s2 = 1.25;
+    float rc = s2 * c * sl;
+    float shx = c * sl;
+    DrawTextInternal(+pos[0], -pos[1], +pos[2], 4, mode, text, size*cl, offset, aspect/cl2, rotation - rc, shear_x+shx, shear_y); // -> 0:0 (Africa)
+    DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, -size*cl, offset, aspect/cl2, rotation + rc, shear_x-shx, shear_y); //
+ }
 
  return size;
 }
