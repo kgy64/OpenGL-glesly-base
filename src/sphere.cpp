@@ -109,7 +109,7 @@ void SphereSurface::reset(PaCaLib::TargetPtr & target, const char * name, int & 
 }
 
 /// Return a \ref PaCaLib::Draw instance
-/*! The surface of the sphere can be drawn using this interface. The x and y parameters of the
+/*! The surface of the sphere can be drawn using the usual drawing interface. The x and y parameters of the
  *  drawing functions are angles (longitude and latitude) in radian. */
 PaCaLib::DrawPtr SphereSurface::Draw(void)
 {
@@ -243,7 +243,7 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
  // objects near to the corners have PI/6 shearing on the sphere surface, on the other four textures (which are around
  // the equator). Calculating the above mentioned plane->sphere distortion, this angle is PI/8 on the square textures.
  // This distortion is nonlinear: it has a sin(a)*sin(b) multiplier (where a and b are the angles from the center of the
- // texture). It means zero distortion at the center, and 0.5 at the corners.
+ // texture).
  // The shear values used below are the values written directly into the transformation matrix, which means tangent of
  // the rotation angle. So, it must be zero at the centre (of the four textures around the equator), and tan(PI/8) at
  // the corners.
