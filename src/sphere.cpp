@@ -229,15 +229,28 @@ PaCaLib::PathPtr SphereData::Draw::NewPath(void)
 
 float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y)
 {
+ text = "++++++++";
+
  float pos[3];
  Convert(lon, lat, pos);
 
- // temp:       cosf(lat);          //  radius of the current latitude
- // pos[0]: (x) sinf(lon) * temp;   //  x -> East
- // pos[1]: (y) sinf(lat);          //  y -> North
- // pos[2]: (z) cosf(lon) * temp;   //  z -> 0:0 (Africa)
+ // pos[0]:     x -> East           (= sin(lon) * cos(lat))
+ // pos[1]:     y -> North          (= sin(lat))
+ // pos[2]:     z -> 0:0 (Africa)   (= cos(lon) * cos(lat))
 
- static constexpr float s1 = 1.10;
+ // Due to cube mapping, there are three textures connected at their corner on the surface of the sphere. Therefore, two
+ // borders close 2*PI/3 angle (instead of PI/2 on a plane). Because the north and south textures are not distorted, the
+ // objects near to the corners have PI/6 shearing on the sphere surface, on the other four textures (which are around
+ // the equator). Calculating the above mentioned plane->sphere distortion, this angle is PI/8 on the square textures.
+ // This distortion is nonlinear: it has a sin(a)*sin(b) multiplier (where a and b are the angles from the center of the
+ // texture). It means zero distortion at the center, and 0.5 at the corners.
+ // The shear values used below are the values written directly into the transformation matrix, which means tangent of
+ // the rotation angle. So, it must be zero at the centre (of the four textures around the equator), and tan(PI/8) at
+ // the corners.
+ static constexpr float factor = tanf(M_PI/8.0f) * 2.0f; // / 0.372821726725316656f;
+
+ std::cout << factor << std::endl;
+
  float c = sinf(lat);
  float cl = cosf(lon);
  float cl2 = cl * cl;
@@ -247,18 +260,37 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
  float result = DrawTextInternal(+pos[0], -pos[2], -pos[1], 2, mode, text, size, offset, aspect, rotation + lon, shear_x, shear_y); // -> S
  /* ------- */  DrawTextInternal(+pos[0], +pos[2], +pos[1], 3, mode, text, size, offset, aspect, rotation - lon, shear_x, shear_y); // -> N
 
+ static constexpr bool kell = true;
+ std::string ss;
+
  if (sl2 > 0.2f) {
-    float shy = s1 * c * cl;
+    float lat2 = lat / fabs(sl);
+    float shy = cl * sinf(lat2) * factor;
+
+    if (kell) {
+        std::ostringstream s;
+        s << "{" << (shy) << "}";
+        ss = s.str();
+        text = ss.c_str();
+    }
+
     DrawTextInternal(-pos[2], -pos[1], +pos[0], 0, mode, text, size*sl, offset, aspect/sl2, rotation, shear_x, shear_y-shy); // -> E
     DrawTextInternal(+pos[2], -pos[1], -pos[0], 1, mode, text, -size*sl, offset, aspect/sl2, rotation, shear_x, shear_y+shy); // -> W
  }
 
  if (cl2 > 0.2f) {
-    static constexpr float s2 = 1.25;
-    float rc = s2 * c * sl;
-    float shx = c * sl;
-    DrawTextInternal(+pos[0], -pos[1], +pos[2], 4, mode, text, size*cl, offset, aspect/cl2, rotation - rc, shear_x+shx, shear_y); // -> 0:0 (Africa)
-    DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, -size*cl, offset, aspect/cl2, rotation + rc, shear_x-shx, shear_y); //
+    float lat2 = lat / fabs(cl);
+    float shy = sl * sinf(lat2) * factor;
+
+    if (kell) {
+        std::ostringstream s;
+        s << "{" << (sl * sinf(lat2)) << "}";
+        ss = s.str();
+        text = ss.c_str();
+    }
+
+    DrawTextInternal(+pos[0], -pos[1], +pos[2], 4, mode, text, size*cl, offset, aspect/cl2, rotation, shear_x, shear_y + shy); // -> 0:0 (Africa)
+    DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, -size*cl, offset, aspect/cl2, rotation, shear_x, shear_y - shy); //
  }
 
  return result;
