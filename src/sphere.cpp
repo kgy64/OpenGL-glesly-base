@@ -122,6 +122,7 @@ PaCaLib::DrawPtr SphereSurface::Draw(void)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+/// Convert longitude and latitude to x:y:z coordinates
 void SphereData::Convert3D::Convert(float longitude, float latitude, float position[3])
 {
  float temp  = cosf(latitude);          //  radius of the current latitude
@@ -231,9 +232,10 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
  float pos[3];
  Convert(lon, lat, pos);
 
- // pos[0]:     x -> East
- // pos[1]:     y -> North
- // pos[2]:     z -> 0:0 (Africa)
+ // temp:       cosf(lat);          //  radius of the current latitude
+ // pos[0]: (x) sinf(lon) * temp;   //  x -> East
+ // pos[1]: (y) sinf(lat);          //  y -> North
+ // pos[2]: (z) cosf(lon) * temp;   //  z -> 0:0 (Africa)
 
  static constexpr float s1 = 1.10;
  float c = sinf(lat);
@@ -242,8 +244,8 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
  float sl = sinf(lon);
  float sl2 = sl * sl;
 
- DrawTextInternal(+pos[0], -pos[2], -pos[1], 2, mode, text, size, offset, aspect, rotation + lon, shear_x, shear_y); // -> S
- DrawTextInternal(+pos[0], +pos[2], +pos[1], 3, mode, text, size, offset, aspect, rotation - lon, shear_x, shear_y); // -> N
+ float result = DrawTextInternal(+pos[0], -pos[2], -pos[1], 2, mode, text, size, offset, aspect, rotation + lon, shear_x, shear_y); // -> S
+ /* ------- */  DrawTextInternal(+pos[0], +pos[2], +pos[1], 3, mode, text, size, offset, aspect, rotation - lon, shear_x, shear_y); // -> N
 
  if (sl2 > 0.2f) {
     float shy = s1 * c * cl;
@@ -259,7 +261,7 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
     DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, -size*cl, offset, aspect/cl2, rotation + rc, shear_x-shx, shear_y); //
  }
 
- return size;
+ return result;
 }
 
 float SphereData::Draw::DrawTextInternal(float x, float y, float z, int index, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y)
