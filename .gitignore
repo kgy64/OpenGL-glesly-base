@@ -3,6 +3,7 @@
 src/shaders/*.cpp
 src/shaders/*.h
 .*.sw?
+.sw?
 tags
 cscope.*
 doc
