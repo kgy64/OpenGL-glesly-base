@@ -276,10 +276,10 @@ float SphereData::Draw::DrawTextInternal(float x, float y, float z, int index, P
     default:
     {
         // Note: This is a temporary code to correct the shear of text on the corresponding surfaces.
-        //       It is a heuristic algorythm, not perfect, but good enough to see good quality text.
-        static constexpr float nonlinearity = 1.85f;
-        static constexpr float correction = 0.93f/nonlinearity;
-        sy = correction*y*sinf(x*nonlinearity);
+        //       It is a heuristic algorythm, not perfect, but good enough to see text on map.
+        static constexpr float correction = 0.90f;
+        static constexpr float nonlinearity = -0.45f;
+        sy = correction * y * (x + nonlinearity * x*x*x);
     }
     break;
  }
