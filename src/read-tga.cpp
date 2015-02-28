@@ -25,7 +25,7 @@ ReadTGA::ReadTGA(const char * filename, bool swap_rgb_bgr):
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  const tga_header & hdr(GetHeader());
- ASSERT(GetSize() >= sizeof(hdr), "tga file header truncated");
+ ASSERT(GetSize() >= sizeof(hdr), "tga file header truncated (name=\"" << filename << "\"");
  ASSERT(hdr.data_type_code == 2, "Not an uncompressed RGB tga file");
  myPixelSize = hdr.bits_per_pixel;
  unsigned int header_length = hdr.id_length + ((int)hdr.color_map_length[0] | ((int)hdr.color_map_length[1] << 8));

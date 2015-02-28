@@ -259,7 +259,7 @@ float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode
 
 float SphereData::Draw::DrawTextInternal(float x, float y, float z, int index, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y)
 {
- if (z < 0.5) {
+ if (z < 0.5f) {
     return size;
  }
 
