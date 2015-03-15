@@ -74,6 +74,7 @@ namespace Glesly
         /// The object's Projection Matrix
         Glesly::Transformation myProjection;
 
+        /// The OpenGL uniform vaiable of \ref myProjection
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
 
     }; // class Object

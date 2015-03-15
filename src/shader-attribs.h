@@ -28,8 +28,10 @@ namespace Glesly
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
-                ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << ", " << std::dec << myVBO << "); name: '" << myName << "'");
+                if (myVBO == 0xffffffff) {
+                    return; // The object is not initialized yet
+                }
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) { // else will be called in Bind()
                     SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << "); name: '" << myName << "'");
@@ -49,7 +51,9 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 if (myTarget == GL_ARRAY_BUFFER) {
-                    ASSERT_DBG(myAttrib != -1, "object is not initialized yet");
+                    if (myAttrib == -1) {
+                        return; // The object is not initialized yet
+                    }
                     SYS_DEBUG(DL_INFO3, " - glDisableVertexAttribArray(" << myAttrib << "); name: '" << myName << "'");
                     glDisableVertexAttribArray(myAttrib);
                 }
