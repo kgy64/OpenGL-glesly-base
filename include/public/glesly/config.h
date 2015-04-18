@@ -13,7 +13,7 @@
 #define __GLESLY_INCLUDE_PUBLIC_GLESLY_CONFIG_H_INCLUDED__
 
 #ifndef CONFIG_ICON_DIR
-#define CONFIG_ICON_DIR     "./config/data"
+#define CONFIG_ICON_DIR     "config/data"
 #endif
 
 #ifndef USE_SHADER_FILES

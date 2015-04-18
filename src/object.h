@@ -23,21 +23,27 @@ namespace Glesly
 {
     class Object: public ObjectBase, public Glesly::Shaders::VarManager
     {
-        class UniformList;
+        class UniformElement;
         class VBOAttribBase;
 
-        friend class UniformList;
+        friend class UniformElement;
         friend class VBOAttribBase;
 
      public:
         virtual ~Object();
 
-        virtual void DrawFrame(const SYS::TimeDelay & frame_start_time);
-        virtual bool MouseClick(float x, float y, int index, int count);
+        virtual void DrawFrame(const SYS::TimeDelay & frame_start_time) override;
+        virtual bool MouseClick(float x, float y, int index, int count) override;
 
         virtual GLint GetUniformLocationSafe(const char * name) const override
         {
             return GetRenderer().GetUniformLocationSafe(name);
+        }
+
+        inline virtual void uninitGL(void) override
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Glesly::Shaders::VarManager::UninitGL();
         }
 
         inline GLint GetUniformLocation(const char * name) const
@@ -74,7 +80,6 @@ namespace Glesly
         /// The object's Projection Matrix
         Glesly::Transformation myProjection;
 
-        /// The OpenGL uniform vaiable of \ref myProjection
         Glesly::Shaders::UniformMatrix_ref<float, 4> p_matrix;
 
     }; // class Object

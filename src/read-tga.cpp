@@ -10,6 +10,8 @@
 
 #include "read-tga.h"
 
+#include <Config/MainConfig.h>
+
 using namespace Glesly;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

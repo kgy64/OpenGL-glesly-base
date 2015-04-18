@@ -19,7 +19,7 @@ namespace Glesly
 
     namespace Shaders
     {
-        class VBOAttribBase: public AttribList
+        class VBOAttribBase: public AttribElement
         {
          protected:
             VBOAttribBase(Glesly::Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER);
@@ -28,10 +28,8 @@ namespace Glesly
             virtual void BufferData(void)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
+                ASSERT_DBG(myVBO != 0xffffffff, "object '" << myName << "' is not initialized yet");
                 SYS_DEBUG(DL_INFO3, " - glBindBuffer(" << std::hex << myTarget << ", " << std::dec << myVBO << "); name: '" << myName << "'");
-                if (myVBO == 0xffffffff) {
-                    return; // The object is not initialized yet
-                }
                 glBindBuffer(myTarget, myVBO);
                 if (myUsage != GL_STATIC_DRAW) { // else will be called in Bind()
                     SYS_DEBUG(DL_INFO3, " - glBufferData(" << std::hex << myTarget << ", " << std::dec << myByteSize << ", " << std::hex << myData << ", " << myUsage << "); name: '" << myName << "'");
@@ -51,9 +49,7 @@ namespace Glesly
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 if (myTarget == GL_ARRAY_BUFFER) {
-                    if (myAttrib == -1) {
-                        return; // The object is not initialized yet
-                    }
+                    ASSERT_DBG(myAttrib != -1, "object is not initialized yet");
                     SYS_DEBUG(DL_INFO3, " - glDisableVertexAttribArray(" << myAttrib << "); name: '" << myName << "'");
                     glDisableVertexAttribArray(myAttrib);
                 }
@@ -83,10 +79,9 @@ namespace Glesly
 
             GLenum myUsage;
 
-            VBOAttribBase * next;
-
          public:
             void InitGL(void);
+            virtual void uninitGL(void) override;
 
             void Bind(const void * data, unsigned elements = 0U)
             {
@@ -396,16 +391,31 @@ namespace Glesly
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        inline void AttribManager::Register(AttribList & var) const
+        inline void AttribManager::Register(AttribElement & var)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Threads::Lock _l(membersMutex);
             var.next = myAttribs;
             myAttribs = &var;
+        }
+
+        inline void AttribManager::Unregister(AttribElement & var)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Threads::Lock _l(membersMutex);
+            for (AttribElement ** i = &myAttribs; *i; i = &(*i)->next) {
+                if (*i == &var) {
+                    *i = (*i)->next;    // Unchain
+                    return;             // No more checks are necessary
+                }
+            }
         }
 
         inline void AttribManager::BufferVariables(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            for (AttribList * i = myAttribs; i; i=i->next) {
+            Threads::Lock _l(membersMutex);
+            for (AttribElement * i = myAttribs; i; i=i->next) {
                 i->BufferData();
             }
         }
@@ -413,7 +423,8 @@ namespace Glesly
         inline void AttribManager::UnbufferVariables(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            for (AttribList * i = myAttribs; i; i=i->next) {
+            Threads::Lock _l(membersMutex);
+            for (AttribElement * i = myAttribs; i; i=i->next) {
                 i->UnbufferData();
             }
         }

@@ -13,6 +13,7 @@
 
 #include <GLES2/gl2.h>
 
+#include <Threads/Mutex.h>
 #include <Debug/Debug.h>
 
 SYS_DECLARE_MODULE(DM_GLESLY);
@@ -21,7 +22,7 @@ namespace Glesly
 {
     namespace Shaders
     {
-        class AttribList;
+        class AttribElement;
 
         class AttribManager
         {
@@ -37,26 +38,40 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            void Register(AttribList & var) const;
+            void UninitGL(void);
+            void Unregister(AttribElement & var);
+            void Register(AttribElement & var);
             void BufferVariables(void);
             void UnbufferVariables(void);
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::AttribManager");
 
-            mutable AttribList * myAttribs;
+            AttribElement * myAttribs;
+
+            Threads::Mutex membersMutex;
 
         }; // class AttribManager
 
-        class AttribList
+        class AttribElement
         {
             friend class AttribManager;
 
+         public:
+            virtual ~AttribElement()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                myParent.Unregister(*this);
+            }
+
+            virtual void uninitGL(void)
+            {
+            }
+
          protected:
-            inline AttribList(AttribManager & parent):
-                myParent(parent)
-                // Note: 'next' is uninitialized intentionally. It will be
-                //       initialized in UniformManager::Register()
+            inline AttribElement(AttribManager & parent):
+                myParent(parent),
+                next(nullptr)
             {
                 SYS_DEBUG_MEMBER(DM_GLESLY);
                 myParent.Register(*this);
@@ -68,20 +83,20 @@ namespace Glesly
             }
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::AttribList");
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::AttribElement");
 
             virtual void BufferData(void)=0;
             virtual void UnbufferData(void)=0;
 
             AttribManager & myParent;
 
-            AttribList * next;
+            AttribElement * next;
 
-        }; // class AttribList
+        }; // class AttribElement
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        class UniformList;
+        class UniformElement;
 
         class UniformManager
         {
@@ -97,7 +112,8 @@ namespace Glesly
                 SYS_DEBUG_MEMBER(DM_GLESLY);
             }
 
-            void Register(UniformList & var) const;
+            void Unregister(UniformElement & var);
+            void Register(UniformElement & var);
             void ActivateVariables(void);
             void InitGLVariables(void);
 
@@ -106,7 +122,9 @@ namespace Glesly
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformManager");
 
-            mutable UniformList * myVars;
+            UniformElement * myVars;
+
+            Threads::Mutex membersMutex;
 
         }; // class UniformManager
 
@@ -131,15 +149,21 @@ namespace Glesly
 
         }; // class UniformManagerCopy
 
-        class UniformList
+        class UniformElement
         {
             friend class UniformManager;
 
          public:
+            virtual ~UniformElement()
+            {
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                myParent.Unregister(*this);
+            }
+
             virtual void initGL(void) =0;
 
          protected:
-            inline UniformList(UniformManager & parent):
+            inline UniformElement(UniformManager & parent):
                 myParent(parent),
                 glInitialized(false),
                 next(nullptr)
@@ -154,7 +178,7 @@ namespace Glesly
             }
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformList");
+            SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformElement");
 
             virtual void Activate(void) =0;
 
@@ -162,9 +186,9 @@ namespace Glesly
 
             bool glInitialized;
 
-            UniformList * next;
+            UniformElement * next;
 
-        }; // class UniformList
+        }; // class UniformElement
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 

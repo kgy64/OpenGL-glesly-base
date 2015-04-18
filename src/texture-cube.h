@@ -50,6 +50,7 @@ namespace Glesly
      public:
         void Update(void);
         void InitGL();
+        void UninitGL();
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::TextureCubeMap");

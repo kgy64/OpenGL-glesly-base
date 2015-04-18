@@ -32,9 +32,8 @@ TextureCubeMap::~TextureCubeMap()
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (myTexture != 0xffffffff) {
-    SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
-    glDeleteTextures(1, &myTexture);
-    CheckEGLError("glDeleteTextures()");
+    // Note: exception is not allowed here:
+    DEBUG_OUT("ERROR in TextureCubeMap::~TextureCubeMap(): texture " << myTexture << " has not been deleted");
  }
 }
 
@@ -105,6 +104,20 @@ void TextureCubeMap::InitGL(void)
  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
 
  Update();
+}
+
+void TextureCubeMap::UninitGL(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myTexture == 0xffffffff) {
+    return;
+ }
+
+ SYS_DEBUG(DL_INFO3, " - glDeleteTextures(1, " << myTexture << ");");
+ glDeleteTextures(1, &myTexture);
+ CheckEGLError("glDeleteTextures()");
+ myTexture = 0xffffffff;
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

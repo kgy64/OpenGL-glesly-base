@@ -22,11 +22,11 @@ namespace Glesly
     namespace Shaders
     {
         /// Represents a generic uniform variable by name
-        class UniformBase: protected UniformList
+        class UniformBase: protected UniformElement
         {
          protected:
             inline UniformBase(UniformManager & obj, const char * name):
-                UniformList(obj),
+                UniformElement(obj),
                 myName(name),
                 myUniformID(-1)
             {
@@ -196,7 +196,9 @@ namespace Glesly
 
             virtual void initGL(void) override
             {
-                InitGL();
+                SYS_DEBUG_MEMBER(DM_GLESLY);
+                UniformBase::initGL();
+                TextureCubeMap::InitGL();
             }
 
          protected:
@@ -204,13 +206,6 @@ namespace Glesly
 
          private:
             SYS_DEFINE_CLASS_NAME("Glesly::Shaders::UniformTextureCube");
-
-            inline void InitGL(void)
-            {
-                SYS_DEBUG_MEMBER(DM_GLESLY);
-                UniformBase::initGL();
-                TextureCubeMap::InitGL();
-            }
 
         }; // class UniformTextureCube
 
@@ -277,16 +272,31 @@ namespace Glesly
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        inline void UniformManager::Register(UniformList & var) const
+        inline void UniformManager::Register(UniformElement & var)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
+            Threads::Lock _l(membersMutex);
             var.next = myVars;
             myVars = &var;
         }
 
+        inline void UniformManager::Unregister(UniformElement & var)
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Threads::Lock _l(membersMutex);
+            for (UniformElement ** i = &myVars; *i; i = &(*i)->next) {
+                if (*i == &var) {
+                    *i = (*i)->next;    // Unchain
+                    return;             // No more checks are necessary
+                }
+            }
+        }
+
         inline void UniformManager::InitGLVariables(void)
         {
-            for (UniformList * var = myVars; var; var=var->next) {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Threads::Lock _l(membersMutex);
+            for (UniformElement * var = myVars; var; var=var->next) {
                 if (!var->glInitialized) {
                     var->glInitialized = true;
                     var->initGL();
@@ -297,7 +307,8 @@ namespace Glesly
         inline void UniformManager::ActivateVariables(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            for (UniformList * var = myVars; var; var=var->next) {
+            Threads::Lock _l(membersMutex);
+            for (UniformElement * var = myVars; var; var=var->next) {
                 var->Activate();
             }
         }

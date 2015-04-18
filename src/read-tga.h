@@ -28,13 +28,16 @@ namespace Glesly
     {
      public:
         ReadTGA(const char * filename, bool swap_rgb_bgr = false);
-        ReadTGA(ReadTGA & other):
-            FILES::FileMap(*this)
+
+        ReadTGA(ReadTGA && other):
+            FILES::FileMap(std::move(other))
         {
+            SYS_DEBUG_MEMBER(DM_FILE);
             myData = other.myData;
             myRawData = other.myRawData;
             other.myRawData = NULL;
         }
+
         virtual ~ReadTGA();
 
         struct pixel_data_rgb565;
@@ -116,6 +119,8 @@ namespace Glesly
         }
 
      private:
+        ReadTGA(ReadTGA & other);
+
         SYS_DEFINE_CLASS_NAME("Glesly::ReadTGA");
 
         MEM::shared_ptr<const pixel_data> myData;

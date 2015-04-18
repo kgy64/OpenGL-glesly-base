@@ -47,6 +47,13 @@ void Render::Cleanup(void)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
+ ObjectListPtr p = GetObjectListPtr(); // The pointer is copied here to solve thread safety
+ if (p) {
+    for (ObjectListIterator i = p->begin(); i != p->end(); ++i) {
+        (*i)->uninitGL();
+    }
+ }
+
  GetObjectList().Cleanup();
 }
 
@@ -117,6 +124,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
     if (!obj) {
         break;
     }
+    obj->uninitGL();
     obj->initGL();
  }
 
@@ -130,6 +138,7 @@ void Render::NextFrame(const SYS::TimeDelay & frame_start_time)
         if (obj->toBeDeleted) {
             p->erase(j);
             obj->uninitGL();
+            obj->toBeDeleted = false;
         } else {
             obj->DrawFrame(frame_start_time);
         }

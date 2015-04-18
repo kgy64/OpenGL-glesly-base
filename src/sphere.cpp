@@ -10,9 +10,7 @@
 
 #include "sphere.h"
 
-#include <glesly/read-tga.h>
-
-SYS_DEFINE_MODULE(DM_GL_SPHERE);
+#include <glesly/read-tga-file.h>
 
 using namespace Glesly;
 
@@ -41,7 +39,7 @@ void SphereSurface::updatePointers(void)
  */
 void SphereSurface::reset(int size, Glesly::PixelFormat format)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (myFormat == Glesly::FORMAT_DEFAULT) {
     myFormat = format;
@@ -64,14 +62,15 @@ void SphereSurface::reset(int size, Glesly::PixelFormat format)
 /*! Note that they must have the same pixel format, and the same size. */
 void SphereSurface::reset(const char * const * filenames)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (!filenames) {
     return;
  }
 
+ int size = 0;
+
  for (int i = 0; i < 6; ++i) {
-    int size = 0;
     reset(pacaTargets[i], filenames[i], size);
  }
 
@@ -82,13 +81,13 @@ void SphereSurface::reset(const char * const * filenames)
  *  initialize one texture. */
 void SphereSurface::reset(PaCaLib::TargetPtr & target, const char * name, int & size)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (!name) {
     return;
  }
 
- Glesly::ReadTGA tga(name);
+ Glesly::ReadTGAFile tga(name);
 
  if (!size) {
     size = tga.GetWidth();
@@ -123,163 +122,34 @@ PaCaLib::DrawPtr SphereSurface::Draw(void)
  *                                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void SphereData::Convert3D::Convert(const SphereData::Convert3D::Oper * source, SphereData::Convert3D::Oper * destination, int count, int mode)
+/// Convert longitude and latitude to x:y:z coordinates
+void SphereData::Convert3D::Convert(float longitude, float latitude, float position[3])
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
-
- ASSERT(count < MAX_OPERS, "Too much count: " << count);
- SYS_DEBUG(DL_INFO1, "count=" << count);
-
- static constexpr float Z_LIMIT = 0.4f;
-
- switch (mode) {
-    case 0:     // E
-        SYS_DEBUG(DL_INFO1, "East");
-        for (int i = 0; i < count; ++i) {
-            float z = source[i].data[0];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] = -source[i].data[2];
-                destination[i].data[1] = -source[i].data[1];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    case 1:     // W
-        SYS_DEBUG(DL_INFO1, "West");
-        for (int i = 0; i < count; ++i) {
-            float z = -source[i].data[0];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] =  source[i].data[2];
-                destination[i].data[1] = -source[i].data[1];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    case 2:     // S
-        SYS_DEBUG(DL_INFO1, "South");
-        for (int i = 0; i < count; ++i) {
-            float z = -source[i].data[1];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] =  source[i].data[0];
-                destination[i].data[1] = -source[i].data[2];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    case 3:     // N
-        SYS_DEBUG(DL_INFO1, "North");
-        for (int i = 0; i < count; ++i) {
-            float z = source[i].data[1];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] =  source[i].data[0];
-                destination[i].data[1] =  source[i].data[2];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    case 4:     // Front (Africa)
-        SYS_DEBUG(DL_INFO1, "Front");
-        for (int i = 0; i < count; ++i) {
-            float z = source[i].data[2];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] =  source[i].data[0];
-                destination[i].data[1] = -source[i].data[1];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    case 5:     // Back
-        SYS_DEBUG(DL_INFO1, "Back");
-        for (int i = 0; i < count; ++i) {
-            float z = -source[i].data[2];
-            if (z < Z_LIMIT) {
-                destination[i].Invalidate();
-            } else {
-                destination[i].op = source[i].op;
-                destination[i].flag = ST_USED;
-                destination[i].data[0] = -source[i].data[0];
-                destination[i].data[1] = -source[i].data[1];
-                destination[i].data[2] =  z;
-                destination[i].data[3] =  source[i].data[3];
-                destination[i].data[4] =  source[i].data[4];
-                destination[i].data[5] =  source[i].data[5];
-                destination[i].Prepare();
-            }
-        }
-    break;
-    default:
-        ASSERT(false, "Invalid mode: " << mode);
-    break;
- }
-
- SphereData::Convert3D::Oper * prev = nullptr;
- bool next = false;
- for (int i = 0; i < count; ++i, ++destination) {
-    bool current = destination->flag != ST_UNUSED;
-    if (next) {
-        destination->flag |= ST_ADDED;
-    }
-    if (current && prev) {
-        prev->flag |= ST_ADDED;
-    }
-    next = current;
-    prev = destination;
- }
+ float temp  = cosf(latitude);          //  radius of the current latitude
+ position[0] = sinf(longitude) * temp;  //  x -> East
+ position[1] = sinf(latitude);          //  y -> North
+ position[2] = cosf(longitude) * temp;  //  z -> 0:0 (Africa)
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- *                                                                                       *
- *     class Glesly::SphereData::Convert3D::Position:                                    *
- *                                                                                       *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-SphereData::Convert3D::Position::Position(float lon, float lat):
-    cos_lat(cosf(lat)),
-    cos_lon(cosf(lon)),
-    x(sinf(lon)*cos_lat),
-    y(sinf(lat)),
-    z(cos_lon*cos_lat)
+void SphereData::Convert3D::Convert(const SphereData::Convert3D::Oper * source, SphereData::Convert3D::Oper * destination, int count)
 {
+ for (int i = 0; i < count; ++i, ++source, ++destination) {
+    destination->op = source->op;
+    if (destination->data[2] < 0.2f) {
+        destination->flag = 0;
+        destination->data[0] = 0.0f;
+        destination->data[1] = 0.0f;
+        destination->data[2] = 0.0f;
+    } else {
+        destination->flag = 1;
+        destination->data[0] = source->data[0] / destination->data[2];
+        destination->data[1] = source->data[1] / destination->data[2];
+        destination->data[2] = 0.0f;
+    }
+    destination->data[3] = source->data[3];
+    destination->data[4] = source->data[4];
+    destination->data[5] = source->data[5];
+ }
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -291,7 +161,7 @@ SphereData::Convert3D::Position::Position(float lon, float lat):
 SphereData::Draw::Draw(SphereSurface & parent):
     parent(parent)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
  for (int i = 0; i < 6; ++i) {
     draws[i] = parent.GetDraw(i);
@@ -317,17 +187,17 @@ void SphereData::Draw::SetColourCompose(PaCaLib::ColourCompose mode)
  }
 }
 
-void SphereData::Draw::SetOutlineColour(float r, float g, float b, float a)
+void SphereData::Draw::SetTextOutlineColour(float r, float g, float b, float a)
 {
  for (int i = 0; i < 6; ++i) {
-    draws[i]->SetOutlineColour(r, g, b, a);
+    draws[i]->SetTextOutlineColour(r, g, b, a);
  }
 }
 
-void SphereData::Draw::SetOutlineWidth(float outline)
+void SphereData::Draw::SetTextOutline(float outline)
 {
  for (int i = 0; i < 6; ++i) {
-    draws[i]->SetOutlineWidth(outline);
+    draws[i]->SetTextOutline(outline);
  }
 }
 
@@ -354,137 +224,93 @@ void SphereData::Draw::Paint(void)
 
 PaCaLib::PathPtr SphereData::Draw::NewPath(void)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
-
  return PaCaLib::PathPtr(new SphereData::Path(*this));
 }
 
-float SphereData::Draw::DrawTextInternal(const PaCaLib::Draw::TextParams & params, const PaCaLib::Draw::Distortion *)
+float SphereData::Draw::DrawTextInternal(float lon, float lat, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ float pos[3];
+ Convert(lon, lat, pos);
 
- float lon = params.x * (float)M_PI;
- float lat = params.y * (float)(M_PI/2.0f);
-
- Position pos(lon, lat);
+ // pos[0]:     x -> East           (= sin(lon) * cos(lat))
+ // pos[1]:     y -> North          (= sin(lat))
+ // pos[2]:     z -> Africa         (= cos(lon) * cos(lat))
 
  float cl = cosf(lon);
  float cl2 = cl * cl;
  float sl = sinf(lon);
  float sl2 = sl * sl;
 
- float texts = 2.0f;
+ float result = DrawTextInternal(+pos[0], -pos[2], -pos[1], 2, mode, text, size, offset, aspect, rotation + lon, shear_x, shear_y); // -> S
+ /* ------- */  DrawTextInternal(+pos[0], +pos[2], +pos[1], 3, mode, text, size, offset, aspect, rotation - lon, shear_x, shear_y); // -> N
 
- PaCaLib::Draw::Distortion distortion;
-
- float result = 0.0f;
-
- {
-    PaCaLib::Draw::TextParams p = params;
-
-    if (sl2 > 0.2f) {
-        p.aspect = params.aspect / sl2;
-        p.size = params.size * sl;
-        result += DrawTextInternal(p, distortion, -pos.z, -pos.y, +pos.x, sl, 0); // -> E
-        p.size = -params.size * sl;
-        result += DrawTextInternal(p, distortion, +pos.z, -pos.y, -pos.x, sl, 1); // -> W
-        texts += 2.0f;
-    }
-
-    if (cl2 > 0.2f) {
-        p.aspect = params.aspect / cl2;
-        p.size = params.size * cl;
-        result += DrawTextInternal(p, distortion, +pos.x, -pos.y, +pos.z, cl, 4); // -> Front (Africa)
-        p.size = -params.size * cl;
-        result += DrawTextInternal(p, distortion, -pos.x, -pos.y, -pos.z, -cl, 5); // -> Back
-        texts += 2.0f;
-    }
+ if (sl2 > 0.2f) {
+    DrawTextInternal(-pos[2], -pos[1], +pos[0], 0, mode, text, size*sl, offset, aspect/sl2, rotation, shear_x, shear_y); // -> E
+    DrawTextInternal(+pos[2], -pos[1], -pos[0], 1, mode, text, -size*sl, offset, aspect/sl2, rotation, shear_x, shear_y); // -> W
  }
 
- distortion.shear_y = 0.0f;
- distortion.rotation = lon;
- result += DrawTextInternal(params, distortion, +pos.x, -pos.z, -pos.y, 1.0f, 2); // -> S
- distortion.rotation = -lon;
- result += DrawTextInternal(params, distortion, +pos.x, +pos.z, +pos.y, 1.0f, 3); // -> N
+ if (cl2 > 0.2f) {
+    DrawTextInternal(+pos[0], -pos[1], +pos[2], 4, mode, text, size*cl, offset, aspect/cl2, rotation, shear_x, shear_y); // -> 0:0 (Africa)
+    DrawTextInternal(-pos[0], -pos[1], -pos[2], 5, mode, text, -size*cl, offset, aspect/cl2, rotation, shear_x, shear_y); //
+ }
 
- return result / texts;
+ return result;
 }
 
-float SphereData::Draw::DrawTextInternal(const PaCaLib::Draw::TextParams & params, PaCaLib::Draw::Distortion & distortion, float x, float y, float z, float corr, int index)
+float SphereData::Draw::DrawTextInternal(float x, float y, float z, int index, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
-
- if (z < 0.4f) {
-    return params.size;
+ if (z < 0.5f) {
+    return size;
  }
 
- PaCaLib::Draw::TextParams par = params;
+ x /= z;
+ y /= z;
 
- par.x = x / z;
- par.y = y / z;
-
- // Note: This is a temporary code to correct the shear of text on the corresponding surfaces.
- //       It is a heuristic algorythm, not perfect, but good enough to see text on map.
- // TODO: Make it mathematically correct.
-
- distortion.obj_size = 1.0f / z;
+ float sy = 0.0f;
 
  switch (index) {
     case 2:
     case 3:
-        distortion.shear_y = 0.0f;
-        distortion.obj_height = 1.0f;
-        distortion.scene_height = distortion.obj_size;
+        // Nothing to do here (North and South bitmaps has no shear distortion)
     break;
     default:
     {
-        static constexpr float correction = -0.90f;
+        // Note: This is a temporary code to correct the shear of text on the corresponding surfaces.
+        //       It is a heuristic algorythm, not perfect, but good enough to see text on map.
+        static constexpr float correction = 0.90f;
         static constexpr float nonlinearity = -0.45f;
-        distortion.shear_y = correction * par.y * (par.x + nonlinearity * par.x*par.x*par.x);
-        distortion.obj_height = distortion.obj_size;
-        distortion.scene_height = 1.0f;
+        sy = correction * y * (x + nonlinearity * x*x*x);
     }
     break;
  }
 
- return draws[index]->DrawTextInternal(par, &distortion);
+ return draws[index]->DrawTextInternal(x, y, mode, text, size/(z*sqrtf(z)), offset, aspect*sqrtf(z), rotation, shear_x, shear_y - sy);
 }
 
-void SphereData::Draw::DrawPath(PaCaLib::Path::DrawMode mode, const Oper * ops, int count)
+void SphereData::Draw::Stroke(const Oper * ops, int count)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
-
- ASSERT(count <= MAX_OPERS, "Count size too big (" << count << ">" << (int)MAX_OPERS << ")");
-
  for (int i = 0; i < 6; ++i) {
     Oper my_opcodes[MAX_OPERS];
-    Convert(ops, my_opcodes, count, i);
-    DrawPath(mode, i, my_opcodes, count);
+    Convert(ops, my_opcodes, count);
+    Stroke(i, my_opcodes, count);
  }
 }
 
-void SphereData::Draw::DrawPath(PaCaLib::Path::DrawMode mode, int index, const Oper * op, int count)
+void SphereData::Draw::Stroke(int index, const Oper * ops, int count)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+}
 
- SYS_DEBUG(DL_INFO1, "index=" << index << ", count=" << count);
+void SphereData::Draw::Fill(const Oper * ops, int count)
+{
+ for (int i = 0; i < 6; ++i) {
+    Oper my_opcodes[MAX_OPERS];
+    Convert(ops, my_opcodes, count);
+    Fill(i, my_opcodes, count);
+ }
+}
 
- PaCaLib::PathPtr path;
- bool continuous = true;
- for (int i = 0; i < count; ++i, ++op) {
-    bool ok = op->isUsed();
-    SYS_DEBUG(DL_INFO1, "oper=" << op << ", OK=" << ok << ", data: " << *op);
-    if (ok) {
-        if (!path) {
-            path = draws[index]->NewPath();
-        }
-        op->Draw(path, continuous);
-    }
-    continuous = ok;
- }
- if (path) {
-    path->Draw(mode);
- }
+void SphereData::Draw::Fill(int index, const Oper * ops, int count)
+{
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -497,27 +323,35 @@ SphereData::Path::Path(SphereData::Draw & parent):
     parent(parent),
     opCount(0)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 }
 
 void SphereData::Path::Move(float x, float y)
 {
- push(OP_MOVE, Position(x*M_PI, y*(M_PI/2.0f)));
+ float pos[3];
+ Convert(x, y, pos);
+ push(OP_MOVE, pos);
 }
 
 void SphereData::Path::Line(float x, float y)
 {
- push(OP_LINE, Position(x*M_PI, y*(M_PI/2.0f)));
+ float pos[3];
+ Convert(x, y, pos);
+ push(OP_LINE, pos);
 }
 
-void SphereData::Path::Arc(float x, float y, float r, float a1, float a2)
+void SphereData::Path::Arc(float xc, float yc, float r, float a1, float a2)
 {
- push(OP_ARC, Position(x*M_PI, y*(M_PI/2.0f)), r, a1, a2);
+ float pos[3];
+ Convert(xc, yc, pos);
+ push(OP_ARC, pos, r, a1, a2);
 }
 
 void SphereData::Path::Bezier(float x, float y, float dx, float dy)
 {
- push(OP_BEZIER, Position(x*M_PI, y*(M_PI/2.0f)), dx, dy);
+ float pos[3];
+ Convert(x, y, pos);
+ push(OP_BEZIER, pos, dx, dy);
 }
 
 void SphereData::Path::Close(void)
@@ -530,74 +364,18 @@ void SphereData::Path::Clear(void)
  opCount = 0;
 }
 
-void SphereData::Path::Draw(DrawMode mode)
+void SphereData::Path::Stroke(void)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
- parent.DrawPath(mode, opcodes, opCount);
+ parent.Stroke(opcodes, opCount);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- *                                                                                       *
- *     class Glesly::SphereData::Convert3D::Oper:                                        *
- *                                                                                       *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void SphereData::Convert3D::Oper::Prepare(void)
+void SphereData::Path::Fill(void)
 {
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+ SYS_DEBUG_MEMBER(DM_GLESLY);
 
- if (isUsed()) {
-    data[0] /= data[2];     // X
-    data[1] /= data[2];     // Y
-    if (data[0] < -1.1 || data[0] > 1.1 || data[1] < -1.1 || data[1] > 1.1) {
-        flag = ST_UNUSED;
-    }
- }
-}
-
-void SphereData::Convert3D::Oper::Draw(PaCaLib::PathPtr & path, bool continuous) const
-{
- SYS_DEBUG_MEMBER(DM_GL_SPHERE);
-
- switch (op) {
-    case NO_OP:
-        // Do nothing here
-    break;
-    case OP_MOVE:
-        path->Move(data[0], data[1]);
-    break;
-    case OP_LINE:
-        if (continuous) {
-            path->Line(data[0], data[1]);
-        } else {
-            path->Move(data[0], data[1]);
-        }
-    break;
-    case OP_ARC:
-        path->Arc(data[0], data[1], data[3], data[4], data[5]);
-    break;
-    case OP_BEZIER:
-    break;
-    case OP_CLOSE:
-        path->Close();
-    break;
-    default:
-        ASSERT(false, "Invalid opcode in Glesly::SphereData::Convert3D::Oper: " << op);
-    break;
- }
-}
-
-void SphereData::Convert3D::Oper::toStream(std::ostream & os) const
-{
- os << "{op=" << op << ", f=" << flag << ", data={";
- for (int i = 0; i < 6; ++i) {
-    if (i) {
-        os << ",";
-    }
-    os << " " << data[i];
- }
- os << " }}";
+ parent.Fill(opcodes, opCount);
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

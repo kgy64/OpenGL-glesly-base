@@ -102,21 +102,13 @@ namespace Glesly
      protected:
         ObjectBase(Glesly::ObjectListBase & base);
 
-        /// Create a smart pointer of this class
-        /*! This function must be called from the Create() function of any OpenGL object
-         *  to create smart pointer.
-         *  \param  do_initialize   Its default value is true, which means the object will be displayed normally.<br>
-         *                          It can be set to false on objects which initialize the surface bitmaps later. The
-         *                          function \ref ReinitGL() must be called after surface initialization to display
-         *                          the object. The double initialization can be prevented this way. */
-        inline ObjectPtr Create(bool do_initialize = true)
+        /// Create an \ref ObjectPtr for an object
+        inline ObjectPtr Create(void)
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
             ObjectPtr p(this);
             mySelf = p;
-            if (do_initialize) {
-                ReinitGL();
-            }
+            ReinitGL();
             return p;
         }
 
@@ -182,7 +174,10 @@ namespace Glesly
          *  deleting such an object. Note that these objects can be deleted from any thread, but
          *  the OpenGL functions must be called from one thread (the OpenGL render thread here).<br>
          *  The function \ref ObjectBase::UnuseGL() must be called to inform the Render Thread to
-         *  call this function.
+         *  call this function.<br>
+         *  Because the objects are held by smart pointers, they can be deleted from any thread. The
+         *  destructors must not contain any OpenGL-related calls.<br>
+         *  The default implementation of this function does nothing. This functionality is optional.
          *  \see ObjectBase::UnuseGL()
          *  */
         virtual void uninitGL(void)

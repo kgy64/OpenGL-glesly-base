@@ -107,37 +107,38 @@ namespace Glesly
             return Glesly::ObjectPtr(new SurfacedIcosahedron(render, size));
         }
 
-        virtual void initGL(void) override
-        {
-            InitGL();
-        }
-
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron");
 
-        inline void InitGL(void)
+        virtual void initGL(void) override
         {
             SYS_DEBUG_MEMBER(DM_GLESLY);
-            DEBUG_OUT("SurfacedIcosahedron::InitGL()...");
             ParentType::InitGL();
             texture.initGL();
         }
 
-        class MyTextureCube: public Glesly::Shaders::UniformTextureCube
+        virtual void uninitGL(void) override
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            ParentType::uninitGL();
+            texture.UninitGL();
+        }
+
+        class SphereTextureCube: public Glesly::Shaders::UniformTextureCube
         {
          public:
-            inline MyTextureCube(SurfacedIcosahedron & parent, const char * name, int index , bool use_mipmap):
+            inline SphereTextureCube(SurfacedIcosahedron & parent, const char * name, int index , bool use_mipmap):
                 Glesly::Shaders::UniformTextureCube(parent, name, index, use_mipmap),
                 parent(parent)
             {
             }
 
-            virtual ~MyTextureCube()
+            virtual ~SphereTextureCube()
             {
             }
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron::MyTextureCube");
+            SYS_DEFINE_CLASS_NAME("Glesly::SurfacedIcosahedron::SphereTextureCube");
 
             SurfacedIcosahedron & parent;
 
@@ -146,9 +147,9 @@ namespace Glesly
                 return parent.getTargets();
             }
 
-        }; // class Glesly::SurfacedIcosahedron::MyTextureCube
+        }; // class Glesly::SurfacedIcosahedron::SphereTextureCube
 
-        MyTextureCube texture;
+        SphereTextureCube texture;
 
         GLushort myElems[IH_ELEM(N)];
 

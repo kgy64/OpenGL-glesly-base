@@ -26,7 +26,7 @@ using namespace Shaders;
   \param  target          Specifies the target buffer object. See 'glBufferData()' and 'glBindBuffer()' function specifications.
   */
 VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * data, unsigned vector_size, unsigned element_size, unsigned vertices, int gl_type, GLenum usage, GLenum target):
-    AttribList(parent),
+    AttribElement(parent),
     myParent(parent),
     myName(name),
     myVBO(0xffffffff),
@@ -38,8 +38,7 @@ VBOAttribBase::VBOAttribBase(Object & parent, const char * name, const void * da
     myByteSize(myVectorSize * myVertices * myElementSize),
     myGLType(gl_type),
     myTarget(target),
-    myUsage(usage),
-    next(NULL)
+    myUsage(usage)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
@@ -52,8 +51,8 @@ VBOAttribBase::~VBOAttribBase()
  SYS_DEBUG(DL_INFO2, "Shader var '" << myName << "'");
 
  if (myVBO != 0xffffffff) {
-    glDeleteBuffers(1, &myVBO);
-    SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
+    // Note that exception is not allowed here:
+    DEBUG_OUT("ERROR in VBOAttribBase::~VBOAttribBase(): VBO " << myVBO << " has not been deleted");
  }
 }
 
@@ -66,7 +65,22 @@ void VBOAttribBase::InitGL(void)
  glGenBuffers(1, &myVBO);
  SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned for name '" << myName << "'");
 
+ DEBUG_OUT("glGenBuffers() returned " << myVBO);
+
  Bind();
+}
+
+void VBOAttribBase::uninitGL(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+
+ if (myVBO != 0xffffffff) {
+    DEBUG_OUT("glDeleteBuffers(" << myVBO << ")");
+    glDeleteBuffers(1, &myVBO);
+    CheckEGLError("glDeleteBuffers()");
+    SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
+    myVBO = 0xffffffff;
+ }
 }
 
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

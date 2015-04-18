@@ -10,4 +10,15 @@
 
 #include "shader-vars.h"
 
+using namespace Glesly::Shaders;
+
+void AttribManager::UninitGL(void)
+{
+ SYS_DEBUG_MEMBER(DM_GLESLY);
+ Threads::Lock _l(membersMutex);
+ for (AttribElement * i = myAttribs; i; i=i->next) {
+    i->uninitGL();
+ }
+}
+
 /* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */

@@ -15,10 +15,6 @@
 
 namespace Glesly
 {
-    /// Base class for all kind of OpenGL objects.
-    /*! \param  P   Number of vertex positions
-     *  \param  E   Number of texture positions
-     *  \param  N   Dimensions of the texture positions. Its default value is 2. */
     template <unsigned P, unsigned E, unsigned N=2>
     class GenericSurfaceObject: public Glesly::Object
     {
@@ -78,6 +74,15 @@ namespace Glesly
         virtual void initGL(void) override
         {
             InitGL();
+        }
+
+        virtual void uninitGL(void) override
+        {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
+            Object::uninitGL();
+            position.uninitGL();
+            texcoord.uninitGL();
+            elements.uninitGL();
         }
 
      private:

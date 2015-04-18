@@ -15,9 +15,7 @@
 #include <glesly/surfaced-icosahedron.h>
 #include <Debug/Debug.h>
 
-#include <ostream>
-
-SYS_DECLARE_MODULE(DM_GL_SPHERE);
+SYS_DECLARE_MODULE(DM_GLESLY);
 
 namespace Glesly
 {
@@ -40,80 +38,18 @@ namespace Glesly
                 OP_CLOSE
             };
 
-            enum _Status
-            {
-                ST_UNUSED       =   0,
-                ST_USED         =   1,
-                ST_ADDED        =   2,
-            };
-
-         public:
             struct Oper
             {
-                inline Oper(void)
-                {
-                    Invalidate();
-                }
-
-                VIRTUAL_IF_DEBUG inline ~Oper()
-                {
-                }
-
-                inline bool isUsed(void) const
-                {
-                    return flag != ST_UNUSED;
-                }
-
-                inline void Invalidate(void)
-                {
-                    op = NO_OP;
-                    flag = 0;
-                    memset(data, 0, sizeof(data));  // ugly :-(
-                }
-
-                void Prepare(void);
-                void Draw(PaCaLib::PathPtr & path, bool continuous) const;
-
                 uint16_t    op;
 
                 uint16_t    flag;
 
                 float       data[6];
 
-                void toStream(std::ostream & os) const;
+            }; // struct Glesly::SphereData::Path::Oper
 
-             private:
-                SYS_DEFINE_CLASS_NAME("Glesly::SphereData::Convert3D::Oper");
-
-            }; // struct Glesly::SphereData::Convert3D::Oper
-
-            /// Converts longitude and latitude to 3D positions
-            struct Position
-            {
-                Position(float lon, float lat);
-
-                /// The raw cos(latitude) value
-                float cos_lat;
-
-                /// The raw cos(longitude) value
-                float cos_lon;
-
-                /// X axis: points to East
-                float x;
-
-                /// Y axis: points to North
-                float y;
-
-                /// Z axis: points to Front (Africa)
-                float z;
-
-            }; // struct Glesly::SphereData::Convert3D::Position
-
-         protected:
-            void Convert(const Oper * source, Oper * destination, int count, int mode);
-
-         private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereData::Convert3D");
+            void Convert(float longitude, float latitude, float position[3]);
+            void Convert(const Oper * source, Oper * destination, int count);
 
         }; // class Glesly::SphereData::Convert3D
 
@@ -124,29 +60,31 @@ namespace Glesly
          public:
             Draw(SphereSurface & parent);
 
-            void DrawPath(PaCaLib::Path::DrawMode mode, const Oper * ops, int count);
+            void Stroke(const Oper * ops, int count);
+            void Fill(const Oper * ops, int count);
 
          protected:
             SphereSurface & parent;
 
             virtual void Scale(float w, float h) override;
-            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
             virtual void SetColour(float r, float g, float b, float a) override;
-            virtual void SetOutlineColour(float r, float g, float b, float a) override;
-            virtual void SetOutlineWidth(float outline) override;
+            virtual void SetColourCompose(PaCaLib::ColourCompose mode = PaCaLib::COLOUR_COMPOSE_DEFAULT) override;
+            virtual void SetTextOutlineColour(float r, float g, float b, float a = 1.0) override;
+            virtual void SetTextOutline(float outline) override;
             virtual void SetLineWidth(float width) override;
             virtual void SetLineCap(PaCaLib::LineCap mode) override;
             virtual void Paint(void) override;
             virtual PaCaLib::PathPtr NewPath(void) override;
-            virtual float DrawTextInternal(const PaCaLib::Draw::TextParams & params, const PaCaLib::Draw::Distortion * distortion) override;
+            virtual float DrawTextInternal(float lon, float lat, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y) override;
 
             PaCaLib::DrawPtr draws[6];
 
          private:
-            SYS_DEFINE_CLASS_NAME("Glesly::SphereData::Draw");
+            SYS_DEFINE_CLASS_NAME("Glesly::SphereSurface::Draw");
 
-            void DrawPath(PaCaLib::Path::DrawMode mode, int index, const Oper * op, int count);
-            float DrawTextInternal(const PaCaLib::Draw::TextParams & params, PaCaLib::Draw::Distortion & distortion, float x, float y, float z, float corr, int index);
+            void Stroke(int index, const Oper * ops, int count);
+            void Fill(int index, const Oper * ops, int count);
+            float DrawTextInternal(float x, float y, float z, int index, PaCaLib::TextMode mode, const char * text, float size, float offset, float aspect, float rotation, float shear_x, float shear_y);
 
         }; // class Glesly::SphereData::Draw
 
@@ -168,15 +106,15 @@ namespace Glesly
                 o.data[5] = 0.0f;
             }
 
-            inline void push(Opcode op, const Position & pos, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f)
+            inline void push(Opcode op, float * c, float d1 = 0.0f, float d2 = 0.0f, float d3 = 0.0f)
             {
                 ASSERT(opCount < MAX_OPERS, "too many opearions on a Glesly::SphereData::Path");
 
                 Oper & o = opcodes[opCount++];
                 o.op = op;
-                o.data[0] = pos.x;
-                o.data[1] = pos.y;
-                o.data[2] = pos.z;
+                o.data[0] = c[0];
+                o.data[1] = c[1];
+                o.data[2] = c[2];
                 o.data[3] = d1;
                 o.data[4] = d2;
                 o.data[5] = d3;
@@ -190,11 +128,12 @@ namespace Glesly
 
             virtual void Move(float x, float y) override;
             virtual void Line(float x, float y) override;
-            virtual void Arc(float x, float y, float r, float a1, float a2) override;
+            virtual void Arc(float xc, float yc, float r, float a1, float a2) override;
             virtual void Bezier(float x, float y, float dx, float dy) override;
             virtual void Close(void) override;
             virtual void Clear(void) override;
-            virtual void Draw(DrawMode mode) override;
+            virtual void Stroke(void) override;
+            virtual void Fill(void) override;
 
             Oper    opcodes[MAX_OPERS];
 
@@ -218,6 +157,7 @@ namespace Glesly
             textureTargets { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr },
             myFormat(format)
         {
+            SYS_DEBUG_MEMBER(DM_GLESLY);
             if (size) {
                 reset(size, format);
             }
@@ -262,7 +202,7 @@ namespace Glesly
             SphereSurface(size),
             super(render, radius)
         {
-            SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
      public:
@@ -273,7 +213,7 @@ namespace Glesly
 
         virtual ~Sphere()
         {
-            SYS_DEBUG_MEMBER(DM_GL_SPHERE);
+            SYS_DEBUG_MEMBER(DM_GLESLY);
         }
 
      private:
@@ -287,12 +227,6 @@ namespace Glesly
     }; // class Glesly::Sphere
 
 } // namespace Glesly
-
-static inline std::ostream & operator<<(std::ostream & os, const Glesly::SphereData::Convert3D::Oper & op)
-{
- op.toStream(os);
- return os;
-}
 
 #endif /* __SRC_SPHERE_H_INCLUDED__ */
 
