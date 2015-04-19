@@ -342,7 +342,7 @@ namespace Glesly
             virtual void Bezier(float x, float y, float dx, float dy) override;
             virtual void Close(void) override;
             virtual void Clear(void) override;
-            virtual void Draw(DrawMode mode = DRAW_STROKE) override;
+            virtual void Draw(DrawMode mode) override;
 
             Operations opers;
 
