@@ -65,8 +65,6 @@ void VBOAttribBase::InitGL(void)
  glGenBuffers(1, &myVBO);
  SYS_DEBUG(DL_INFO3, " - glGenBuffers(1, " << myVBO << "); returned for name '" << myName << "'");
 
- DEBUG_OUT("glGenBuffers() returned " << myVBO);
-
  Bind();
 }
 
@@ -75,7 +73,6 @@ void VBOAttribBase::uninitGL(void)
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  if (myVBO != 0xffffffff) {
-    DEBUG_OUT("glDeleteBuffers(" << myVBO << ")");
     glDeleteBuffers(1, &myVBO);
     CheckEGLError("glDeleteBuffers()");
     SYS_DEBUG(DL_INFO2, "glDeleteBuffers(1, " << myVBO << "): deleted.");
