@@ -10,7 +10,10 @@ export CXXFLAGS         +=  $(SHADER_PATH:%=-I%)
 
 %.cpp: %.shader
 	@echo "    Embedding shader $< ..."
-	$(GLSCRIPTS)/shader2c -f $(PWD)/"$<" -i "<glesly/shader-names.h>" -c "$@"
+	$(GLSCRIPTS)/shader2c -f "$<" -i "<glesly/shader-names.h>" -c "$@"
 
 do_pre_compile: $(SHADER_SOURCES)
+
+do_clean:
+	rm -f $(SHADER_OBJECTS) $(SHADER_HEADERS) $(SHADER_SOURCES)
 

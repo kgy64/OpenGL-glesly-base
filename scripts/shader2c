@@ -37,6 +37,7 @@ done
 
 test "$failed" && error "Exiting now."
 test "$shader_file" || error "No input file name given"
+test -r "$shader_file" || error "Invalid (unreadable) input file given: $shader_file"
 test "$cppfile" || error "No output file name given"
 
 headerfile="${cppfile/\.cpp/.h}"
