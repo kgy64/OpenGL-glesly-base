@@ -7,19 +7,7 @@ VERS_MINOR           =  1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-.PHONY: all
-all: _everything
-
-export SRCDIR        =  .
-
 BASE_LIBRARIES       =  pangocairo
 
 include $(SCRIPTDIR)/makelib
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-.PHONY: clean
-clean:
-	@echo " - Cleaning $(NAME)..."
-	@rm -f $(BINDIR)/* $(OBJECTS) $(Y_CPPFILES) $(Y_HEADERS) $(DEPENDS)
 
