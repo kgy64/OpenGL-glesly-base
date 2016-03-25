@@ -26,18 +26,20 @@ using namespace Glesly;
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 Main::Main(void):
-    myTimer(*this)
+    myTimer(new TimerThread(*this))
 {
  GetBackend().RegisterParent(this);
+ myTimer->Start(myTimer, 4*65536);
 }
 
 Main::Main(TargetPtr & target):
-    myTimer(*this),
+    myTimer(new TimerThread(*this)),
     myBackend(target)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
 
  GetBackend().RegisterParent(this);
+ myTimer->Start(myTimer, 4*65536);
 }
 
 Main::~Main()
@@ -164,8 +166,6 @@ Main::TimerThread::TimerThread(Main & parent):
     myParent(parent)
 {
  SYS_DEBUG_MEMBER(DM_GLESLY);
-
- Start(4*65536);
 }
 
 Main::TimerThread::~TimerThread(void)

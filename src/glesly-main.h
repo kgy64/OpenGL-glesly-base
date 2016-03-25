@@ -119,7 +119,7 @@ namespace Glesly
 
         Threads::Semaphore timerSemaphore;
 
-        TimerThread myTimer;
+        MEM::shared_ptr<TimerThread> myTimer;
 
      private:
         SYS_DEFINE_CLASS_NAME("Glesly::Main");
