@@ -4,6 +4,9 @@ Glesly - my OpenGL (GLES) based rendering library
 This library is intended to be an object-oriented interface to OpenGL, in a GLES-compatible way.
 The renderer, the camera, and the 3D objects are represented by easy-to-use classes.
 
+It is easy to create and control (e.g. move) objects from a multithreaded environment.
+It has the same drawing interface as pacalib (see below) uses, for 3D objects including sphere.
+
 It is base on my other libraries:
 - makesys   git://github.com/kgy64/makesys  (generic make system)
 - pacalib   git://github.com/kgy64/pacalib  (2D rendering library)
