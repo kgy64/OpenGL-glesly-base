@@ -1,0 +1,6 @@
+Glesly - my OpenGL (GLES) based rendering library
+-------------------------------------------------
+
+This library is intended to be an object-oriented interface to OpenGL, in a GLES-compatible way.
+The renderer, the camera, and the 3D objects are represented by easy-to-use classes.
+
